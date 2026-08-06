@@ -1,0 +1,64 @@
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/subsets/Paperlogy-dynamic-subset.css");
+
+:root {
+    --content-max-width: 1200px;
+
+    --desktop-padding: 24px;
+    --desktop-gap: 24px;
+
+    --mobile-padding: 16px;
+    --mobile-gap: 16px;
+
+    --primary-color: #427eff;
+    --text-color: #1f2937;
+    --secondary-text-color: #64748b;
+    --border-color: #cbd5e1;
+    --panel-color: #f7f9fc;
+    --background-color: #ffffff;
+    --icon-section-color: #fbfcff;
+
+    --slide-duration: 500ms;
+    --slide-easing: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family:
+        "Paperlogy",
+        "Apple SD Gothic Neo",
+        "Malgun Gothic",
+        sans-serif;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button,
+a {
+    color: inherit;
+}
+
+img,
+iframe {
+    display: block;
+    max-width: 100%;
+}
+
+[hidden] {
+    display: none !important;
+}

@@ -1,0 +1,281 @@
+/* 헤더 */
+
+.site-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.site-name {
+    margin: 0;
+    font-weight: 700;
+}
+
+/* 히어로 */
+
+.hero-section h1 {
+    margin: 0;
+}
+
+.hero-section p {
+    margin: 20px 0 0;
+    line-height: 1.7;
+}
+
+/* 유의사항 */
+
+.guide-section {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.guide-section + .gallery-section {
+    border-top: 0;
+}
+
+.guide-section h2,
+.support-section h2 {
+    margin: 0;
+}
+
+.guide-panel,
+.support-panel {
+    margin-top: 24px;
+    padding: 24px;
+    background-color: var(--panel-color);
+    border: 1px solid var(--border-color);
+}
+
+.guide-panel p,
+.support-panel p {
+    margin: 0;
+    line-height: 1.7;
+}
+
+.guide-panel ul {
+    margin: 20px 0 0;
+    padding-left: 22px;
+}
+
+.guide-panel li {
+    line-height: 1.7;
+}
+
+.guide-panel li + li {
+    margin-top: 8px;
+}
+
+.support-panel .text-link {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+/* 갤러리 섹션 */
+
+.gallery-section {
+    border-top: 1px solid var(--border-color);
+}
+
+.gallery-section--icon {
+    background-color: var(--icon-section-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.gallery-list-view h2,
+.artwork-preview-view h2 {
+    margin: 0;
+}
+
+/* 검색 및 정렬 */
+
+.control-field label {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.gallery-controls input,
+.gallery-controls select {
+    min-height: 44px;
+    padding: 8px 12px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0;
+}
+
+/* 작품 카드 */
+
+.artwork-item {
+    padding: 16px;
+    color: var(--text-color);
+    text-align: left;
+    background-color: var(--panel-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.artwork-item:hover,
+.artwork-item:focus-visible {
+    border-color: var(--primary-color);
+    outline: 2px solid transparent;
+}
+
+.artwork-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 16px;
+    color: var(--secondary-text-color);
+    background-color: var(--background-color);
+    border: 1px dashed var(--border-color);
+}
+
+.artwork-placeholder--illustration {
+    min-height: 150px;
+    aspect-ratio: 16 / 9;
+}
+
+.artwork-placeholder--icon {
+    aspect-ratio: 1;
+}
+
+.artwork-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.artwork-title {
+    display: block;
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.artwork-motion {
+    display: block;
+    margin-top: 8px;
+    color: var(--secondary-text-color);
+    font-size: 13px;
+}
+
+.empty-message {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 32px;
+    color: var(--secondary-text-color);
+    text-align: center;
+    border: 1px dashed var(--border-color);
+}
+
+/* 텍스트 버튼 및 링크 */
+
+.text-button,
+.text-link {
+    display: inline;
+    padding: 0;
+    color: var(--primary-color);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+/* 작품 미리보기 */
+
+.artwork-preview-view h2 {
+    margin-top: 24px;
+}
+
+.artwork-preview h3,
+.panel h3 {
+    margin: 0 0 16px;
+}
+
+.preview-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+    overflow: hidden;
+    color: var(--secondary-text-color);
+    background-color: var(--panel-color);
+    border: 1px solid var(--border-color);
+}
+
+.preview-placeholder--icon {
+    min-height: auto;
+    aspect-ratio: 1;
+}
+
+.preview-placeholder img {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+}
+
+.preview-placeholder--icon img {
+    height: 100%;
+    max-height: none;
+}
+
+.preview-placeholder iframe {
+    width: 100%;
+    min-height: 420px;
+    background-color: var(--background-color);
+    border: 0;
+}
+
+.preview-placeholder--icon iframe {
+    height: 100%;
+    min-height: 0;
+}
+
+/* 정보 패널 */
+
+.panel {
+    padding: 24px;
+    background-color: var(--panel-color);
+    border: 1px solid var(--border-color);
+}
+
+.panel p {
+    line-height: 1.7;
+}
+
+.download-empty-message {
+    margin: 0;
+    color: var(--secondary-text-color);
+}
+
+/* 푸터 */
+
+.site-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* 모바일 컴포넌트 */
+
+@media (max-width: 767px) {
+    .preview-placeholder,
+    .preview-placeholder iframe {
+        min-height: 300px;
+    }
+
+    .preview-placeholder--icon {
+        min-height: auto;
+    }
+
+    .preview-placeholder--icon iframe {
+        min-height: 0;
+    }
+
+    .preview-placeholder img {
+        max-height: 300px;
+    }
+
+    .preview-placeholder--icon img {
+        max-height: none;
+    }
+}
