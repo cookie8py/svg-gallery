@@ -1,33 +1,26 @@
 @import url("https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/subsets/Paperlogy-dynamic-subset.css");
 
-
 :root {
     --content-max-width: 1200px;
-
     --desktop-padding: 24px;
     --desktop-gap: 24px;
-
     --mobile-padding: 16px;
     --mobile-gap: 16px;
-
     --primary-color: #427eff;
     --text-color: #1f2937;
     --secondary-text-color: #64748b;
     --border-color: #cbd5e1;
     --panel-color: #f7f9fc;
     --background-color: #ffffff;
-
     --slide-duration: 500ms;
     --slide-easing: cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
-
 
 html {
     font-family:
@@ -37,15 +30,12 @@ html {
         sans-serif;
 }
 
-
 body {
     min-width: 320px;
     margin: 0;
-
     color: var(--text-color);
     background-color: var(--background-color);
 }
-
 
 button,
 input,
@@ -53,12 +43,10 @@ select {
     font: inherit;
 }
 
-
 button,
 a {
     color: inherit;
 }
-
 
 img,
 iframe {
@@ -66,13 +54,23 @@ iframe {
     max-width: 100%;
 }
 
-
 [hidden] {
     display: none !important;
 }
 
-
-/* 공통 콘텐츠 영역 */
+/* 잘라낸 뒤 남은 완전히 빈 요소가 공간을 차지하지 않게 처리 */
+section:empty,
+div:empty:not(
+    .artwork-placeholder,
+    .preview-placeholder,
+    .gallery-slider,
+    .gallery-track,
+    .gallery-slide,
+    .artwork-list,
+    .preview-layout
+) {
+    display: none;
+}
 
 .site-container,
 .content-container {
@@ -83,10 +81,6 @@ iframe {
     padding-left: var(--desktop-padding);
 }
 
-
-/* 실제 12열 그리드 */
-
-.grid-12,
 .artwork-list,
 .preview-layout {
     display: grid;
@@ -94,13 +88,9 @@ iframe {
     gap: var(--desktop-gap);
 }
 
-
-/* 헤더 */
-
 .site-header {
     border-bottom: 1px solid var(--border-color);
 }
-
 
 .site-header .site-container {
     display: flex;
@@ -109,25 +99,19 @@ iframe {
     min-height: 72px;
 }
 
-
 .site-name {
     margin: 0;
     font-weight: 700;
 }
-
-
-/* 히어로 */
 
 .hero-section .content-container {
     padding-top: 72px;
     padding-bottom: 72px;
 }
 
-
 .hero-section h1 {
     margin: 0;
 }
-
 
 .hero-section p {
     max-width: 680px;
@@ -135,59 +119,98 @@ iframe {
     line-height: 1.7;
 }
 
+/* 유의사항 */
+
+.guide-section {
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 유의사항의 아래쪽 보더와 다음 갤러리의 위쪽 보더가 겹치지 않게 처리 */
+.guide-section + .gallery-section {
+    border-top: 0;
+}
+
+.guide-section .content-container,
+.support-section .content-container {
+    padding-top: 64px;
+    padding-bottom: 64px;
+}
+
+.guide-section h2,
+.support-section h2 {
+    margin: 0;
+}
+
+.guide-panel,
+.support-panel {
+    margin-top: 24px;
+    padding: 24px;
+    background-color: var(--panel-color);
+    border: 1px solid var(--border-color);
+}
+
+.guide-panel p,
+.support-panel p {
+    margin: 0;
+    line-height: 1.7;
+}
+
+.guide-panel ul {
+    margin: 20px 0 0;
+    padding-left: 22px;
+}
+
+.guide-panel li {
+    line-height: 1.7;
+}
+
+.guide-panel li + li {
+    margin-top: 8px;
+}
+
+.support-panel .text-link {
+    display: inline-block;
+    margin-top: 20px;
+}
 
 /* 갤러리 */
 
 .gallery-section {
     overflow: hidden;
-
     border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
 }
 
+.gallery-section--icon {
+    background-color: #fbfcff;
+    border-bottom: 1px solid var(--border-color);
+}
 
 .gallery-section .content-container {
     padding-top: 64px;
     padding-bottom: 64px;
 }
 
-
-/*
- * 목록과 미리보기를 나란히 배치하는 슬라이드 구조
- *
- * gallery-slider:
- * 사이트에 실제로 보이는 창
- *
- * gallery-track:
- * 목록과 미리보기를 담고 좌우로 이동하는 영역
- */
-
 .gallery-slider {
     width: 100%;
     overflow: hidden;
 }
 
-
 .gallery-track {
     display: flex;
     align-items: flex-start;
-
     width: 200%;
-
     transform: translateX(0);
     transition:
         transform
         var(--slide-duration)
         var(--slide-easing);
-
     will-change: transform;
 }
-
 
 .gallery-track.is-preview-open {
     transform: translateX(-50%);
 }
-
 
 .gallery-slide {
     flex: 0 0 50%;
@@ -196,148 +219,169 @@ iframe {
     padding-right: 1px;
 }
 
-
 .gallery-list-view h2,
 .artwork-preview-view h2 {
     margin: 0;
 }
 
-
-/* 검색과 필터 */
-
 .gallery-controls {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-
+    align-items: flex-end;
+    gap: 16px;
     margin-top: 32px;
 }
 
+.control-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.control-field--search {
+    flex: 1 1 280px;
+}
+
+.control-field label {
+    font-size: 14px;
+    font-weight: 600;
+}
 
 .gallery-controls input,
 .gallery-controls select {
-    min-height: 42px;
+    min-height: 44px;
     padding: 8px 12px;
-
+    color: var(--text-color);
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
+    border-radius: 0;
 }
-
-
-/* 작품 목록 */
 
 .artwork-list {
     margin-top: 32px;
 }
 
-
 .artwork-item {
-    grid-column: span 4;
-
-    min-height: 220px;
-    padding: 20px;
-
+    padding: 16px;
     color: var(--text-color);
     text-align: left;
-
     background-color: var(--panel-color);
     border: 1px solid var(--border-color);
-
     cursor: pointer;
 }
 
+.artwork-item--illustration {
+    grid-column: span 4;
+    min-height: 220px;
+}
+
+.artwork-item--icon {
+    grid-column: span 2;
+    min-width: 0;
+}
 
 .artwork-item:hover,
 .artwork-item:focus-visible {
     border-color: var(--primary-color);
+    outline: 2px solid transparent;
 }
-
 
 .artwork-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 100%;
-    min-height: 150px;
     margin-bottom: 16px;
-
     color: var(--secondary-text-color);
     background-color: var(--background-color);
     border: 1px dashed var(--border-color);
 }
 
+.artwork-placeholder--illustration {
+    min-height: 150px;
+    aspect-ratio: 16 / 9;
+}
+
+.artwork-placeholder--icon {
+    aspect-ratio: 1;
+}
 
 .artwork-placeholder img {
     width: 100%;
-    height: 150px;
+    height: 100%;
     object-fit: contain;
 }
 
-
 .artwork-title {
     display: block;
-    margin: 0;
-
+    overflow: hidden;
     font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
+.artwork-motion {
+    display: block;
+    margin-top: 8px;
+    color: var(--secondary-text-color);
+    font-size: 13px;
+}
 
-/* 글씨 형태 버튼과 링크 */
+.empty-message {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 32px;
+    color: var(--secondary-text-color);
+    text-align: center;
+    border: 1px dashed var(--border-color);
+}
 
 .text-button,
 .text-link {
     display: inline;
     padding: 0;
-
     color: var(--primary-color);
     text-decoration: underline;
     text-underline-offset: 4px;
-
     background: none;
     border: 0;
-
     cursor: pointer;
 }
-
-
-/* 미리보기 */
 
 .artwork-preview-view h2 {
     margin-top: 24px;
 }
 
-
 .preview-layout {
     margin-top: 32px;
 }
 
-
 .artwork-preview {
     grid-column: 1 / -1;
 }
-
 
 .artwork-preview h3,
 .panel h3 {
     margin: 0 0 16px;
 }
 
-
 .preview-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-
     min-height: 420px;
     overflow: hidden;
-
     color: var(--secondary-text-color);
     background-color: var(--panel-color);
     border: 1px solid var(--border-color);
 }
 
+.preview-placeholder--icon {
+    width: min(100%, 520px);
+    min-height: auto;
+    margin: 0 auto;
+    aspect-ratio: 1;
+}
 
 .preview-placeholder img {
     width: 100%;
@@ -345,39 +389,41 @@ iframe {
     object-fit: contain;
 }
 
+.preview-placeholder--icon img {
+    height: 100%;
+    max-height: none;
+}
 
 .preview-placeholder iframe {
     width: 100%;
     min-height: 420px;
-
     background-color: var(--background-color);
     border: 0;
 }
 
+.preview-placeholder--icon iframe {
+    height: 100%;
+    min-height: 0;
+}
 
 .panel {
     padding: 24px;
-
     background-color: var(--panel-color);
     border: 1px solid var(--border-color);
 }
 
-
 .panel p {
     line-height: 1.7;
 }
-
 
 .artwork-information,
 .artwork-source {
     grid-column: span 6;
 }
 
-
 .artwork-download {
     grid-column: 1 / -1;
 }
-
 
 .download-links {
     display: flex;
@@ -385,49 +431,10 @@ iframe {
     gap: 20px;
 }
 
-
 .download-empty-message {
     margin: 0;
     color: var(--secondary-text-color);
 }
-
-
-/* 안내와 후원 */
-
-.guide-section .content-container,
-.support-section .content-container {
-    padding-top: 64px;
-    padding-bottom: 64px;
-}
-
-
-.guide-section h2,
-.support-section h2 {
-    margin: 0;
-}
-
-
-.guide-panel,
-.support-panel {
-    margin-top: 24px;
-    padding: 24px;
-
-    background-color: var(--panel-color);
-    border: 1px solid var(--border-color);
-}
-
-
-.guide-panel p,
-.support-panel p {
-    margin: 0;
-}
-
-
-.support-panel .text-link {
-    display: inline-block;
-    margin-top: 20px;
-}
-
 
 /* 푸터 */
 
@@ -435,15 +442,17 @@ iframe {
     border-top: 1px solid var(--border-color);
 }
 
-
 .site-footer .site-container {
     display: flex;
     align-items: center;
     min-height: 120px;
 }
 
-
-/* 모바일 4열 그리드 */
+@media (max-width: 900px) {
+    .artwork-item--icon {
+        grid-column: span 3;
+    }
+}
 
 @media (max-width: 767px) {
     .site-container,
@@ -452,14 +461,11 @@ iframe {
         padding-left: var(--mobile-padding);
     }
 
-
-    .grid-12,
     .artwork-list,
     .preview-layout {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: var(--mobile-gap);
     }
-
 
     .hero-section .content-container,
     .gallery-section .content-container,
@@ -469,18 +475,19 @@ iframe {
         padding-bottom: 48px;
     }
 
-
     .gallery-controls {
         align-items: stretch;
         flex-direction: column;
     }
 
-
-    .artwork-item {
-        grid-column: span 2;
-        min-height: 190px;
+    .control-field--search {
+        flex-basis: auto;
     }
 
+    .artwork-item--illustration,
+    .artwork-item--icon {
+        grid-column: span 2;
+    }
 
     .artwork-information,
     .artwork-source,
@@ -488,27 +495,33 @@ iframe {
         grid-column: 1 / -1;
     }
 
-
     .preview-placeholder,
     .preview-placeholder iframe {
         min-height: 300px;
     }
 
+    .preview-placeholder--icon {
+        min-height: auto;
+    }
+
+    .preview-placeholder--icon iframe {
+        min-height: 0;
+    }
 
     .preview-placeholder img {
         max-height: 300px;
     }
-}
 
-
-@media (max-width: 479px) {
-    .artwork-item {
-        grid-column: 1 / -1;
+    .preview-placeholder--icon img {
+        max-height: none;
     }
 }
 
-
-/* 사용자가 동작 줄이기를 설정한 경우 */
+@media (max-width: 479px) {
+    .artwork-item--illustration {
+        grid-column: 1 / -1;
+    }
+}
 
 @media (prefers-reduced-motion: reduce) {
     .gallery-track {
