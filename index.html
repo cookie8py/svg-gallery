@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="기후위기, 동물보호, 해양보호 캠페인과 기사에 활용할 수 있는 정적·동적 SVG 일러스트와 환경 아이콘을 둘러보고 다운로드하세요."
+    >
+
+    <title>
+        환경운동가를 위한 SVG 갤러리 | 환경ㆍ동물ㆍ해양보호 일러스트
+    </title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="site-container">
+            <p class="site-name">사이트 이름</p>
+
+            <nav aria-label="주요 메뉴">
+                <!-- 메뉴 자리 -->
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="content-container">
+                <h1>환경운동가를 위한 SVG 갤러리</h1>
+
+                <p>
+                    기후위기, 동물보호, 해양보호 메시지를 전달하는
+                    정적ㆍ동적 SVG 일러스트와 아이콘을 제공합니다.
+                </p>
+            </div>
+        </section>
+
+        <section class="gallery-section">
+            <div class="content-container">
+
+                <div
+                    class="gallery-slider"
+                    id="gallery-slider"
+                >
+                    <div
+                        class="gallery-track"
+                        id="gallery-track"
+                    >
+                        <!-- 작품 목록 화면 -->
+                        <div
+                            class="gallery-slide gallery-list-view"
+                            id="gallery-list-view"
+                            aria-hidden="false"
+                        >
+                            <h2>SVG 작품 둘러보기</h2>
+
+                            <div class="gallery-controls">
+                                <label for="artwork-search">
+                                    작품 검색
+                                </label>
+
+                                <input
+                                    id="artwork-search"
+                                    type="search"
+                                    placeholder="작품명을 입력하세요"
+                                >
+
+                                <label for="category-filter">
+                                    분류
+                                </label>
+
+                                <select id="category-filter">
+                                    <option value="all">전체</option>
+                                    <option value="climate">기후위기</option>
+                                    <option value="animal">동물보호</option>
+                                    <option value="ocean">해양보호</option>
+                                </select>
+                            </div>
+
+                            <div
+                                class="artwork-list"
+                                id="artwork-list"
+                                aria-live="polite"
+                            >
+                                <!-- artworks.js 데이터로 자동 생성 -->
+                            </div>
+                        </div>
+
+                        <!-- 미리보기 화면 -->
+                        <article
+                            class="gallery-slide artwork-preview-view"
+                            id="artwork-preview-view"
+                            aria-labelledby="preview-title"
+                            aria-hidden="true"
+                            inert
+                        >
+                            <button
+                                class="text-button"
+                                id="preview-close-button"
+                                type="button"
+                            >
+                                ← 목록으로
+                            </button>
+
+                            <h2 id="preview-title">
+                                선택 작품
+                            </h2>
+
+                            <div class="preview-layout">
+                                <section class="artwork-preview">
+                                    <h3>작품 미리보기</h3>
+
+                                    <div
+                                        class="preview-placeholder"
+                                        id="preview-placeholder"
+                                    >
+                                        작품 미리보기 영역
+                                    </div>
+                                </section>
+
+                                <section class="artwork-information panel">
+                                    <h3>작품 정보</h3>
+
+                                    <p id="preview-description">
+                                        선택한 작품의 설명이 표시됩니다.
+                                    </p>
+                                </section>
+
+                                <section class="artwork-source panel">
+                                    <h3>출처 및 참고 자료</h3>
+
+                                    <p id="preview-source">
+                                        출처와 참고 자료가 표시됩니다.
+                                    </p>
+                                </section>
+
+                                <section class="artwork-download panel">
+                                    <h3>다운로드</h3>
+
+                                    <div class="download-links">
+                                        <a
+                                            class="text-link"
+                                            id="svg-download-link"
+                                            download
+                                            hidden
+                                        >
+                                            SVG 다운로드
+                                        </a>
+
+                                        <a
+                                            class="text-link"
+                                            id="html-download-link"
+                                            download
+                                            hidden
+                                        >
+                                            HTML 다운로드
+                                        </a>
+                                    </div>
+
+                                    <p
+                                        class="download-empty-message"
+                                        id="download-empty-message"
+                                    >
+                                        실제 작품 파일이 등록되면
+                                        다운로드 항목이 표시됩니다.
+                                    </p>
+                                </section>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="guide-section">
+            <div class="content-container">
+                <h2>이용 안내</h2>
+
+                <div class="guide-panel">
+                    <p>
+                        작품별 이용 범위와 출처 표시 방법을
+                        안내할 자리입니다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="support-section">
+            <div class="content-container">
+                <h2>프로젝트 후원</h2>
+
+                <div class="support-panel">
+                    <p>
+                        환경운동가를 위한 SVG 작품 제작을
+                        후원할 수 있습니다.
+                    </p>
+
+                    <a
+                        class="text-link"
+                        href="#"
+                    >
+                        후원하기
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-container">
+            <p>사이트 이름</p>
+        </div>
+    </footer>
+
+    <script
+        type="module"
+        src="./js/app.js"
+    ></script>
+</body>
+</html>
