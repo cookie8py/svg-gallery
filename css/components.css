@@ -104,12 +104,17 @@
 /* 작품 카드 */
 
 .artwork-item {
+    position: relative;
     padding: 16px;
     color: var(--text-color);
     text-align: left;
     background-color: var(--panel-color);
     border: 1px solid var(--border-color);
     cursor: pointer;
+}
+
+.artwork-item--icon {
+    padding: 12px;
 }
 
 .artwork-item:hover,
@@ -134,8 +139,16 @@
     aspect-ratio: 16 / 9;
 }
 
+/* 아이콘 카드 안의 실제 섬네일 크기 */
+
 .artwork-placeholder--icon {
+    width: min(100%, 120px);
+    margin-right: auto;
+    margin-left: auto;
     aspect-ratio: 1;
+    line-height: 1.4;
+    text-align: center;
+    white-space: pre-line;
 }
 
 .artwork-placeholder img {
@@ -152,11 +165,27 @@
     white-space: nowrap;
 }
 
-.artwork-motion {
-    display: block;
-    margin-top: 8px;
-    color: var(--secondary-text-color);
-    font-size: 13px;
+.artwork-item--icon .artwork-title {
+    font-size: 14px;
+    text-align: center;
+}
+
+.artwork-motion-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding-left: 2px;
+    color: var(--background-color);
+    font-size: 10px;
+    line-height: 1;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 .empty-message {
@@ -180,6 +209,38 @@
     background: none;
     border: 0;
     cursor: pointer;
+}
+
+/* 페이지 이동 */
+
+.pagination-button {
+    min-width: 40px;
+    min-height: 40px;
+    padding: 8px 12px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.pagination-button:hover,
+.pagination-button:focus-visible {
+    border-color: var(--primary-color);
+    outline: 2px solid transparent;
+}
+
+.pagination-button[aria-current="page"] {
+    color: var(--background-color);
+    font-weight: 700;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.pagination-button:disabled {
+    color: var(--secondary-text-color);
+    background-color: var(--panel-color);
+    cursor: default;
+    opacity: 0.6;
 }
 
 /* 작품 미리보기 */
@@ -258,6 +319,10 @@
 /* 모바일 컴포넌트 */
 
 @media (max-width: 767px) {
+    .artwork-placeholder--icon {
+        width: min(100%, 104px);
+    }
+
     .preview-placeholder,
     .preview-placeholder iframe {
         min-height: 300px;
