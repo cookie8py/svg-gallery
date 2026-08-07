@@ -154,17 +154,5 @@ export const climateIcons = [
         previewPath: "",
         svgPath: "",
         htmlPath: ""
-    },
-    {
-        id: "icon-placeholder-40",
-        title: "임시 아이콘 40",
-        category: "climate",
-        motion: "animated",
-        description: "기후위기 동적 아이콘이 들어갈 임시 카드입니다.",
-        source: "아직 등록된 출처가 없습니다.",
-        previewType: "placeholder",
-        previewPath: "",
-        svgPath: "",
-        htmlPath: ""
     }
 ];

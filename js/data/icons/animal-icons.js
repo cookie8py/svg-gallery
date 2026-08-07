@@ -142,17 +142,5 @@ export const animalIcons = [
         previewPath: "",
         svgPath: "",
         htmlPath: ""
-    },
-    {
-        id: "icon-placeholder-38",
-        title: "임시 아이콘 38",
-        category: "animal",
-        motion: "static",
-        description: "동물보호 정적 아이콘이 들어갈 임시 카드입니다.",
-        source: "아직 등록된 출처가 없습니다.",
-        previewType: "placeholder",
-        previewPath: "",
-        svgPath: "",
-        htmlPath: ""
     }
 ];

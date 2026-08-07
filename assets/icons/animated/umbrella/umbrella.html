@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>비를 막아주는 우산 애니메이션</title>
+
+    <style>
+        :root {
+            --umbrella-color: #427eff;
+            --umbrella-line-width: 4px;
+            --rain-color: #8fb3ff;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            background-color: transparent;
+        }
+
+        .umbrella-scene {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .rain-layer {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .raindrop {
+            position: absolute;
+            top: 0;
+            width: 3px;
+            height: 18px;
+            background-color: var(--rain-color);
+            border-radius: 999px;
+            opacity: 0.85;
+            transform-origin: center;
+        }
+
+        .umbrella-scale-box {
+            position: relative;
+            z-index: 2;
+            flex: 0 0 auto;
+            width: 240px;
+            height: 260px;
+            transform-origin: center;
+        }
+
+        .umbrella {
+            position: relative;
+            width: 240px;
+            height: 260px;
+        }
+
+        .umbrella-pole {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: var(--umbrella-line-width);
+            height: 200px;
+            background-color: var(--umbrella-color);
+            border-radius: 990px 990px 0 0;
+            transform: translateX(-50%);
+        }
+
+        .umbrella-canopy {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 200px;
+            height: 100px;
+            overflow: visible;
+            transform: translateX(-50%);
+        }
+
+        .umbrella-canopy-shape {
+            fill: var(--umbrella-color);
+        }
+
+        .umbrella-handle {
+            position: absolute;
+            top: 205px;
+            left: 50%;
+            width: 25px;
+            height: 25px;
+
+            border-right:
+                var(--umbrella-line-width)
+                solid
+                var(--umbrella-color);
+
+            border-bottom:
+                var(--umbrella-line-width)
+                solid
+                var(--umbrella-color);
+
+            border-left:
+                var(--umbrella-line-width)
+                solid
+                var(--umbrella-color);
+
+            border-radius: 0 0 24px 24px;
+            transform: translateX(-2px);
+        }
+    </style>
+</head>
+
+<body>
+    <div
+        class="umbrella-scene"
+        id="umbrellaScene"
+    >
+        <div
+            class="rain-layer"
+            id="rainLayer"
+            aria-hidden="true"
+        ></div>
+
+        <div
+            class="umbrella-scale-box"
+            id="umbrellaScaleBox"
+        >
+            <div class="umbrella">
+                <div class="umbrella-pole"></div>
+
+                <svg
+                    class="umbrella-canopy"
+                    id="umbrellaCanopy"
+                    viewBox="0 0 200 100"
+                    role="img"
+                    aria-labelledby="umbrellaTitle umbrellaDescription"
+                >
+                    <title id="umbrellaTitle">
+                        비를 막아주는 우산
+                    </title>
+
+                    <desc id="umbrellaDescription">
+                        빗방울이 우산 위에 떨어진 뒤 양옆으로 튀어 나갑니다.
+                    </desc>
+
+                    <path
+                        class="umbrella-canopy-shape"
+                        d="
+                            M 0 100
+                            C 0 45, 45 2, 100 2
+                            C 155 2, 200 45, 200 100
+                            C 182 80, 151 80, 133.33 100
+                            C 115 80, 85 80, 66.67 100
+                            C 49 80, 18 80, 0 100
+                            Z
+                        "
+                    />
+                </svg>
+
+                <div class="umbrella-handle"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener(
+            "message",
+            function (event) {
+                const data = event.data;
+
+                if (
+                    !data ||
+                    typeof data !== "object"
+                ) {
+                    return;
+                }
+
+                if (
+                    data.type ===
+                        "svg-gallery-colors" &&
+                    data.colors
+                ) {
+                    Object.entries(
+                        data.colors
+                    ).forEach(
+                        function (
+                            [key, value]
+                        ) {
+                            document
+                                .documentElement
+                                .style
+                                .setProperty(
+                                    key,
+                                    value
+                                );
+                        }
+                    );
+                }
+
+                if (
+                    data.type ===
+                    "svg-gallery-background"
+                ) {
+                    document
+                        .body
+                        .style
+                        .backgroundColor =
+                            data.visible
+                                ? data.color
+                                : "transparent";
+                }
+            }
+        );
+
+        const umbrellaScene =
+            document.getElementById(
+                "umbrellaScene"
+            );
+
+        const umbrellaScaleBox =
+            document.getElementById(
+                "umbrellaScaleBox"
+            );
+
+        const rainLayer =
+            document.getElementById(
+                "rainLayer"
+            );
+
+        const umbrellaCanopy =
+            document.getElementById(
+                "umbrellaCanopy"
+            );
+
+        const umbrellaOriginalWidth = 240;
+        const umbrellaOriginalHeight = 260;
+
+        const horizontalSpace = 24;
+        const verticalSpace = 24;
+
+        const rainInterval = 120;
+
+        function resizeUmbrella() {
+            const availableWidth =
+                Math.max(
+                    umbrellaScene.clientWidth -
+                        horizontalSpace,
+                    0
+                );
+
+            const availableHeight =
+                Math.max(
+                    umbrellaScene.clientHeight -
+                        verticalSpace,
+                    0
+                );
+
+            const widthScale =
+                availableWidth /
+                umbrellaOriginalWidth;
+
+            const heightScale =
+                availableHeight /
+                umbrellaOriginalHeight;
+
+            const scale =
+                Math.max(
+                    Math.min(
+                        widthScale,
+                        heightScale,
+                        1
+                    ),
+                    0
+                );
+
+            umbrellaScaleBox.style.transform =
+                `scale(${scale})`;
+        }
+
+        function getCanopyImpactY(
+            horizontalDistance,
+            canopyHalfWidth
+        ) {
+            const normalizedDistance =
+                Math.abs(
+                    horizontalDistance
+                ) /
+                canopyHalfWidth;
+
+            const limitedDistance =
+                Math.min(
+                    normalizedDistance,
+                    1
+                );
+
+            return (
+                8 +
+                Math.pow(
+                    limitedDistance,
+                    1.7
+                ) *
+                    82
+            );
+        }
+
+        function createRaindrop() {
+            const sceneRect =
+                umbrellaScene
+                    .getBoundingClientRect();
+
+            const canopyRect =
+                umbrellaCanopy
+                    .getBoundingClientRect();
+
+            if (
+                sceneRect.width <= 0 ||
+                sceneRect.height <= 0 ||
+                canopyRect.width <= 0 ||
+                canopyRect.height <= 0
+            ) {
+                return;
+            }
+
+            const canopyCenterX =
+                canopyRect.left -
+                sceneRect.left +
+                canopyRect.width / 2;
+
+            const canopyHalfWidth =
+                canopyRect.width / 2;
+
+            const horizontalDistance =
+                Math.random() *
+                    canopyRect.width -
+                canopyHalfWidth;
+
+            const impactX =
+                canopyCenterX +
+                horizontalDistance;
+
+            const canopyImpactOffsetY =
+                getCanopyImpactY(
+                    horizontalDistance,
+                    canopyHalfWidth
+                );
+
+            const impactY =
+                canopyRect.top -
+                sceneRect.top +
+                canopyImpactOffsetY;
+
+            const drop =
+                document.createElement(
+                    "div"
+                );
+
+            drop.className = "raindrop";
+
+            drop.style.left =
+                `${impactX}px`;
+
+            rainLayer.appendChild(drop);
+
+            const bounceDirection =
+                horizontalDistance < 0
+                    ? -1
+                    : 1;
+
+            const bounceDistance =
+                35 +
+                Math.random() *
+                    45;
+
+            const fallDistance =
+                impactY - 20;
+
+            const animationDuration =
+                900 +
+                Math.random() *
+                    350;
+
+            const animation =
+                drop.animate(
+                    [
+                        {
+                            transform:
+                                "translate(-50%, -30px)",
+                            width: "3px",
+                            height: "18px",
+                            borderRadius:
+                                "999px",
+                            opacity: 0,
+                            offset: 0
+                        },
+                        {
+                            transform:
+                                "translate(-50%, 0)",
+                            width: "3px",
+                            height: "18px",
+                            borderRadius:
+                                "999px",
+                            opacity: 0.85,
+                            offset: 0.08
+                        },
+                        {
+                            transform:
+                                `translate(
+                                    -50%,
+                                    ${fallDistance}px
+                                )`,
+                            width: "3px",
+                            height: "18px",
+                            borderRadius:
+                                "999px",
+                            opacity: 0.85,
+                            offset: 0.719
+                        },
+                        {
+                            transform:
+                                `translate(
+                                    -50%,
+                                    ${fallDistance}px
+                                )`,
+                            width: "7px",
+                            height: "7px",
+                            borderRadius:
+                                "50%",
+                            opacity: 0.9,
+                            offset: 0.72
+                        },
+                        {
+                            transform:
+                                `translate(
+                                    calc(
+                                        -50% +
+                                        ${
+                                            bounceDirection *
+                                            bounceDistance
+                                        }px
+                                    ),
+                                    ${
+                                        fallDistance +
+                                        24
+                                    }px
+                                )`,
+                            width: "7px",
+                            height: "7px",
+                            borderRadius:
+                                "50%",
+                            opacity: 0.8,
+                            offset: 0.84
+                        },
+                        {
+                            transform:
+                                `translate(
+                                    calc(
+                                        -50% +
+                                        ${
+                                            bounceDirection *
+                                            (
+                                                bounceDistance +
+                                                35
+                                            )
+                                        }px
+                                    ),
+                                    ${
+                                        fallDistance +
+                                        70
+                                    }px
+                                )`,
+                            width: "5px",
+                            height: "5px",
+                            borderRadius:
+                                "50%",
+                            opacity: 0,
+                            offset: 1
+                        }
+                    ],
+                    {
+                        duration:
+                            animationDuration,
+                        easing: "linear",
+                        fill: "forwards"
+                    }
+                );
+
+            animation.addEventListener(
+                "finish",
+                function () {
+                    drop.remove();
+                }
+            );
+        }
+
+        const umbrellaResizeObserver =
+            new ResizeObserver(
+                resizeUmbrella
+            );
+
+        umbrellaResizeObserver.observe(
+            umbrellaScene
+        );
+
+        resizeUmbrella();
+
+        setInterval(
+            createRaindrop,
+            rainInterval
+        );
+    </script>
+</body>
+</html>
