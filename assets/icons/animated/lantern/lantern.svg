@@ -1,0 +1,266 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 180 240"
+    role="img"
+    aria-labelledby="lanternTitle lanternDescription"
+>
+    <title id="lanternTitle">
+        등불
+    </title>
+
+    <desc id="lanternDescription">
+        은은하게 빛나는 파란색과 흰색의 등불
+    </desc>
+
+    <style>
+        :root {
+            --lantern-blue: #427eff;
+            --lantern-white: #ffffff;
+            --lantern-glass: #dce7ff;
+        }
+
+        .lantern-glow {
+            transform-origin: 90px 130px;
+            animation:
+                lanternGlowPulse
+                2.8s
+                ease-in-out
+                infinite;
+        }
+
+        .lantern-handle {
+            fill: none;
+            stroke: var(--lantern-white);
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .lantern-ring {
+            fill: var(--lantern-blue);
+            stroke: var(--lantern-white);
+            stroke-width: 6;
+        }
+
+        .lantern-top,
+        .lantern-bottom,
+        .lantern-foot {
+            fill: var(--lantern-blue);
+            stroke: var(--lantern-white);
+            stroke-width: 6;
+            stroke-linejoin: round;
+        }
+
+        .lantern-glass {
+            fill: url("#lanternGlass");
+            stroke: var(--lantern-white);
+            stroke-width: 4;
+            stroke-linejoin: round;
+        }
+
+        .lantern-flame-group {
+            transform-box: view-box;
+            transform-origin: 90px 145px;
+            animation:
+                lanternFlame
+                1.4s
+                ease-in-out
+                infinite;
+        }
+
+        .lantern-flame-outer {
+            fill: var(--lantern-blue);
+        }
+
+        .lantern-flame-inner {
+            fill: var(--lantern-white);
+        }
+
+        @keyframes lanternGlowPulse {
+            0%,
+            100% {
+                opacity: 0.55;
+                transform: scale(0.92);
+            }
+
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes lanternFlame {
+            0%,
+            100% {
+                transform: scaleX(0.95) scaleY(1);
+            }
+
+            50% {
+                transform: scaleX(1.08) scaleY(0.94);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .lantern-glow,
+            .lantern-flame-group {
+                animation: none;
+            }
+        }
+    </style>
+
+    <defs>
+        <radialGradient
+            id="lanternGlow"
+            cx="50%"
+            cy="50%"
+            r="50%"
+        >
+            <stop
+                offset="0%"
+                stop-color="var(--lantern-white)"
+                stop-opacity="0.95"
+            />
+
+            <stop
+                offset="55%"
+                stop-color="var(--lantern-white)"
+                stop-opacity="0.45"
+            />
+
+            <stop
+                offset="100%"
+                stop-color="var(--lantern-white)"
+                stop-opacity="0"
+            />
+        </radialGradient>
+
+        <linearGradient
+            id="lanternGlass"
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+        >
+            <stop
+                offset="0%"
+                stop-color="var(--lantern-white)"
+                stop-opacity="0.95"
+            />
+
+            <stop
+                offset="100%"
+                stop-color="var(--lantern-glass)"
+                stop-opacity="0.85"
+            />
+        </linearGradient>
+    </defs>
+
+    <!-- 주변 불빛 -->
+    <circle
+        class="lantern-glow"
+        cx="90"
+        cy="130"
+        r="72"
+        fill="url(#lanternGlow)"
+    />
+
+    <!-- 손잡이 -->
+    <path
+        class="lantern-handle"
+        d="
+            M 58 72
+            C 58 30, 122 30, 122 72
+        "
+    />
+
+    <!-- 손잡이 연결 고리 -->
+    <rect
+        class="lantern-ring"
+        x="80"
+        y="62"
+        width="20"
+        height="18"
+        rx="8"
+    />
+
+    <!-- 위쪽 뚜껑 -->
+    <path
+        class="lantern-top"
+        d="
+            M 58 78
+            L 122 78
+            L 132 98
+            L 48 98
+            Z
+        "
+    />
+
+    <!-- 유리 몸체 -->
+    <path
+        class="lantern-glass"
+        d="
+            M 58 99
+            L 122 99
+            L 115 176
+            L 65 176
+            Z
+        "
+    />
+
+    <!-- 불꽃 -->
+    <g class="lantern-flame-group">
+        <path
+            class="lantern-flame-outer"
+            d="
+                M 90 157
+                C 75 145, 79 128, 91 112
+                C 93 126, 107 135, 104 148
+                C 102 159, 95 165, 90 165
+                C 84 165, 78 160, 78 153
+                C 78 146, 82 141, 87 136
+                C 86 145, 88 151, 90 157
+                Z
+            "
+        />
+
+        <path
+            class="lantern-flame-inner"
+            transform="
+                translate(90 157)
+                scale(0.42)
+                translate(-90 -145)
+            "
+            d="
+                M 90 157
+                C 75 145, 79 128, 91 112
+                C 93 126, 107 135, 104 148
+                C 102 159, 95 165, 90 165
+                C 84 165, 78 160, 78 153
+                C 78 146, 82 141, 87 136
+                C 86 145, 88 151, 90 157
+                Z
+            "
+        />
+    </g>
+
+    <!-- 아래쪽 받침 -->
+    <path
+        class="lantern-bottom"
+        d="
+            M 62 176
+            L 118 176
+            L 130 194
+            L 50 194
+            Z
+        "
+    />
+
+    <!-- 아래 장식 -->
+    <rect
+        class="lantern-foot"
+        x="74"
+        y="194"
+        width="32"
+        height="12"
+        rx="5"
+    />
+</svg>
