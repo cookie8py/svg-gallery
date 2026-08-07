@@ -10,7 +10,14 @@ export const illustrations = [
         previewType: "placeholder",
         previewPath: "",
         svgPath: "",
-        htmlPath: ""
+        htmlPath: "",
+        editableColors: [
+            {
+                key: "--placeholder-color",
+                label: "일러스트",
+                defaultValue: "#64748B"
+            }
+        ]
     },
     {
         id: "illustration-placeholder-2",
@@ -23,7 +30,14 @@ export const illustrations = [
         previewType: "placeholder",
         previewPath: "",
         svgPath: "",
-        htmlPath: ""
+        htmlPath: "",
+        editableColors: [
+            {
+                key: "--placeholder-color",
+                label: "일러스트",
+                defaultValue: "#64748B"
+            }
+        ]
     },
     {
         id: "illustration-placeholder-3",
@@ -36,7 +50,14 @@ export const illustrations = [
         previewType: "placeholder",
         previewPath: "",
         svgPath: "",
-        htmlPath: ""
+        htmlPath: "",
+        editableColors: [
+            {
+                key: "--placeholder-color",
+                label: "일러스트",
+                defaultValue: "#64748B"
+            }
+        ]
     },
     {
         id: "illustration-placeholder-4",
@@ -49,7 +70,14 @@ export const illustrations = [
         previewType: "placeholder",
         previewPath: "",
         svgPath: "",
-        htmlPath: ""
+        htmlPath: "",
+        editableColors: [
+            {
+                key: "--placeholder-color",
+                label: "일러스트",
+                defaultValue: "#64748B"
+            }
+        ]
     },
     {
         id: "illustration-placeholder-5",
@@ -62,7 +90,14 @@ export const illustrations = [
         previewType: "placeholder",
         previewPath: "",
         svgPath: "",
-        htmlPath: ""
+        htmlPath: "",
+        editableColors: [
+            {
+                key: "--placeholder-color",
+                label: "일러스트",
+                defaultValue: "#64748B"
+            }
+        ]
     },
     {
         id: "illustration-placeholder-6",
@@ -75,6 +110,13 @@ export const illustrations = [
         previewType: "placeholder",
         previewPath: "",
         svgPath: "",
-        htmlPath: ""
+        htmlPath: "",
+        editableColors: [
+            {
+                key: "--placeholder-color",
+                label: "일러스트",
+                defaultValue: "#64748B"
+            }
+        ]
     }
 ];

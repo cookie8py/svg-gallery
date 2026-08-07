@@ -30,7 +30,10 @@ function createPreviewMedia(
 
     container.className = className;
 
-    if (item.previewType === "svg" && item.previewPath) {
+    if (
+        item.previewType === "svg" &&
+        item.previewPath
+    ) {
         const image = document.createElement("img");
 
         image.src = item.previewPath;
@@ -71,8 +74,65 @@ function isValidHexColor(value) {
     return HEX_COLOR_PATTERN.test(value);
 }
 
+function getFileName(
+    filePath,
+    fallbackName
+) {
+    if (!filePath) {
+        return fallbackName;
+    }
+
+    const pathWithoutQuery =
+        filePath.split("?")[0];
+
+    const fileName =
+        pathWithoutQuery
+            .split("/")
+            .filter(Boolean)
+            .pop();
+
+    return fileName || fallbackName;
+}
+
+function downloadBlob(
+    content,
+    mimeType,
+    fileName
+) {
+    const blob = new Blob(
+        [content],
+        {
+            type: mimeType
+        }
+    );
+
+    const objectUrl =
+        URL.createObjectURL(blob);
+
+    const temporaryLink =
+        document.createElement("a");
+
+    temporaryLink.href = objectUrl;
+    temporaryLink.download = fileName;
+    temporaryLink.hidden = true;
+
+    document.body.append(temporaryLink);
+
+    temporaryLink.click();
+    temporaryLink.remove();
+
+    window.setTimeout(
+        function () {
+            URL.revokeObjectURL(objectUrl);
+        },
+        1000
+    );
+}
+
 function createGallery(definition) {
-    const root = document.querySelector(definition.selector);
+    const root = document.querySelector(
+        definition.selector
+    );
 
     if (!root) {
         return null;
@@ -162,17 +222,20 @@ function createGallery(definition) {
         "[data-preview-background-toggle]"
     );
 
-    const backgroundColorField = root.querySelector(
-        "[data-preview-background-color-field]"
-    );
+    const backgroundColorField =
+        root.querySelector(
+            "[data-preview-background-color-field]"
+        );
 
     const backgroundColor = root.querySelector(
         "[data-preview-background-color]"
     );
 
-    const pagination = document.createElement("nav");
+    const pagination =
+        document.createElement("nav");
 
-    pagination.className = "gallery-pagination";
+    pagination.className =
+        "gallery-pagination";
 
     pagination.setAttribute(
         "aria-label",
@@ -188,6 +251,7 @@ function createGallery(definition) {
     let selectedItem = null;
     let currentPage = 1;
     let previewRenderId = 0;
+    let isDownloading = false;
 
     const currentColors = new Map();
 
@@ -240,16 +304,27 @@ function createGallery(definition) {
         );
     }
 
+    function getCurrentColorsObject() {
+        return Object.fromEntries(
+            currentColors
+        );
+    }
+
     function sendBackgroundToFrame(frame) {
-        if (!frame || !hasBackgroundControls()) {
+        if (
+            !frame ||
+            !hasBackgroundControls()
+        ) {
             return;
         }
 
         frame.contentWindow?.postMessage(
             {
                 type: "svg-gallery-background",
-                visible: backgroundToggle.checked,
-                color: backgroundColor.value
+                visible:
+                    backgroundToggle.checked,
+                color:
+                    backgroundColor.value
             },
             "*"
         );
@@ -266,13 +341,16 @@ function createGallery(definition) {
         backgroundColorField.hidden =
             !isBackgroundVisible;
 
-        previewPlaceholder.style.backgroundColor =
-            isBackgroundVisible
-                ? backgroundColor.value
-                : "";
+        previewPlaceholder.style
+            .backgroundColor =
+                isBackgroundVisible
+                    ? backgroundColor.value
+                    : "";
 
         const frame =
-            previewPlaceholder.querySelector("iframe");
+            previewPlaceholder.querySelector(
+                "iframe"
+            );
 
         if (frame) {
             frame.style.backgroundColor =
@@ -292,19 +370,25 @@ function createGallery(definition) {
         backgroundToggle.checked = false;
         backgroundColorField.hidden = true;
 
-        previewPlaceholder.style.backgroundColor = "";
+        previewPlaceholder.style
+            .backgroundColor = "";
 
         const frame =
-            previewPlaceholder.querySelector("iframe");
+            previewPlaceholder.querySelector(
+                "iframe"
+            );
 
         if (frame) {
-            frame.style.backgroundColor = "transparent";
+            frame.style.backgroundColor =
+                "transparent";
 
             sendBackgroundToFrame(frame);
         }
     }
 
-    function setAccessibility(isPreviewOpen) {
+    function setAccessibility(
+        isPreviewOpen
+    ) {
         listView.setAttribute(
             "aria-hidden",
             String(isPreviewOpen)
@@ -316,17 +400,32 @@ function createGallery(definition) {
         );
 
         if (isPreviewOpen) {
-            listView.setAttribute("inert", "");
-            previewView.removeAttribute("inert");
+            listView.setAttribute(
+                "inert",
+                ""
+            );
+
+            previewView.removeAttribute(
+                "inert"
+            );
 
             return;
         }
 
-        previewView.setAttribute("inert", "");
-        listView.removeAttribute("inert");
+        previewView.setAttribute(
+            "inert",
+            ""
+        );
+
+        listView.removeAttribute(
+            "inert"
+        );
     }
 
-    function updateDownloadLink(link, filePath) {
+    function updateDownloadLink(
+        link,
+        filePath
+    ) {
         if (!link) {
             return;
         }
@@ -361,12 +460,221 @@ function createGallery(definition) {
         }
     }
 
+    function createSvgDownloadContent(
+        sourceText
+    ) {
+        const parser = new DOMParser();
+
+        const svgDocument =
+            parser.parseFromString(
+                sourceText,
+                "image/svg+xml"
+            );
+
+        const parserError =
+            svgDocument.querySelector(
+                "parsererror"
+            );
+
+        if (parserError) {
+            throw new Error(
+                "SVG 파일을 해석하지 못했습니다."
+            );
+        }
+
+        const svgElement =
+            svgDocument.documentElement;
+
+        currentColors.forEach(
+            function (
+                colorValue,
+                colorKey
+            ) {
+                svgElement.style.setProperty(
+                    colorKey,
+                    colorValue
+                );
+            }
+        );
+
+        const serializer =
+            new XMLSerializer();
+
+        return serializer.serializeToString(
+            svgDocument
+        );
+    }
+
+    function createHtmlDownloadContent(
+        sourceText
+    ) {
+        const parser = new DOMParser();
+
+        const htmlDocument =
+            parser.parseFromString(
+                sourceText,
+                "text/html"
+            );
+
+        const colorStyle =
+            htmlDocument.createElement(
+                "style"
+            );
+
+        colorStyle.setAttribute(
+            "data-svg-gallery-colors",
+            ""
+        );
+
+        const colorDeclarations = [];
+
+        currentColors.forEach(
+            function (
+                colorValue,
+                colorKey
+            ) {
+                colorDeclarations.push(
+                    `    ${colorKey}: ${colorValue};`
+                );
+            }
+        );
+
+        colorStyle.textContent = [
+            ":root {",
+            ...colorDeclarations,
+            "}"
+        ].join("\n");
+
+        htmlDocument.head.append(
+            colorStyle
+        );
+
+        return [
+            "<!DOCTYPE html>",
+            htmlDocument.documentElement
+                .outerHTML
+        ].join("\n");
+    }
+
+    async function downloadEditedFile(
+        filePath,
+        fileType
+    ) {
+        if (
+            !selectedItem ||
+            !filePath ||
+            isDownloading
+        ) {
+            return;
+        }
+
+        isDownloading = true;
+
+        try {
+            const response = await fetch(
+                filePath
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `파일 요청 실패: ${response.status}`
+                );
+            }
+
+            const sourceText =
+                await response.text();
+
+            if (fileType === "svg") {
+                const svgContent =
+                    createSvgDownloadContent(
+                        sourceText
+                    );
+
+                downloadBlob(
+                    svgContent,
+                    "image/svg+xml;charset=utf-8",
+                    getFileName(
+                        filePath,
+                        `${selectedItem.id}.svg`
+                    )
+                );
+
+                return;
+            }
+
+            if (fileType === "html") {
+                const htmlContent =
+                    createHtmlDownloadContent(
+                        sourceText
+                    );
+
+                downloadBlob(
+                    htmlContent,
+                    "text/html;charset=utf-8",
+                    getFileName(
+                        filePath,
+                        `${selectedItem.id}.html`
+                    )
+                );
+            }
+        } catch (error) {
+            console.error(
+                "색상을 적용한 파일을 다운로드하지 못했습니다.",
+                error
+            );
+
+            window.alert(
+                "파일을 다운로드하지 못했습니다. 잠시 후 다시 시도해 주세요."
+            );
+        } finally {
+            isDownloading = false;
+        }
+    }
+
+    function handleDownload(
+        event,
+        fileType
+    ) {
+        if (!selectedItem) {
+            event.preventDefault();
+
+            return;
+        }
+
+        const filePath =
+            fileType === "svg"
+                ? selectedItem.svgPath
+                : selectedItem.htmlPath;
+
+        if (!filePath) {
+            event.preventDefault();
+
+            return;
+        }
+
+        if (
+            !hasEditableColors(
+                selectedItem
+            )
+        ) {
+            return;
+        }
+
+        event.preventDefault();
+
+        downloadEditedFile(
+            filePath,
+            fileType
+        );
+    }
+
     function closeColorPopover() {
         if (!hasColorEditor()) {
             return false;
         }
 
-        const wasOpen = !colorPopover.hidden;
+        const wasOpen =
+            !colorPopover.hidden;
 
         colorPopover.hidden = true;
 
@@ -393,9 +701,10 @@ function createGallery(definition) {
             "true"
         );
 
-        const firstInput = colorFields.querySelector(
-            ".detail-color-picker"
-        );
+        const firstInput =
+            colorFields.querySelector(
+                ".detail-color-picker"
+            );
 
         if (firstInput) {
             firstInput.focus();
@@ -416,27 +725,29 @@ function createGallery(definition) {
         closeColorPopover();
     }
 
-    function applyColorsToSvg(svgElement) {
-        currentColors.forEach(function (
-            colorValue,
-            colorKey
-        ) {
-            svgElement.style.setProperty(
-                colorKey,
-                colorValue
-            );
-        });
+    function applyColorsToSvg(
+        svgElement
+    ) {
+        currentColors.forEach(
+            function (
+                colorValue,
+                colorKey
+            ) {
+                svgElement.style.setProperty(
+                    colorKey,
+                    colorValue
+                );
+            }
+        );
     }
 
     function applyColorsToFrame(frame) {
-        const colors = Object.fromEntries(
-            currentColors
-        );
-
         frame.contentWindow?.postMessage(
             {
-                type: "svg-gallery-colors",
-                colors
+                type:
+                    "svg-gallery-colors",
+                colors:
+                    getCurrentColorsObject()
             },
             "*"
         );
@@ -449,16 +760,20 @@ function createGallery(definition) {
                 return;
             }
 
-            currentColors.forEach(function (
-                colorValue,
-                colorKey
-            ) {
-                frameDocument.documentElement.style
-                    .setProperty(
-                        colorKey,
-                        colorValue
-                    );
-            });
+            currentColors.forEach(
+                function (
+                    colorValue,
+                    colorKey
+                ) {
+                    frameDocument
+                        .documentElement
+                        .style
+                        .setProperty(
+                            colorKey,
+                            colorValue
+                        );
+                }
+            );
         } catch (error) {
             console.warn(
                 "미리보기 문서에 색상을 적용할 수 없습니다.",
@@ -469,23 +784,28 @@ function createGallery(definition) {
 
     function applyCurrentColors() {
         const svgElement =
-            previewPlaceholder.querySelector("svg");
+            previewPlaceholder
+                .querySelector("svg");
 
         if (svgElement) {
-            applyColorsToSvg(svgElement);
+            applyColorsToSvg(
+                svgElement
+            );
         }
 
         const frame =
-            previewPlaceholder.querySelector("iframe");
+            previewPlaceholder
+                .querySelector("iframe");
 
         if (frame) {
             applyColorsToFrame(frame);
         }
 
         const placeholder =
-            previewPlaceholder.querySelector(
-                ".preview-message--placeholder"
-            );
+            previewPlaceholder
+                .querySelector(
+                    ".preview-message--placeholder"
+                );
 
         if (placeholder) {
             const placeholderColor =
@@ -507,7 +827,9 @@ function createGallery(definition) {
     ) {
         currentColors.set(
             colorKey,
-            normalizeHexColor(colorValue)
+            normalizeHexColor(
+                colorValue
+            )
         );
 
         applyCurrentColors();
@@ -517,13 +839,18 @@ function createGallery(definition) {
         colorDefinition,
         index
     ) {
-        const field = document.createElement("div");
+        const field =
+            document.createElement("div");
 
-        field.className = "detail-color-field";
+        field.className =
+            "detail-color-field";
 
-        const label = document.createElement("label");
+        const label =
+            document.createElement("label");
 
-        label.className = "detail-color-label";
+        label.className =
+            "detail-color-label";
+
         label.htmlFor =
             `${definition.kind}-color-value-${index}`;
 
@@ -534,18 +861,24 @@ function createGallery(definition) {
         const controls =
             document.createElement("div");
 
-        controls.className = "detail-color-controls";
+        controls.className =
+            "detail-color-controls";
 
         const picker =
             document.createElement("input");
 
-        picker.className = "detail-color-picker";
+        picker.className =
+            "detail-color-picker";
+
         picker.type = "color";
+
         picker.id =
             `${definition.kind}-color-picker-${index}`;
 
         picker.value =
-            colorDefinition.defaultValue.toLowerCase();
+            colorDefinition
+                .defaultValue
+                .toLowerCase();
 
         picker.setAttribute(
             "aria-label",
@@ -555,14 +888,19 @@ function createGallery(definition) {
         const valueInput =
             document.createElement("input");
 
-        valueInput.className = "detail-color-value";
+        valueInput.className =
+            "detail-color-value";
+
         valueInput.type = "text";
+
         valueInput.id =
             `${definition.kind}-color-value-${index}`;
 
-        valueInput.value = normalizeHexColor(
-            colorDefinition.defaultValue
-        );
+        valueInput.value =
+            normalizeHexColor(
+                colorDefinition
+                    .defaultValue
+            );
 
         valueInput.maxLength = 7;
         valueInput.spellcheck = false;
@@ -574,9 +912,12 @@ function createGallery(definition) {
             "input",
             function () {
                 const newValue =
-                    normalizeHexColor(picker.value);
+                    normalizeHexColor(
+                        picker.value
+                    );
 
-                valueInput.value = newValue;
+                valueInput.value =
+                    newValue;
 
                 valueInput.setAttribute(
                     "aria-invalid",
@@ -598,10 +939,13 @@ function createGallery(definition) {
                         valueInput.value
                     );
 
-                valueInput.value = newValue;
+                valueInput.value =
+                    newValue;
 
                 const isValid =
-                    isValidHexColor(newValue);
+                    isValidHexColor(
+                        newValue
+                    );
 
                 valueInput.setAttribute(
                     "aria-invalid",
@@ -613,7 +957,8 @@ function createGallery(definition) {
                 }
 
                 picker.value =
-                    newValue.toLowerCase();
+                    newValue
+                        .toLowerCase();
 
                 setColorValue(
                     colorDefinition.key,
@@ -640,7 +985,8 @@ function createGallery(definition) {
 
                 valueInput.value =
                     currentValue ||
-                    colorDefinition.defaultValue;
+                    colorDefinition
+                        .defaultValue;
 
                 valueInput.setAttribute(
                     "aria-invalid",
@@ -662,14 +1008,19 @@ function createGallery(definition) {
         return field;
     }
 
-    function initializeColorValues(item) {
+    function initializeColorValues(
+        item
+    ) {
         currentColors.clear();
 
         getEditableColors(item).forEach(
-            function (colorDefinition) {
+            function (
+                colorDefinition
+            ) {
                 const defaultValue =
                     normalizeHexColor(
-                        colorDefinition.defaultValue
+                        colorDefinition
+                            .defaultValue
                     );
 
                 currentColors.set(
@@ -688,13 +1039,19 @@ function createGallery(definition) {
         colorFields.replaceChildren();
 
         getEditableColors(item).forEach(
-            function (colorDefinition, index) {
-                const field = createColorField(
-                    colorDefinition,
-                    index
-                );
+            function (
+                colorDefinition,
+                index
+            ) {
+                const field =
+                    createColorField(
+                        colorDefinition,
+                        index
+                    );
 
-                colorFields.append(field);
+                colorFields.append(
+                    field
+                );
             }
         );
     }
@@ -708,7 +1065,9 @@ function createGallery(definition) {
         colorFields.replaceChildren();
         currentColors.clear();
 
-        if (!hasEditableColors(item)) {
+        if (
+            !hasEditableColors(item)
+        ) {
             colorEditor.hidden = true;
 
             return;
@@ -723,28 +1082,42 @@ function createGallery(definition) {
     function resetColors() {
         if (
             !selectedItem ||
-            !hasEditableColors(selectedItem)
+            !hasEditableColors(
+                selectedItem
+            )
         ) {
             return;
         }
 
-        initializeColorValues(selectedItem);
-        renderColorFields(selectedItem);
+        initializeColorValues(
+            selectedItem
+        );
+
+        renderColorFields(
+            selectedItem
+        );
+
         applyCurrentColors();
     }
 
-    function createPreviewMessage(text) {
-        const message = document.createElement("p");
+    function createPreviewMessage(
+        text
+    ) {
+        const message =
+            document.createElement("p");
 
         message.textContent = text;
 
         return message;
     }
 
-    function createPlaceholderPreview(item) {
-        const message = createPreviewMessage(
-            `${item.title} ${definition.placeholderText}`
-        );
+    function createPlaceholderPreview(
+        item
+    ) {
+        const message =
+            createPreviewMessage(
+                `${item.title} ${definition.placeholderText}`
+            );
 
         message.className =
             "preview-message--placeholder";
@@ -756,11 +1129,12 @@ function createGallery(definition) {
         item,
         currentRenderId
     ) {
-        previewPlaceholder.replaceChildren(
-            createPreviewMessage(
-                `${item.title} 미리보기를 불러오는 중입니다.`
-            )
-        );
+        previewPlaceholder
+            .replaceChildren(
+                createPreviewMessage(
+                    `${item.title} 미리보기를 불러오는 중입니다.`
+                )
+            );
 
         try {
             const response = await fetch(
@@ -773,15 +1147,18 @@ function createGallery(definition) {
                 );
             }
 
-            const svgText = await response.text();
+            const svgText =
+                await response.text();
 
             if (
-                currentRenderId !== previewRenderId
+                currentRenderId !==
+                previewRenderId
             ) {
                 return;
             }
 
-            const parser = new DOMParser();
+            const parser =
+                new DOMParser();
 
             const svgDocument =
                 parser.parseFromString(
@@ -801,14 +1178,25 @@ function createGallery(definition) {
             }
 
             const svgElement =
-                svgDocument.documentElement;
+                svgDocument
+                    .documentElement;
 
-            svgElement.removeAttribute("width");
-            svgElement.removeAttribute("height");
+            svgElement.removeAttribute(
+                "width"
+            );
 
-            svgElement.style.width = "100%";
-            svgElement.style.height = "100%";
-            svgElement.style.display = "block";
+            svgElement.removeAttribute(
+                "height"
+            );
+
+            svgElement.style.width =
+                "100%";
+
+            svgElement.style.height =
+                "100%";
+
+            svgElement.style.display =
+                "block";
 
             svgElement.setAttribute(
                 "role",
@@ -820,14 +1208,20 @@ function createGallery(definition) {
                 `${item.title} 미리보기`
             );
 
-            applyColorsToSvg(svgElement);
-
-            previewPlaceholder.replaceChildren(
+            applyColorsToSvg(
                 svgElement
             );
+
+            previewPlaceholder
+                .replaceChildren(
+                    svgElement
+                );
+
+            updatePreviewBackground();
         } catch (error) {
             if (
-                currentRenderId !== previewRenderId
+                currentRenderId !==
+                previewRenderId
             ) {
                 return;
             }
@@ -838,20 +1232,30 @@ function createGallery(definition) {
             );
 
             const image =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
 
-            image.src = item.previewPath;
-            image.alt = `${item.title} 미리보기`;
+            image.src =
+                item.previewPath;
 
-            previewPlaceholder.replaceChildren(
-                image
-            );
+            image.alt =
+                `${item.title} 미리보기`;
+
+            previewPlaceholder
+                .replaceChildren(
+                    image
+                );
+
+            updatePreviewBackground();
         }
     }
 
     function renderHtmlPreview(item) {
         const frame =
-            document.createElement("iframe");
+            document.createElement(
+                "iframe"
+            );
 
         frame.src = item.previewPath;
 
@@ -865,25 +1269,32 @@ function createGallery(definition) {
             function () {
                 if (
                     !selectedItem ||
-                    selectedItem.id !== item.id
+                    selectedItem.id !==
+                        item.id
                 ) {
                     return;
                 }
 
-                applyColorsToFrame(frame);
+                applyColorsToFrame(
+                    frame
+                );
+
                 updatePreviewBackground();
             }
         );
 
-        previewPlaceholder.replaceChildren(frame);
+        previewPlaceholder
+            .replaceChildren(frame);
     }
 
     function renderLargePreview(item) {
         previewRenderId += 1;
 
-        const currentRenderId = previewRenderId;
+        const currentRenderId =
+            previewRenderId;
 
-        previewPlaceholder.replaceChildren();
+        previewPlaceholder
+            .replaceChildren();
 
         if (
             item.previewType === "svg" &&
@@ -907,10 +1318,13 @@ function createGallery(definition) {
         }
 
         previewPlaceholder.append(
-            createPlaceholderPreview(item)
+            createPlaceholderPreview(
+                item
+            )
         );
 
         applyCurrentColors();
+        updatePreviewBackground();
     }
 
     function openPreview(item) {
@@ -918,7 +1332,8 @@ function createGallery(definition) {
         selectedItem = item;
 
         previewTitle.textContent =
-            item.title || "선택 작품";
+            item.title ||
+            "선택 작품";
 
         previewDescription.textContent =
             item.description ||
@@ -934,7 +1349,9 @@ function createGallery(definition) {
         updateDownloadArea(item);
         setAccessibility(true);
 
-        track.classList.add("is-preview-open");
+        track.classList.add(
+            "is-preview-open"
+        );
 
         window.setTimeout(
             function () {
@@ -954,7 +1371,9 @@ function createGallery(definition) {
 
         if (hasColorEditor()) {
             colorEditor.hidden = true;
-            colorFields.replaceChildren();
+
+            colorFields
+                .replaceChildren();
         }
 
         setAccessibility(false);
@@ -986,47 +1405,66 @@ function createGallery(definition) {
 
     function createItemButton(item) {
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
         button.className =
             `artwork-item artwork-item--${definition.kind}`;
 
         button.type = "button";
-        button.dataset.artworkId = item.id;
 
-        const cardPreview = createPreviewMedia(
-            item,
-            `artwork-placeholder artwork-placeholder--${definition.kind}`,
-            definition.placeholderText
-        );
+        button.dataset.artworkId =
+            item.id;
+
+        const cardPreview =
+            createPreviewMedia(
+                item,
+                `artwork-placeholder artwork-placeholder--${definition.kind}`,
+                definition.placeholderText
+            );
 
         const title =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
-        title.className = "artwork-title";
-        title.textContent = item.title;
+        title.className =
+            "artwork-title";
+
+        title.textContent =
+            item.title;
 
         button.append(
             cardPreview,
             title
         );
 
-        if (item.motion === "animated") {
+        if (
+            item.motion === "animated"
+        ) {
             const motionBadge =
-                document.createElement("span");
+                document.createElement(
+                    "span"
+                );
 
             motionBadge.className =
                 "artwork-motion-badge";
 
-            motionBadge.textContent = "▶";
-            motionBadge.title = "애니메이션 있음";
+            motionBadge.textContent =
+                "▶";
+
+            motionBadge.title =
+                "애니메이션 있음";
 
             motionBadge.setAttribute(
                 "aria-label",
                 "애니메이션이 있는 동적 SVG"
             );
 
-            button.append(motionBadge);
+            button.append(
+                motionBadge
+            );
         }
 
         button.addEventListener(
@@ -1046,9 +1484,13 @@ function createGallery(definition) {
         current = false
     ) {
         const button =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
-        button.className = "pagination-button";
+        button.className =
+            "pagination-button";
+
         button.type = "button";
         button.textContent = label;
         button.disabled = disabled;
@@ -1075,12 +1517,14 @@ function createGallery(definition) {
             function () {
                 if (
                     disabled ||
-                    currentPage === pageNumber
+                    currentPage ===
+                        pageNumber
                 ) {
                     return;
                 }
 
-                currentPage = pageNumber;
+                currentPage =
+                    pageNumber;
 
                 renderList();
 
@@ -1094,7 +1538,9 @@ function createGallery(definition) {
         return button;
     }
 
-    function renderPagination(totalItemCount) {
+    function renderPagination(
+        totalItemCount
+    ) {
         pagination.replaceChildren();
 
         const totalPages = Math.ceil(
@@ -1117,7 +1563,9 @@ function createGallery(definition) {
                 currentPage === 1
             );
 
-        pagination.append(previousButton);
+        pagination.append(
+            previousButton
+        );
 
         for (
             let pageNumber = 1;
@@ -1129,20 +1577,26 @@ function createGallery(definition) {
                     String(pageNumber),
                     pageNumber,
                     false,
-                    pageNumber === currentPage
+                    pageNumber ===
+                        currentPage
                 );
 
-            pagination.append(pageButton);
+            pagination.append(
+                pageButton
+            );
         }
 
         const nextButton =
             createPaginationButton(
                 "다음",
                 currentPage + 1,
-                currentPage === totalPages
+                currentPage ===
+                    totalPages
             );
 
-        pagination.append(nextButton);
+        pagination.append(
+            nextButton
+        );
     }
 
     function getFilteredItems() {
@@ -1159,46 +1613,60 @@ function createGallery(definition) {
 
         return definition.items.filter(
             function (item) {
-                const title = item.title || "";
+                const title =
+                    item.title || "";
 
                 const matchesSearch =
                     title
                         .toLowerCase()
-                        .includes(searchWord);
+                        .includes(
+                            searchWord
+                        );
 
                 const matchesCategory =
-                    selectedCategory === "all" ||
+                    selectedCategory ===
+                        "all" ||
                     item.category ===
                         selectedCategory;
 
-                let matchesFeature = false;
+                let matchesFeature =
+                    false;
 
-                if (selectedFeature === "all") {
+                if (
+                    selectedFeature ===
+                    "all"
+                ) {
                     matchesFeature = true;
                 } else if (
-                    selectedFeature === "static" ||
-                    selectedFeature === "animated"
+                    selectedFeature ===
+                        "static" ||
+                    selectedFeature ===
+                        "animated"
                 ) {
                     matchesFeature =
                         item.motion ===
                         selectedFeature;
                 } else if (
-                    selectedFeature === "mono"
+                    selectedFeature ===
+                    "mono"
                 ) {
                     matchesFeature =
-                        item.colorCount === 1;
+                        item.colorCount ===
+                        1;
                 } else if (
                     selectedFeature ===
                     "two-colors"
                 ) {
                     matchesFeature =
-                        item.colorCount === 2;
+                        item.colorCount ===
+                        2;
                 } else if (
                     selectedFeature ===
                     "three-plus-colors"
                 ) {
                     matchesFeature =
-                        item.colorCount >= 3;
+                        item.colorCount >=
+                        3;
                 }
 
                 return (
@@ -1222,7 +1690,9 @@ function createGallery(definition) {
             )
         );
 
-        if (currentPage > totalPages) {
+        if (
+            currentPage > totalPages
+        ) {
             currentPage = totalPages;
         }
 
@@ -1245,14 +1715,20 @@ function createGallery(definition) {
         visibleItems.forEach(
             function (item) {
                 list.append(
-                    createItemButton(item)
+                    createItemButton(
+                        item
+                    )
                 );
             }
         );
 
-        if (filteredItems.length === 0) {
+        if (
+            filteredItems.length === 0
+        ) {
             const emptyMessage =
-                document.createElement("p");
+                document.createElement(
+                    "p"
+                );
 
             emptyMessage.className =
                 "empty-message";
@@ -1260,7 +1736,9 @@ function createGallery(definition) {
             emptyMessage.textContent =
                 "조건에 맞는 작품이 없습니다.";
 
-            list.append(emptyMessage);
+            list.append(
+                emptyMessage
+            );
         }
 
         renderPagination(
@@ -1315,6 +1793,30 @@ function createGallery(definition) {
         );
     }
 
+    if (svgDownload) {
+        svgDownload.addEventListener(
+            "click",
+            function (event) {
+                handleDownload(
+                    event,
+                    "svg"
+                );
+            }
+        );
+    }
+
+    if (htmlDownload) {
+        htmlDownload.addEventListener(
+            "click",
+            function (event) {
+                handleDownload(
+                    event,
+                    "html"
+                );
+            }
+        );
+    }
+
     document.addEventListener(
         "click",
         function (event) {
@@ -1366,24 +1868,29 @@ function createGallery(definition) {
 
         closeColorPopover,
 
-        isPreviewOpen: function () {
-            return track.classList.contains(
-                "is-preview-open"
-            );
-        },
+        isPreviewOpen:
+            function () {
+                return track
+                    .classList
+                    .contains(
+                        "is-preview-open"
+                    );
+            },
 
-        isColorPopoverOpen: function () {
-            return Boolean(
-                hasColorEditor() &&
-                !colorPopover.hidden
-            );
-        }
+        isColorPopoverOpen:
+            function () {
+                return Boolean(
+                    hasColorEditor() &&
+                    !colorPopover.hidden
+                );
+            }
     };
 }
 
-const galleries = galleryDefinitions
-    .map(createGallery)
-    .filter(Boolean);
+const galleries =
+    galleryDefinitions
+        .map(createGallery)
+        .filter(Boolean);
 
 document.addEventListener(
     "keydown",
@@ -1400,7 +1907,9 @@ document.addEventListener(
                 }
             );
 
-        if (galleryWithOpenColorPopover) {
+        if (
+            galleryWithOpenColorPopover
+        ) {
             galleryWithOpenColorPopover
                 .closeColorPopover();
 
@@ -1409,8 +1918,12 @@ document.addEventListener(
 
         galleries.forEach(
             function (gallery) {
-                if (gallery.isPreviewOpen()) {
-                    gallery.closePreview();
+                if (
+                    gallery
+                        .isPreviewOpen()
+                ) {
+                    gallery
+                        .closePreview();
                 }
             }
         );
