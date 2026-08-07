@@ -6,7 +6,12 @@
 
 .site-name {
     margin: 0;
-    font-weight: 700;
+    color: #334155;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    text-align: center;
 }
 
 /* 히어로 */
@@ -613,6 +618,15 @@
 /* 모바일 컴포넌트 */
 
 @media (max-width: 767px) {
+    .site-name {
+        font-size: 14px;
+        line-height: 1.35;
+    }
+
+    .site-name span {
+        display: block;
+    }
+
     .artwork-placeholder--icon {
         width: min(100%, 104px);
     }
