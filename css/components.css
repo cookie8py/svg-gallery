@@ -114,7 +114,7 @@
 }
 
 .artwork-item--icon {
-    padding: 12px;
+    padding: 8px;
 }
 
 .artwork-item:hover,
@@ -138,8 +138,6 @@
     min-height: 150px;
     aspect-ratio: 16 / 9;
 }
-
-/* 아이콘 카드 안의 실제 섬네일 크기 */
 
 .artwork-placeholder--icon {
     width: min(100%, 120px);
@@ -284,13 +282,22 @@
 .preview-placeholder iframe {
     width: 100%;
     min-height: 420px;
-    background-color: var(--background-color);
+    background-color: transparent;
     border: 0;
 }
 
 .preview-placeholder--icon iframe {
     height: 100%;
     min-height: 0;
+}
+
+.preview-message--placeholder {
+    margin: 0;
+    padding: 24px;
+    line-height: 1.5;
+    text-align: center;
+    white-space: pre-line;
+    border: 2px dashed currentColor;
 }
 
 /* 상세 미리보기 컨트롤 */

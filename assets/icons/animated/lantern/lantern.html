@@ -30,6 +30,7 @@
 
         body {
             margin: 0;
+            background-color: transparent;
         }
 
         .lantern-group {
@@ -91,10 +92,6 @@
             stroke-linejoin: round;
         }
 
-        /*
-            안쪽 불꽃과 바깥 불꽃을 포함하는
-            이 그룹 하나만 움직입니다.
-        */
         .lantern-flame-group {
             transform-box: view-box;
             transform-origin: 90px 145px;
@@ -144,6 +141,51 @@
             }
         }
     </style>
+
+    <script>
+        window.addEventListener(
+            "message",
+            function (event) {
+                const data = event.data;
+
+                if (
+                    !data ||
+                    typeof data !== "object"
+                ) {
+                    return;
+                }
+
+                if (
+                    data.type ===
+                        "svg-gallery-colors" &&
+                    data.colors
+                ) {
+                    Object.entries(
+                        data.colors
+                    ).forEach(
+                        function ([key, value]) {
+                            document.documentElement
+                                .style.setProperty(
+                                    key,
+                                    value
+                                );
+                        }
+                    );
+                }
+
+                if (
+                    data.type ===
+                    "svg-gallery-background"
+                ) {
+                    document.body.style
+                        .backgroundColor =
+                            data.visible
+                                ? data.color
+                                : "transparent";
+                }
+            }
+        );
+    </script>
 </head>
 
 <body>
@@ -210,7 +252,6 @@
                     </linearGradient>
                 </defs>
 
-                <!-- 주변 불빛 -->
                 <circle
                     class="lantern-glow"
                     cx="90"
@@ -219,7 +260,6 @@
                     fill="url(#lanternGlow)"
                 />
 
-                <!-- 손잡이 -->
                 <path
                     class="lantern-handle"
                     d="
@@ -228,7 +268,6 @@
                     "
                 />
 
-                <!-- 손잡이 연결 고리 -->
                 <rect
                     class="lantern-ring"
                     x="80"
@@ -238,7 +277,6 @@
                     rx="8"
                 />
 
-                <!-- 위쪽 뚜껑 -->
                 <path
                     class="lantern-top"
                     d="
@@ -250,7 +288,6 @@
                     "
                 />
 
-                <!-- 유리 몸체 -->
                 <path
                     class="lantern-glass"
                     d="
@@ -262,9 +299,7 @@
                     "
                 />
 
-                <!-- 안쪽과 바깥쪽 불꽃이 함께 움직이는 단일 그룹 -->
                 <g class="lantern-flame-group">
-                    <!-- 바깥쪽 파란 불꽃 -->
                     <path
                         class="lantern-flame-outer"
                         d="
@@ -279,7 +314,6 @@
                         "
                     />
 
-                    <!-- 안쪽의 같은 모양 흰 불꽃 -->
                     <path
                         class="lantern-flame-inner"
                         transform="
@@ -300,7 +334,6 @@
                     />
                 </g>
 
-                <!-- 아래쪽 받침 -->
                 <path
                     class="lantern-bottom"
                     d="
@@ -312,7 +345,6 @@
                     "
                 />
 
-                <!-- 아래 장식 -->
                 <rect
                     class="lantern-foot"
                     x="74"

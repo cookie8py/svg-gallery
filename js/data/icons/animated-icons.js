@@ -10,7 +10,8 @@ export const animatedIcons = [
         previewType: "html",
         previewPath:
             "./assets/icons/animated/lantern/lantern.html",
-        thumbnailPath: "",
+        thumbnailPath:
+            "./assets/icons/animated/lantern/lantern.svg",
         svgPath:
             "./assets/icons/animated/lantern/lantern.svg",
         htmlPath:

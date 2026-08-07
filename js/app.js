@@ -42,18 +42,20 @@ function createPreviewMedia(
         return container;
     }
 
-    if (item.previewType === "html" && item.previewPath) {
+    if (
+        item.previewType === "html" &&
+        item.previewPath &&
+        item.thumbnailPath
+    ) {
         const image = document.createElement("img");
 
-        if (item.thumbnailPath) {
-            image.src = item.thumbnailPath;
-            image.alt = "";
-            image.loading = "lazy";
+        image.src = item.thumbnailPath;
+        image.alt = "";
+        image.loading = "lazy";
 
-            container.append(image);
+        container.append(image);
 
-            return container;
-        }
+        return container;
     }
 
     container.textContent = placeholderText;
@@ -171,6 +173,7 @@ function createGallery(definition) {
     const pagination = document.createElement("nav");
 
     pagination.className = "gallery-pagination";
+
     pagination.setAttribute(
         "aria-label",
         "작품 목록 페이지"
@@ -188,6 +191,30 @@ function createGallery(definition) {
 
     const currentColors = new Map();
 
+    function getEditableColors(item) {
+        if (
+            Array.isArray(item.editableColors) &&
+            item.editableColors.length > 0
+        ) {
+            return item.editableColors;
+        }
+
+        if (
+            definition.kind === "icon" &&
+            item.previewType === "placeholder"
+        ) {
+            return [
+                {
+                    key: "--placeholder-color",
+                    label: "아이콘",
+                    defaultValue: "#64748B"
+                }
+            ];
+        }
+
+        return [];
+    }
+
     function hasColorEditor() {
         return Boolean(
             colorEditor &&
@@ -201,8 +228,7 @@ function createGallery(definition) {
     function hasEditableColors(item) {
         return Boolean(
             hasColorEditor() &&
-            Array.isArray(item.editableColors) &&
-            item.editableColors.length > 0
+            getEditableColors(item).length > 0
         );
     }
 
@@ -211,6 +237,21 @@ function createGallery(definition) {
             backgroundToggle &&
             backgroundColorField &&
             backgroundColor
+        );
+    }
+
+    function sendBackgroundToFrame(frame) {
+        if (!frame || !hasBackgroundControls()) {
+            return;
+        }
+
+        frame.contentWindow?.postMessage(
+            {
+                type: "svg-gallery-background",
+                visible: backgroundToggle.checked,
+                color: backgroundColor.value
+            },
+            "*"
         );
     }
 
@@ -229,6 +270,18 @@ function createGallery(definition) {
             isBackgroundVisible
                 ? backgroundColor.value
                 : "";
+
+        const frame =
+            previewPlaceholder.querySelector("iframe");
+
+        if (frame) {
+            frame.style.backgroundColor =
+                isBackgroundVisible
+                    ? backgroundColor.value
+                    : "transparent";
+
+            sendBackgroundToFrame(frame);
+        }
     }
 
     function resetPreviewBackground() {
@@ -238,7 +291,17 @@ function createGallery(definition) {
 
         backgroundToggle.checked = false;
         backgroundColorField.hidden = true;
+
         previewPlaceholder.style.backgroundColor = "";
+
+        const frame =
+            previewPlaceholder.querySelector("iframe");
+
+        if (frame) {
+            frame.style.backgroundColor = "transparent";
+
+            sendBackgroundToFrame(frame);
+        }
     }
 
     function setAccessibility(isPreviewOpen) {
@@ -264,6 +327,10 @@ function createGallery(definition) {
     }
 
     function updateDownloadLink(link, filePath) {
+        if (!link) {
+            return;
+        }
+
         if (filePath) {
             link.href = filePath;
             link.hidden = false;
@@ -286,10 +353,12 @@ function createGallery(definition) {
             item.htmlPath
         );
 
-        downloadEmpty.hidden = Boolean(
-            item.svgPath ||
-            item.htmlPath
-        );
+        if (downloadEmpty) {
+            downloadEmpty.hidden = Boolean(
+                item.svgPath ||
+                item.htmlPath
+            );
+        }
     }
 
     function closeColorPopover() {
@@ -310,7 +379,10 @@ function createGallery(definition) {
     }
 
     function openColorPopover() {
-        if (!hasColorEditor() || colorEditor.hidden) {
+        if (
+            !hasColorEditor() ||
+            colorEditor.hidden
+        ) {
             return;
         }
 
@@ -357,6 +429,18 @@ function createGallery(definition) {
     }
 
     function applyColorsToFrame(frame) {
+        const colors = Object.fromEntries(
+            currentColors
+        );
+
+        frame.contentWindow?.postMessage(
+            {
+                type: "svg-gallery-colors",
+                colors
+            },
+            "*"
+        );
+
         try {
             const frameDocument =
                 frame.contentDocument;
@@ -397,6 +481,24 @@ function createGallery(definition) {
         if (frame) {
             applyColorsToFrame(frame);
         }
+
+        const placeholder =
+            previewPlaceholder.querySelector(
+                ".preview-message--placeholder"
+            );
+
+        if (placeholder) {
+            const placeholderColor =
+                currentColors.get(
+                    "--placeholder-color"
+                );
+
+            placeholder.style.color =
+                placeholderColor || "";
+
+            placeholder.style.borderColor =
+                placeholderColor || "";
+        }
     }
 
     function setColorValue(
@@ -411,7 +513,10 @@ function createGallery(definition) {
         applyCurrentColors();
     }
 
-    function createColorField(colorDefinition, index) {
+    function createColorField(
+        colorDefinition,
+        index
+    ) {
         const field = document.createElement("div");
 
         field.className = "detail-color-field";
@@ -426,11 +531,13 @@ function createGallery(definition) {
             colorDefinition.label ||
             `색상 ${index + 1}`;
 
-        const controls = document.createElement("div");
+        const controls =
+            document.createElement("div");
 
         controls.className = "detail-color-controls";
 
-        const picker = document.createElement("input");
+        const picker =
+            document.createElement("input");
 
         picker.className = "detail-color-picker";
         picker.type = "color";
@@ -531,7 +638,9 @@ function createGallery(definition) {
                     return;
                 }
 
-                valueInput.value = currentValue;
+                valueInput.value =
+                    currentValue ||
+                    colorDefinition.defaultValue;
 
                 valueInput.setAttribute(
                     "aria-invalid",
@@ -556,7 +665,7 @@ function createGallery(definition) {
     function initializeColorValues(item) {
         currentColors.clear();
 
-        item.editableColors.forEach(
+        getEditableColors(item).forEach(
             function (colorDefinition) {
                 const defaultValue =
                     normalizeHexColor(
@@ -578,7 +687,7 @@ function createGallery(definition) {
 
         colorFields.replaceChildren();
 
-        item.editableColors.forEach(
+        getEditableColors(item).forEach(
             function (colorDefinition, index) {
                 const field = createColorField(
                     colorDefinition,
@@ -632,6 +741,17 @@ function createGallery(definition) {
         return message;
     }
 
+    function createPlaceholderPreview(item) {
+        const message = createPreviewMessage(
+            `${item.title} ${definition.placeholderText}`
+        );
+
+        message.className =
+            "preview-message--placeholder";
+
+        return message;
+    }
+
     async function renderSvgPreview(
         item,
         currentRenderId
@@ -655,7 +775,9 @@ function createGallery(definition) {
 
             const svgText = await response.text();
 
-            if (currentRenderId !== previewRenderId) {
+            if (
+                currentRenderId !== previewRenderId
+            ) {
                 return;
             }
 
@@ -704,7 +826,9 @@ function createGallery(definition) {
                 svgElement
             );
         } catch (error) {
-            if (currentRenderId !== previewRenderId) {
+            if (
+                currentRenderId !== previewRenderId
+            ) {
                 return;
             }
 
@@ -713,7 +837,8 @@ function createGallery(definition) {
                 error
             );
 
-            const image = document.createElement("img");
+            const image =
+                document.createElement("img");
 
             image.src = item.previewPath;
             image.alt = `${item.title} 미리보기`;
@@ -725,9 +850,11 @@ function createGallery(definition) {
     }
 
     function renderHtmlPreview(item) {
-        const frame = document.createElement("iframe");
+        const frame =
+            document.createElement("iframe");
 
         frame.src = item.previewPath;
+
         frame.title =
             `${item.title} 실행 미리보기`;
 
@@ -744,6 +871,7 @@ function createGallery(definition) {
                 }
 
                 applyColorsToFrame(frame);
+                updatePreviewBackground();
             }
         );
 
@@ -779,10 +907,10 @@ function createGallery(definition) {
         }
 
         previewPlaceholder.append(
-            createPreviewMessage(
-                `${item.title} ${definition.placeholderText}`
-            )
+            createPlaceholderPreview(item)
         );
+
+        applyCurrentColors();
     }
 
     function openPreview(item) {
@@ -857,7 +985,8 @@ function createGallery(definition) {
     }
 
     function createItemButton(item) {
-        const button = document.createElement("button");
+        const button =
+            document.createElement("button");
 
         button.className =
             `artwork-item artwork-item--${definition.kind}`;
@@ -871,7 +1000,8 @@ function createGallery(definition) {
             definition.placeholderText
         );
 
-        const title = document.createElement("span");
+        const title =
+            document.createElement("span");
 
         title.className = "artwork-title";
         title.textContent = item.title;
@@ -915,7 +1045,8 @@ function createGallery(definition) {
         disabled = false,
         current = false
     ) {
-        const button = document.createElement("button");
+        const button =
+            document.createElement("button");
 
         button.className = "pagination-button";
         button.type = "button";
@@ -1028,8 +1159,7 @@ function createGallery(definition) {
 
         return definition.items.filter(
             function (item) {
-                const title =
-                    item.title || "";
+                const title = item.title || "";
 
                 const matchesSearch =
                     title
@@ -1050,12 +1180,16 @@ function createGallery(definition) {
                     selectedFeature === "animated"
                 ) {
                     matchesFeature =
-                        item.motion === selectedFeature;
-                } else if (selectedFeature === "mono") {
+                        item.motion ===
+                        selectedFeature;
+                } else if (
+                    selectedFeature === "mono"
+                ) {
                     matchesFeature =
                         item.colorCount === 1;
                 } else if (
-                    selectedFeature === "two-colors"
+                    selectedFeature ===
+                    "two-colors"
                 ) {
                     matchesFeature =
                         item.colorCount === 2;
