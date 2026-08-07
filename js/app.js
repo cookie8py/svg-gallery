@@ -970,37 +970,58 @@ function createGallery(definition) {
             search.value
                 .trim()
                 .toLowerCase();
-
+        
         const selectedCategory =
             category.value;
-
-        const selectedMotion =
+        
+        const selectedFeature =
             motion.value;
-
+        
         return definition.items.filter(
             function (item) {
                 const title =
                     item.title || "";
-
+            
                 const matchesSearch =
                     title
                         .toLowerCase()
                         .includes(searchWord);
-
+            
                 const matchesCategory =
                     selectedCategory === "all" ||
                     item.category ===
                         selectedCategory;
-
-                const matchesMotion =
-                    selectedMotion === "all" ||
-                    item.motion ===
-                        selectedMotion;
-
+            
+                let matchesFeature = false;
+            
+                if (selectedFeature === "all") {
+                    matchesFeature = true;
+                } else if (
+                    selectedFeature === "static" ||
+                    selectedFeature === "animated"
+                ) {
+                    matchesFeature =
+                        item.motion === selectedFeature;
+                } else if (selectedFeature === "mono") {
+                    matchesFeature =
+                        item.colorCount === 1;
+                } else if (
+                    selectedFeature === "two-colors"
+                ) {
+                    matchesFeature =
+                        item.colorCount === 2;
+                } else if (
+                    selectedFeature ===
+                    "three-plus-colors"
+                ) {
+                    matchesFeature =
+                        item.colorCount >= 3;
+                }
+            
                 return (
                     matchesSearch &&
                     matchesCategory &&
-                    matchesMotion
+                    matchesFeature
                 );
             }
         );
