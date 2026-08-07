@@ -12,8 +12,9 @@
 .site-header .site-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    min-height: 72px;
+    justify-content: center;
+    min-height: 52px;
+    text-align: center;
 }
 
 /* 히어로 */
@@ -191,6 +192,10 @@
     .content-container {
         padding-right: var(--mobile-padding);
         padding-left: var(--mobile-padding);
+    }
+
+    .site-header .site-container {
+        min-height: 48px;
     }
 
     .artwork-list--illustration,
