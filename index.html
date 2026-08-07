@@ -184,10 +184,91 @@
                                 <section class="artwork-preview">
                                     <h3>작품 미리보기</h3>
 
-                                    <div
-                                        class="preview-placeholder"
-                                        data-preview-placeholder
-                                    ></div>
+                                    <div class="detail-preview">
+                                        <div
+                                            class="preview-display-controls"
+                                            data-preview-display-controls
+                                        >
+                                            <label
+                                                class="preview-background-toggle"
+                                                for="illustration-background-toggle"
+                                            >
+                                                <input
+                                                    id="illustration-background-toggle"
+                                                    type="checkbox"
+                                                    data-preview-background-toggle
+                                                >
+
+                                                <span
+                                                    class="preview-background-switch"
+                                                    aria-hidden="true"
+                                                ></span>
+
+                                                <span>
+                                                    배경 표시
+                                                </span>
+                                            </label>
+
+                                            <label
+                                                class="preview-background-color"
+                                                for="illustration-background-color"
+                                                data-preview-background-color-field
+                                                hidden
+                                            >
+                                                <span>
+                                                    배경색
+                                                </span>
+
+                                                <input
+                                                    id="illustration-background-color"
+                                                    type="color"
+                                                    value="#427eff"
+                                                    data-preview-background-color
+                                                >
+                                            </label>
+                                        </div>
+
+                                        <div
+                                            class="preview-placeholder"
+                                            data-preview-placeholder
+                                        ></div>
+
+                                        <div
+                                            class="detail-color-editor"
+                                            data-detail-color-editor
+                                            hidden
+                                        >
+                                            <button
+                                                class="detail-color-button"
+                                                type="button"
+                                                data-detail-color-button
+                                                aria-expanded="false"
+                                                aria-controls="illustration-color-popover"
+                                            >
+                                                색상
+                                            </button>
+
+                                            <div
+                                                class="detail-color-popover"
+                                                id="illustration-color-popover"
+                                                data-detail-color-popover
+                                                hidden
+                                            >
+                                                <div
+                                                    class="detail-color-fields"
+                                                    data-detail-color-fields
+                                                ></div>
+
+                                                <button
+                                                    class="detail-color-reset"
+                                                    type="button"
+                                                    data-detail-color-reset
+                                                >
+                                                    기본 색상으로 되돌리기
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </section>
 
                                 <section class="artwork-information panel">
