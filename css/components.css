@@ -293,18 +293,21 @@
     min-height: 0;
 }
 
-/* 상세 미리보기 색상 편집 */
+/* 상세 미리보기 컨트롤 */
 
 .detail-preview {
     position: relative;
     width: 100%;
 }
 
+/* 색상 버튼 */
+
 .detail-color-editor {
     position: absolute;
     top: 12px;
     right: 12px;
-    z-index: 10;
+    z-index: 20;
+    width: 76px;
 }
 
 .detail-color-editor[hidden],
@@ -313,9 +316,9 @@
 }
 
 .detail-color-button {
-    min-width: 64px;
-    min-height: 36px;
-    padding: 7px 12px;
+    width: 100%;
+    min-width: 36px;
+    padding: 7px 8px;
     color: var(--text-color);
     font: inherit;
     font-size: 13px;
@@ -341,6 +344,8 @@
 .detail-color-button[aria-expanded="true"]::after {
     content: "▴";
 }
+
+/* 색상 팝업 */
 
 .detail-color-popover {
     position: absolute;
@@ -443,6 +448,138 @@
     outline: 2px solid transparent;
 }
 
+/* 미리보기 배경 설정 */
+
+.preview-display-controls {
+    position: absolute;
+    top: 58px;
+    right: 12px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 76px;
+    padding: 8px 6px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+}
+
+.preview-background-toggle {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    cursor: pointer;
+    user-select: none;
+}
+
+.preview-background-toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+}
+
+.preview-background-switch {
+    position: relative;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 24px;
+    background-color: var(--border-color);
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    transition:
+        background-color 180ms ease,
+        border-color 180ms ease;
+}
+
+.preview-background-switch::after {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background-color: var(--background-color);
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+    content: "";
+    transition: transform 180ms ease;
+}
+
+.preview-background-toggle input:checked
+    + .preview-background-switch {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.preview-background-toggle input:checked
+    + .preview-background-switch::after {
+    transform: translateX(20px);
+}
+
+.preview-background-toggle input:focus-visible
+    + .preview-background-switch {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
+}
+
+/* 배경색 선택 */
+
+.preview-background-color {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    color: var(--text-color);
+    font-size: 12px;
+    font-weight: 700;
+    border-top: 1px solid var(--border-color);
+}
+
+.preview-background-color[hidden] {
+    display: none;
+}
+
+.preview-background-color input[type="color"] {
+    width: 40px;
+    height: 30px;
+    padding: 2px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.preview-background-color input[type="color"]:hover,
+.preview-background-color input[type="color"]:focus-visible {
+    border-color: var(--primary-color);
+    outline: 2px solid transparent;
+}
+
+.preview-background-color
+    input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.preview-background-color
+    input[type="color"]::-webkit-color-swatch {
+    border: 0;
+}
+
+.preview-background-color
+    input[type="color"]::-moz-color-swatch {
+    border: 0;
+}
+
 /* 정보 패널 */
 
 .panel {
@@ -497,17 +634,50 @@
     .detail-color-editor {
         top: 8px;
         right: 8px;
+        width: 70px;
     }
 
     .detail-color-button {
-        min-width: 58px;
+        width: 100%;
         min-height: 34px;
-        padding: 6px 10px;
+        padding: 6px 8px;
         font-size: 12px;
     }
 
     .detail-color-popover {
         width: min(260px, calc(100vw - 48px));
         padding: 14px;
+    }
+
+    .preview-display-controls {
+        top: 52px;
+        right: 8px;
+        width: 70px;
+        padding: 7px 5px;
+    }
+
+    .preview-background-toggle,
+    .preview-background-color {
+        font-size: 11px;
+    }
+
+    .preview-background-switch {
+        width: 40px;
+        height: 22px;
+    }
+
+    .preview-background-switch::after {
+        width: 14px;
+        height: 14px;
+    }
+
+    .preview-background-toggle input:checked
+        + .preview-background-switch::after {
+        transform: translateX(18px);
+    }
+
+    .preview-background-color input[type="color"] {
+        width: 36px;
+        height: 28px;
     }
 }
