@@ -263,7 +263,53 @@
                                     <div
                                         class="preview-placeholder preview-placeholder--icon"
                                         data-preview-placeholder
-                                    ></div>
+                                    >
+                                        
+                                    <div class="detail-preview">
+                                        <div 
+                                            class="detail-color-editor"
+                                            id="detailColorEditor"
+                                            hidden
+                                        >
+                                            <button
+                                                class="detail-color-button"
+                                                id="detailColorButton"
+                                                type="button"
+                                                aria-expanded="false"
+                                                aria-controls="detailColorPopover"
+                                            >
+                                                색상
+                                            </button>
+
+                                            <div
+                                                class="detail-color-popover"
+                                                id="detailColorPopover"
+                                                hidden
+                                            >
+                                                <div
+                                                    class="detail-color-fields"
+                                                    id="detailColorFields"
+                                                ></div>
+
+                                                <button
+                                                    class="detail-color-reset"
+                                                    id="detailColorReset"
+                                                    type="button"
+                                                >
+                                                    기본 색상으로 되돌리기
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="detail-preview-content"
+                                            id="detailPreviewContent"
+                                        >
+                                            <!--선택한 아이콘 미리보기-->
+                                        </div>
+                                    </div>
+
+                                    </div>
                                 </section>
 
                                 <section class="artwork-information panel">
