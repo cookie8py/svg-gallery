@@ -13,7 +13,6 @@
     <style>
         :root {
             --umbrella-color: #427eff;
-            --umbrella-line-width: 4px;
             --rain-color: #8fb3ff;
         }
 
@@ -67,66 +66,28 @@
             position: relative;
             z-index: 2;
             flex: 0 0 auto;
-            width: 240px;
-            height: 260px;
+            width: 220px;
+            height: 240px;
             transform-origin: center;
         }
 
-        .umbrella {
-            position: relative;
-            width: 240px;
-            height: 260px;
-        }
-
-        .umbrella-pole {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            width: var(--umbrella-line-width);
-            height: 200px;
-            background-color: var(--umbrella-color);
-            border-radius: 990px 990px 0 0;
-            transform: translateX(-50%);
-        }
-
-        .umbrella-canopy {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            width: 200px;
-            height: 100px;
+        .umbrella-graphic {
+            display: block;
+            width: 220px;
+            height: 240px;
             overflow: visible;
-            transform: translateX(-50%);
         }
 
-        .umbrella-canopy-shape {
+        .umbrella-part {
             fill: var(--umbrella-color);
         }
 
-        .umbrella-handle {
-            position: absolute;
-            top: 205px;
-            left: 50%;
-            width: 25px;
-            height: 25px;
-
-            border-right:
-                var(--umbrella-line-width)
-                solid
-                var(--umbrella-color);
-
-            border-bottom:
-                var(--umbrella-line-width)
-                solid
-                var(--umbrella-color);
-
-            border-left:
-                var(--umbrella-line-width)
-                solid
-                var(--umbrella-color);
-
-            border-radius: 0 0 24px 24px;
-            transform: translateX(-2px);
+        .umbrella-line {
+            fill: none;
+            stroke: var(--umbrella-color);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
     </style>
 </head>
@@ -146,40 +107,73 @@
             class="umbrella-scale-box"
             id="umbrellaScaleBox"
         >
-            <div class="umbrella">
-                <div class="umbrella-pole"></div>
+            <svg
+                class="umbrella-graphic"
+                viewBox="0 0 220 240"
+                role="img"
+                aria-labelledby="umbrellaTitle umbrellaDescription"
+            >
+                <title id="umbrellaTitle">
+                    비를 막아주는 우산
+                </title>
 
-                <svg
-                    class="umbrella-canopy"
+                <desc id="umbrellaDescription">
+                    빗방울이 우산 위에 떨어진 뒤 양옆으로 튀어 나갑니다.
+                </desc>
+
+                <!-- 꼭지를 포함한 우산대 -->
+                <path
+                    class="umbrella-line"
+                    d="
+                        M 110 10
+                        L 110 210
+                    "
+                />
+
+                <!-- 우산 덮개 -->
+                <path
+                    class="umbrella-part"
                     id="umbrellaCanopy"
-                    viewBox="0 0 200 100"
-                    role="img"
-                    aria-labelledby="umbrellaTitle umbrellaDescription"
-                >
-                    <title id="umbrellaTitle">
-                        비를 막아주는 우산
-                    </title>
+                    d="
+                        M 10 120
 
-                    <desc id="umbrellaDescription">
-                        빗방울이 우산 위에 떨어진 뒤 양옆으로 튀어 나갑니다.
-                    </desc>
+                        C 10 65,
+                          55 22,
+                          110 22
 
-                    <path
-                        class="umbrella-canopy-shape"
-                        d="
-                            M 0 100
-                            C 0 45, 45 2, 100 2
-                            C 155 2, 200 45, 200 100
-                            C 182 80, 151 80, 133.33 100
-                            C 115 80, 85 80, 66.67 100
-                            C 49 80, 18 80, 0 100
-                            Z
-                        "
-                    />
-                </svg>
+                        C 165 22,
+                          210 65,
+                          210 120
 
-                <div class="umbrella-handle"></div>
-            </div>
+                        C 192 100,
+                          161 100,
+                          143.33 120
+
+                        C 125 100,
+                          95 100,
+                          76.67 120
+
+                        C 59 100,
+                          28 100,
+                          10 120
+
+                        Z
+                    "
+                />
+
+                <!-- 우산 손잡이 -->
+                <path
+                    class="umbrella-line"
+                    d="
+                        M 110 210
+                        L 110 218
+
+                        C 110 232,
+                          135 232,
+                          135 218
+                    "
+                />
+            </svg>
         </div>
     </div>
 
@@ -204,9 +198,7 @@
                     Object.entries(
                         data.colors
                     ).forEach(
-                        function (
-                            [key, value]
-                        ) {
+                        function ([key, value]) {
                             document
                                 .documentElement
                                 .style
@@ -253,11 +245,11 @@
                 "umbrellaCanopy"
             );
 
-        const umbrellaOriginalWidth = 240;
-        const umbrellaOriginalHeight = 260;
+        const umbrellaOriginalWidth = 220;
+        const umbrellaOriginalHeight = 240;
 
-        const horizontalSpace = 24;
-        const verticalSpace = 24;
+        const horizontalSpace = 20;
+        const verticalSpace = 20;
 
         const rainInterval = 120;
 
@@ -315,12 +307,12 @@
                 );
 
             return (
-                8 +
+                2 +
                 Math.pow(
                     limitedDistance,
                     1.7
                 ) *
-                    82
+                    88
             );
         }
 

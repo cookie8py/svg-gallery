@@ -1,0 +1,221 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 220 240"
+    role="img"
+    aria-labelledby="umbrellaTitle umbrellaDescription"
+>
+    <title id="umbrellaTitle">
+        비를 막아주는 우산
+    </title>
+
+    <desc id="umbrellaDescription">
+        고정된 우산 위로 빗방울이 수직으로 내리는 애니메이션 아이콘
+    </desc>
+
+    <style>
+        :root {
+            --umbrella-color: #427eff;
+            --rain-color: #8fb3ff;
+        }
+
+        .umbrella-part {
+            fill: var(--umbrella-color);
+        }
+
+        .umbrella-line {
+            fill: none;
+            stroke: var(--umbrella-color);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .rain-drop {
+            fill: none;
+            stroke: var(--rain-color);
+            stroke-width: 3;
+            stroke-linecap: round;
+            opacity: 0;
+            animation-name: vertical-rain;
+            animation-duration: 1.4s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .rain-drop-1 {
+            --rain-start: -28px;
+            --rain-end: 44px;
+            animation-delay: -0.15s;
+        }
+
+        .rain-drop-2 {
+            --rain-start: -35px;
+            --rain-end: 19px;
+            animation-delay: -0.85s;
+        }
+
+        .rain-drop-3 {
+            --rain-start: -24px;
+            --rain-end: 10px;
+            animation-delay: -0.45s;
+        }
+
+        .rain-drop-4 {
+            --rain-start: -32px;
+            --rain-end: 20px;
+            animation-delay: -1.15s;
+        }
+
+        .rain-drop-5 {
+            --rain-start: -26px;
+            --rain-end: 45px;
+            animation-delay: -0.65s;
+        }
+
+        @keyframes vertical-rain {
+            0% {
+                opacity: 0;
+                transform:
+                    translateY(
+                        var(--rain-start)
+                    );
+            }
+
+            10% {
+                opacity: 0.85;
+            }
+
+            68% {
+                opacity: 0.85;
+                transform:
+                    translateY(
+                        var(--rain-end)
+                    );
+            }
+
+            69%,
+            100% {
+                opacity: 0;
+                transform:
+                    translateY(
+                        var(--rain-end)
+                    );
+            }
+        }
+
+        @media (
+            prefers-reduced-motion:
+            reduce
+        ) {
+            .rain-drop {
+                animation: none;
+                opacity: 0.75;
+                transform:
+                    translateY(
+                        var(--rain-end)
+                    );
+            }
+        }
+    </style>
+
+    <!-- 수직으로 내리는 비 -->
+    <g
+        id="rain-group"
+        aria-hidden="true"
+    >
+        <line
+            class="rain-drop rain-drop-1"
+            x1="38"
+            y1="0"
+            x2="38"
+            y2="18"
+        />
+
+        <line
+            class="rain-drop rain-drop-2"
+            x1="74"
+            y1="0"
+            x2="74"
+            y2="18"
+        />
+
+        <line
+            class="rain-drop rain-drop-3"
+            x1="110"
+            y1="0"
+            x2="110"
+            y2="18"
+        />
+
+        <line
+            class="rain-drop rain-drop-4"
+            x1="146"
+            y1="0"
+            x2="146"
+            y2="18"
+        />
+
+        <line
+            class="rain-drop rain-drop-5"
+            x1="182"
+            y1="0"
+            x2="182"
+            y2="18"
+        />
+    </g>
+
+    <!-- 고정된 우산 -->
+    <g id="umbrella-group">
+        <!-- 꼭지를 포함한 우산대 -->
+        <path
+            class="umbrella-line"
+            d="
+                M 110 10
+                L 110 210
+            "
+        />
+
+        <!-- 우산 덮개 -->
+        <path
+            class="umbrella-part"
+            d="
+                M 10 120
+
+                C 10 65,
+                  55 22,
+                  110 22
+
+                C 165 22,
+                  210 65,
+                  210 120
+
+                C 192 100,
+                  161 100,
+                  143.33 120
+
+                C 125 100,
+                  95 100,
+                  76.67 120
+
+                C 59 100,
+                  28 100,
+                  10 120
+
+                Z
+            "
+        />
+
+        <!-- 우산 손잡이 -->
+        <path
+            class="umbrella-line"
+            d="
+                M 110 210
+                L 110 218
+
+                C 110 232,
+                  135 232,
+                  135 218
+            "
+        />
+    </g>
+</svg>

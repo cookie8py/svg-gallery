@@ -34,5 +34,36 @@ export const animatedIcons = [
                 defaultValue: "#dce7ff"
             }
         ]
+    },
+    {
+        id: "umbrella",
+        title: "비와 우산",
+        category: "climate",
+        motion: "animated",
+        description:
+            "우산 위로 비가 내리는 애니메이션 아이콘입니다. HTML 버전에서는 빗방울이 우산에 부딪혀 양옆으로 튀는 효과가 적용됩니다.",
+        source: "직접 제작",
+        previewType: "html",
+        previewPath:
+            "./assets/icons/animated/umbrella/umbrella.html",
+        thumbnailPath:
+            "./assets/icons/animated/umbrella/umbrella.svg",
+        svgPath:
+            "./assets/icons/animated/umbrella/umbrella.svg",
+        htmlPath:
+            "./assets/icons/animated/umbrella/umbrella.html",
+        colorCount: 2,
+        editableColors: [
+            {
+                key: "--umbrella-color",
+                label: "우산",
+                defaultValue: "#427eff"
+            },
+            {
+                key: "--rain-color",
+                label: "빗방울",
+                defaultValue: "#8fb3ff"
+            }
+        ]
     }
 ];
