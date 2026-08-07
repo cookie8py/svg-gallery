@@ -156,6 +156,18 @@ function createGallery(definition) {
         "[data-detail-color-reset]"
     );
 
+    const backgroundToggle = root.querySelector(
+        "[data-preview-background-toggle]"
+    );
+
+    const backgroundColorField = root.querySelector(
+        "[data-preview-background-color-field]"
+    );
+
+    const backgroundColor = root.querySelector(
+        "[data-preview-background-color]"
+    );
+
     const pagination = document.createElement("nav");
 
     pagination.className = "gallery-pagination";
@@ -192,6 +204,41 @@ function createGallery(definition) {
             Array.isArray(item.editableColors) &&
             item.editableColors.length > 0
         );
+    }
+
+    function hasBackgroundControls() {
+        return Boolean(
+            backgroundToggle &&
+            backgroundColorField &&
+            backgroundColor
+        );
+    }
+
+    function updatePreviewBackground() {
+        if (!hasBackgroundControls()) {
+            return;
+        }
+
+        const isBackgroundVisible =
+            backgroundToggle.checked;
+
+        backgroundColorField.hidden =
+            !isBackgroundVisible;
+
+        previewPlaceholder.style.backgroundColor =
+            isBackgroundVisible
+                ? backgroundColor.value
+                : "";
+    }
+
+    function resetPreviewBackground() {
+        if (!hasBackgroundControls()) {
+            return;
+        }
+
+        backgroundToggle.checked = false;
+        backgroundColorField.hidden = true;
+        previewPlaceholder.style.backgroundColor = "";
     }
 
     function setAccessibility(isPreviewOpen) {
@@ -754,6 +801,7 @@ function createGallery(definition) {
             "등록된 출처 및 참고 자료가 없습니다.";
 
         showColorEditor(item);
+        resetPreviewBackground();
         renderLargePreview(item);
         updateDownloadArea(item);
         setAccessibility(true);
@@ -770,6 +818,7 @@ function createGallery(definition) {
 
     function closePreview() {
         closeColorPopover();
+        resetPreviewBackground();
 
         previewRenderId += 1;
         selectedItem = null;
@@ -970,30 +1019,30 @@ function createGallery(definition) {
             search.value
                 .trim()
                 .toLowerCase();
-        
+
         const selectedCategory =
             category.value;
-        
+
         const selectedFeature =
             motion.value;
-        
+
         return definition.items.filter(
             function (item) {
                 const title =
                     item.title || "";
-            
+
                 const matchesSearch =
                     title
                         .toLowerCase()
                         .includes(searchWord);
-            
+
                 const matchesCategory =
                     selectedCategory === "all" ||
                     item.category ===
                         selectedCategory;
-            
+
                 let matchesFeature = false;
-            
+
                 if (selectedFeature === "all") {
                     matchesFeature = true;
                 } else if (
@@ -1017,7 +1066,7 @@ function createGallery(definition) {
                     matchesFeature =
                         item.colorCount >= 3;
                 }
-            
+
                 return (
                     matchesSearch &&
                     matchesCategory &&
@@ -1118,6 +1167,20 @@ function createGallery(definition) {
         );
     }
 
+    if (backgroundToggle) {
+        backgroundToggle.addEventListener(
+            "change",
+            updatePreviewBackground
+        );
+    }
+
+    if (backgroundColor) {
+        backgroundColor.addEventListener(
+            "input",
+            updatePreviewBackground
+        );
+    }
+
     document.addEventListener(
         "click",
         function (event) {
@@ -1160,6 +1223,7 @@ function createGallery(definition) {
         resetPageAndRender
     );
 
+    resetPreviewBackground();
     setAccessibility(false);
     renderList();
 

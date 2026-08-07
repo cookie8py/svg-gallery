@@ -317,7 +317,7 @@
 
 .detail-color-button {
     width: 100%;
-    min-width: 36px;
+    min-height: 36px;
     padding: 7px 8px;
     color: var(--text-color);
     font: inherit;
