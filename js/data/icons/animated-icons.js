@@ -11,14 +11,15 @@ export const animatedIcons = [
         previewPath:
             "./assets/icons/animated/lantern/lantern.html",
         thumbnailPath: "",
-        svgPath: "",
+        svgPath:
+            "./assets/icons/animated/lantern/lantern.svg",
         htmlPath:
             "./assets/icons/animated/lantern/lantern.html",
         colorCount: 3,
         editableColors: [
             {
                 key: "--lantern-blue",
-                label: "배경과 등불",
+                label: "등불",
                 defaultValue: "#427eff"
             },
             {
