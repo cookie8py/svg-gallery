@@ -9,7 +9,20 @@ export const climateIcons = [
         previewType: "svg",
         previewPath: "./assets/icons/static/earth/earth-base.svg",
         svgPath: "./assets/icons/static/earth/earth-base.svg",
-        htmlPath: ""
+        htmlPath: "",
+        colorCount: 2,
+        editableColors: [
+            {
+                key: "--earth-ocean",
+                label: "바다",
+                defaultValue: "#427eff"
+            },
+            {
+                key: "--earth-land",
+                label: "대륙과 외곽선",
+                defaultValue: "#ffffff"
+            }
+        ]
     },
     {
         id: "icon-placeholder-4",
