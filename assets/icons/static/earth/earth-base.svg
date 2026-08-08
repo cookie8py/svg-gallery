@@ -14,33 +14,34 @@
         동아시아, 한반도, 일본, 동남아시아와 호주가 보이는 정적 지구 아이콘
     </desc>
 
-<style>
-    :root {
-        --earth-ocean: #427eff;
-        --earth-land: #ffffff;
-    }
-
-    #earth-ocean {
-        fill: var(--earth-ocean);
-    }
-
-    #earth-continents {
-        fill: var(--earth-land);
-        stroke: var(--earth-land);
-        stroke-width: 4;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-miterlimit: 6;
-    }
-
-    #earth-outline {
-        fill: none;
-        stroke: var(--earth-land);
-        stroke-width: 8;
-        stroke-linejoin: bevel;
-        stroke-miterlimit: 6;
-    }
-</style>
+    <style>
+        :root {
+            --earth-ocean: #427eff;
+            --earth-land: #ffffff;
+            --earth-outline: #ffffff;
+        }
+    
+        #earth-ocean {
+            fill: var(--earth-ocean);
+        }
+    
+        #earth-continents {
+            fill: var(--earth-land);
+            stroke: var(--earth-outline);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-miterlimit: 6;
+        }
+    
+        #earth-outline {
+            fill: none;
+            stroke: var(--earth-outline);
+            stroke-width: 8;
+            stroke-linejoin: bevel;
+            stroke-miterlimit: 6;
+        }
+    </style>
 
     <defs>
         <clipPath

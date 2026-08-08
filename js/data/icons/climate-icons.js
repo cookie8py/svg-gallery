@@ -10,7 +10,7 @@ export const climateIcons = [
         previewPath: "./assets/icons/static/earth/earth-base.svg",
         svgPath: "./assets/icons/static/earth/earth-base.svg",
         htmlPath: "",
-        colorCount: 2,
+        colorCount: 3,
         editableColors: [
             {
                 key: "--earth-ocean",
@@ -19,7 +19,12 @@ export const climateIcons = [
             },
             {
                 key: "--earth-land",
-                label: "대륙과 외곽선",
+                label: "대륙",
+                defaultValue: "#ffffff"
+            },
+            {
+                key: "--earth-outline",
+                label: "외곽선",
                 defaultValue: "#ffffff"
             }
         ]
