@@ -1,14 +1,14 @@
 export const climateIcons = [
     {
-        id: "icon-placeholder-1",
-        title: "임시 아이콘 1",
+        id: "earth",
+        title: "지구",
         category: "climate",
         motion: "static",
-        description: "기후위기 정적 아이콘이 들어갈 임시 카드입니다.",
-        source: "아직 등록된 출처가 없습니다.",
-        previewType: "placeholder",
-        previewPath: "",
-        svgPath: "",
+        description: "동아시아와 태평양을 중심으로 표현한 기본 지구 아이콘입니다.",
+        source: "직접 제작",
+        previewType: "svg",
+        previewPath: "./assets/icons/static/earth/earth-base.svg",
+        svgPath: "./assets/icons/static/earth/earth-base.svg",
         htmlPath: ""
     },
     {
