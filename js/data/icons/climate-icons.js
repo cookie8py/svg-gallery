@@ -20,7 +20,7 @@ export const climateIcons = [
             {
                 key: "--earth-land",
                 label: "대륙",
-                defaultValue: "#ffffff"
+                defaultValue: "#72c66b"
             },
             {
                 key: "--earth-outline",
