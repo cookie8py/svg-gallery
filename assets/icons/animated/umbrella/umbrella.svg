@@ -103,19 +103,7 @@
             }
         }
 
-        @media (
-            prefers-reduced-motion:
-            reduce
-        ) {
-            .rain-drop {
-                animation: none;
-                opacity: 0.75;
-                transform:
-                    translateY(
-                        var(--rain-end)
-                    );
-            }
-        }
+
     </style>
 
     <!-- 수직으로 내리는 비 -->
