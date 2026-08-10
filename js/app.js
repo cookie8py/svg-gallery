@@ -463,43 +463,83 @@ function createGallery(definition) {
     function createSvgDownloadContent(
         sourceText
     ) {
-        const parser = new DOMParser();
-
-        const svgDocument =
-            parser.parseFromString(
-                sourceText,
-                "image/svg+xml"
-            );
-
-        const parserError =
-            svgDocument.querySelector(
-                "parsererror"
-            );
-
-        if (parserError) {
-            throw new Error(
-                "SVG 파일을 해석하지 못했습니다."
-            );
-        }
-
-        const svgElement =
-            svgDocument.documentElement;
-
+        let downloadSource =
+            sourceText;
+    
         currentColors.forEach(
             function (
                 colorValue,
                 colorKey
             ) {
-                svgElement.style.setProperty(
-                    colorKey,
-                    colorValue
-                );
+                const escapedColorKey =
+                    colorKey.replace(
+                        /[.*+?^${}()|[\]\\]/g,
+                        "\\$&"
+                    );
+                
+                const colorVariablePattern =
+                    new RegExp(
+                        `var\\(\\s*${escapedColorKey}\\s*(?:,\\s*[^)]+)?\\)`,
+                        "g"
+                    );
+                
+                downloadSource =
+                    downloadSource.replace(
+                        colorVariablePattern,
+                        colorValue
+                    );
             }
         );
-
+    
+        const parser =
+            new DOMParser();
+    
+        const svgDocument =
+            parser.parseFromString(
+                downloadSource,
+                "image/svg+xml"
+            );
+        
+        const parserError =
+            svgDocument.querySelector(
+                "parsererror"
+            );
+        
+        if (parserError) {
+            throw new Error(
+                "SVG 파일을 해석하지 못했습니다."
+            );
+        }
+    
+        const svgElement =
+            svgDocument.documentElement;
+    
+        if (
+            !svgElement.hasAttribute(
+                "xmlns"
+            )
+        ) {
+            svgElement.setAttribute(
+                "xmlns",
+                "http://www.w3.org/2000/svg"
+            );
+        }
+    
+        currentColors.forEach(
+            function (
+                colorValue,
+                colorKey
+            ) {
+                svgElement.style
+                    .removeProperty(
+                        colorKey
+                    );
+            }
+        );
+    
         const serializer =
             new XMLSerializer();
-
+    
         return serializer.serializeToString(
             svgDocument
         );
