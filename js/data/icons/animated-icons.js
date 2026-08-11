@@ -65,5 +65,35 @@ export const animatedIcons = [
                 defaultValue: "#8fb3ff"
             }
         ]
+    },
+    {
+        id: "pump-jack",
+        title: "펌프잭",
+        category: "climate",
+        motion: "animated",
+        description:
+            "크랭크의 회전이 핏맨 암과 워킹빔으로 전달되는 석유 시추용 펌프잭 애니메이션 아이콘입니다.",
+        source: "직접 제작",
+        previewType: "html",
+        previewPath:
+            "./assets/icons/animated/pump-jack/pump-jack-animated.svg",
+        thumbnailPath:
+            "./assets/icons/animated/pump-jack/pump-jack-animated.svg",
+        svgPath:
+            "./assets/icons/animated/pump-jack/pump-jack-animated.svg",
+        htmlPath: "",
+        colorCount: 2,
+        editableColors: [
+            {
+                key: "--pump-jack-fill",
+                label: "도형 내부",
+                defaultValue: "#ffffff"
+            },
+            {
+                key: "--pump-jack-stroke",
+                label: "윤곽선",
+                defaultValue: "#000000"
+            }
+        ]
     }
 ];
