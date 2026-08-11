@@ -2,307 +2,548 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="581.49772"
-   height="456.07602"
-   viewBox="-40.10329 -31.45352 581.49772 456.07602"
-   version="1.1"
-   id="svg1"
-   xml:space="preserve"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   role="img"
-   aria-labelledby="pumpJackTitle pumpJackDescription"><title
-     id="pumpJackTitle">펌프잭</title><desc
-     id="pumpJackDescription">크랭크와 핏맨 암, 워킹빔이 맞물려 움직이는 석유 시추용 펌프잭 애니메이션 아이콘</desc><style>
-    :root {
-      --pump-jack-fill: #ffffff;
-      --pump-jack-stroke: #000000;
-    }
-  </style><defs
-     id="defs1" /><g
-     id="layer1"
-     transform="matrix(1.3450513,0,0,1.3450513,-94.133018,-121.9058)"><g
-       id="drive-unit"
-       style="stroke-width:2.97386;stroke-dasharray:none"><path
-         d="m 294.5957,263.21484 -15.45508,15.45703 1.77149,81.49415 h 78.31641 v -81.9629 l -15.45508,-8.89843 -23.41797,-6.08985 z"
-         style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         id="gear-reducer" /><path
-         d="m 390.03516,274.45703 c -6.94715,0 -12.54102,5.59191 -12.54102,12.53906 v 71.86914 c 0,0.43891 0.0228,0.87376 0.0664,1.30079 h 46.23437 c 0.0436,-0.42703 0.0664,-0.86188 0.0664,-1.30079 v -71.86914 c 0,-6.94715 -5.59192,-12.53906 -12.53906,-12.53906 z"
-         style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         id="prime-mover" /><path
-         id="v-belt"
-         style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         d="m 331.28271,276.49525 0.24093,-0.33691 c 6.154,-8.60573 18.99973,-11.74149 26.6421,-4.42547 l 39.53016,37.84212 c 2.54765,2.43886 5.49855,5.30291 7.84583,7.58992 2.34079,2.28067 2.84466,6.39253 1.13282,9.17652 -1.43917,2.34054 -5.10089,3.34658 -8.16473,2.20911 -3.14878,-1.16901 -7.15514,-2.68969 -10.6999,-4.13721 l -52.10174,-21.27596 c -9.79454,-3.99964 -10.57949,-18.03639 -4.42547,-26.64212 z" /></g><g
-       id="crank-assembly"
-       transform="rotate(-122.00052,310.90856,286.26317)"
-       style="display:inline;stroke-width:2.97386;stroke-dasharray:none"><path
-         id="counterweight"
-         style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         d="m 231.04188,287.75964 c -0.38755,-21.29459 13.02698,-38.68773 13.02698,-38.68773 l 6.84315,-0.12454 c 7.6045,-0.1384 12.7713,16.91655 13.15886,38.21114 0.38757,21.2946 -4.15522,38.52626 -11.75972,38.66466 l -6.84315,0.12455 c 0,0 -14.03855,-16.89349 -14.42612,-38.18808 z" /><rect
-         style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         id="crank"
-         width="90.159317"
-         height="23.031912"
-         x="229.96303"
-         y="276.59531" /></g><rect
-       style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:3.42245;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="pitman-arm"
-       width="13.972582"
-       height="146.95479"
-       x="158.55551"
-       y="307.22513"
-       transform="matrix(0.8721118,-0.48930666,0.42850616,0.90353886,0,0)" /><path
-       d="m 110.39485,99.648304 -32.19162,40.064316 -0.401991,48.69355 -0.147253,24.62927 -4.888318,8.67312 v 88.6046 h 4.51452 1.39691 5.32333 v -88.51893 l -5.903562,-8.74136 -0.41047,-24.73459 0.872607,-48.48006 32.607767,-39.956136 z m -31.717752,210.664856 -0.23358,0.23266 v 70.90808 l 0.23358,-0.23266 z"
-       style="fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="polished-rod" /><g
-       id="walking-beam-group"
-       transform="rotate(21.598285,195.76777,175.62666)"
-       style="display:inline;opacity:1;stroke-width:2.97386;stroke-dasharray:none"><path
-         style="display:inline;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         d="m 100.01552,160.62096 -4.636477,25.16947 204.005177,1.32471 v -25.83183 z"
-         id="walking-beam" /><path
-         style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         d="m 85.443726,129.4903 -16.227685,21.52652 -0.331177,37.09185 10.597672,31.46183 10.928848,0.33118 14.571796,-86.10608 z"
-         id="horse-head" /></g><g
-       id="pumpjack-frame"
-       style="display:inline;stroke-width:2.97386;stroke-dasharray:none"><path
-         d="m 195.11328,177.18359 -5.58984,1.58008 -1.64063,5.69531 -51.48437,178.78321 13.77343,3.96679 45.09571,-156.59961 44.25976,156.70118 13.79297,-3.89649 -50.5332,-178.91601 -1.57031,-5.55664 z"
-         style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         id="samson-post" /><rect
-         style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-         id="base"
-         width="311.4563"
-         height="19.670923"
-         x="129.73442"
-         y="360.16525" /></g><circle
-       style="display:inline;opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="beam-pivot"
-       visibility="hidden"
-       cx="195.14584"
-       cy="174.23145"
-       r="3" /><circle
-       style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="beam-pin"
-       visibility="hidden"
-       cx="282.16684"
-       cy="208.82146"
-       r="3" /><circle
-       style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="crank-pin"
-       visibility="hidden"
-       cx="-72.452255"
-       cy="-458.33368"
-       transform="rotate(142.81962)"
-       r="3" /><circle
-       style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="crank-center"
-       visibility="hidden"
-       cx="313.5463"
-       cy="288.82336"
-       r="3" /><circle
-       style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
-       id="polished-rod-pin"
-       visibility="hidden"
-       r="3"
-       cy="99.761101"
-       cx="110.59529" /></g><script
-     id="pump-jack-animation"
-     type="application/ecmascript"><![CDATA[
+    width="100%"
+    height="100%"
+    viewBox="-40.10329 -31.45352 581.49772 456.07602"
+    preserveAspectRatio="xMidYMid meet"
+    version="1.1"
+    id="svg1"
+    xml:space="preserve"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    role="img"
+    aria-labelledby="pumpJackTitle pumpJackDescription"
+    style="display:block;overflow:hidden"
+>
+    <title id="pumpJackTitle">펌프잭</title>
+
+    <desc id="pumpJackDescription">
+        크랭크와 핏맨 암, 워킹빔이 맞물려 움직이는 석유 시추용 펌프잭 애니메이션 아이콘
+    </desc>
+
+    <style>
+        :root {
+            --pump-jack-fill: #ffffff;
+            --pump-jack-stroke: #000000;
+        }
+    </style>
+
+    <defs id="defs1" />
+
+    <g
+        id="layer1"
+        transform="matrix(1.3450513,0,0,1.3450513,-94.133018,-121.9058)"
+    >
+        <g
+            id="drive-unit"
+            style="stroke-width:2.97386;stroke-dasharray:none"
+        >
+            <path
+                id="gear-reducer"
+                d="m 294.5957,263.21484 -15.45508,15.45703 1.77149,81.49415 h 78.31641 v -81.9629 l -15.45508,-8.89843 -23.41797,-6.08985 z"
+                style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+
+            <path
+                id="prime-mover"
+                d="m 390.03516,274.45703 c -6.94715,0 -12.54102,5.59191 -12.54102,12.53906 v 71.86914 c 0,0.43891 0.0228,0.87376 0.0664,1.30079 h 46.23437 c 0.0436,-0.42703 0.0664,-0.86188 0.0664,-1.30079 v -71.86914 c 0,-6.94715 -5.59192,-12.53906 -12.53906,-12.53906 z"
+                style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+
+            <path
+                id="v-belt"
+                d="m 331.28271,276.49525 0.24093,-0.33691 c 6.154,-8.60573 18.99973,-11.74149 26.6421,-4.42547 l 39.53016,37.84212 c 2.54765,2.43886 5.49855,5.30291 7.84583,7.58992 2.34079,2.28067 2.84466,6.39253 1.13282,9.17652 -1.43917,2.34054 -5.10089,3.34658 -8.16473,2.20911 -3.14878,-1.16901 -7.15514,-2.68969 -10.6999,-4.13721 l -52.10174,-21.27596 c -9.79454,-3.99964 -10.57949,-18.03639 -4.42547,-26.64212 z"
+                style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+        </g>
+
+        <g
+            id="crank-assembly"
+            transform="rotate(-122.00052,310.90856,286.26317)"
+            style="display:inline;stroke-width:2.97386;stroke-dasharray:none"
+        >
+            <path
+                id="counterweight"
+                d="m 231.04188,287.75964 c -0.38755,-21.29459 13.02698,-38.68773 13.02698,-38.68773 l 6.84315,-0.12454 c 7.6045,-0.1384 12.7713,16.91655 13.15886,38.21114 0.38757,21.2946 -4.15522,38.52626 -11.75972,38.66466 l -6.84315,0.12455 c 0,0 -14.03855,-16.89349 -14.42612,-38.18808 z"
+                style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+
+            <rect
+                id="crank"
+                width="90.159317"
+                height="23.031912"
+                x="229.96303"
+                y="276.59531"
+                style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+        </g>
+
+        <rect
+            id="pitman-arm"
+            width="13.972582"
+            height="146.95479"
+            x="158.55551"
+            y="307.22513"
+            transform="matrix(0.8721118,-0.48930666,0.42850616,0.90353886,0,0)"
+            style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:3.42245;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+        />
+
+        <path
+            id="polished-rod-cable"
+            d="M 78.2 161.28 V 381.45"
+            fill="none"
+            stroke="var(--pump-jack-stroke)"
+            stroke-width="2.97386"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+
+        <g
+            id="walking-beam-group"
+            transform="rotate(21.598285,195.76777,175.62666)"
+            style="display:inline;opacity:1;stroke-width:2.97386;stroke-dasharray:none"
+        >
+            <path
+                id="walking-beam"
+                d="m 100.01552,160.62096 -4.636477,25.16947 204.005177,1.32471 v -25.83183 z"
+                style="display:inline;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+
+            <path
+                id="horse-head"
+                d="m 85.443726,129.4903 -16.227685,21.52652 -0.331177,37.09185 10.597672,31.46183 10.928848,0.33118 14.571796,-86.10608 z"
+                style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+        </g>
+
+        <g
+            id="pumpjack-frame"
+            style="display:inline;stroke-width:2.97386;stroke-dasharray:none"
+        >
+            <path
+                id="samson-post"
+                d="m 195.11328,177.18359 -5.58984,1.58008 -1.64063,5.69531 -51.48437,178.78321 13.77343,3.96679 45.09571,-156.59961 44.25976,156.70118 13.79297,-3.89649 -50.5332,-178.91601 -1.57031,-5.55664 z"
+                style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+
+            <rect
+                id="base"
+                width="311.4563"
+                height="19.670923"
+                x="129.73442"
+                y="360.16525"
+                style="opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            />
+        </g>
+
+        <circle
+            id="beam-pivot"
+            visibility="hidden"
+            cx="195.14584"
+            cy="174.23145"
+            r="3"
+            style="display:inline;opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+        />
+
+        <circle
+            id="beam-pin"
+            visibility="hidden"
+            cx="282.16684"
+            cy="208.82146"
+            r="3"
+            style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+        />
+
+        <circle
+            id="crank-pin"
+            visibility="hidden"
+            cx="-72.452255"
+            cy="-458.33368"
+            transform="rotate(142.81962)"
+            r="3"
+            style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+        />
+
+        <circle
+            id="crank-center"
+            visibility="hidden"
+            cx="313.5463"
+            cy="288.82336"
+            r="3"
+            style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+        />
+
+        <circle
+            id="polished-rod-pin"
+            visibility="hidden"
+            cx="110.59529"
+            cy="99.761101"
+            r="3"
+            style="opacity:1;fill:#427eff;fill-opacity:1;stroke:none;stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+        />
+    </g>
+
+    <script
+        id="pump-jack-animation"
+        type="application/ecmascript"
+    >
+        <![CDATA[
 (() => {
-  const svg = document.documentElement;
-  const crank = document.getElementById("crank-assembly");
-  const beam = document.getElementById("walking-beam-group");
-  let pitman = document.getElementById("pitman-arm");
-  const rod = document.getElementById("polished-rod");
-  const pins = [
-    document.getElementById("beam-pivot"),
-    document.getElementById("beam-pin"),
-    document.getElementById("crank-pin"),
-    document.getElementById("crank-center"),
-    document.getElementById("polished-rod-pin")
-  ];
+    const svg = document.documentElement;
+    const crank = document.getElementById("crank-assembly");
+    const beam = document.getElementById("walking-beam-group");
+    let pitman = document.getElementById("pitman-arm");
+    const cable = document.getElementById("polished-rod-cable");
 
-  if (!crank || !beam || !pitman || !rod || pins.some((pin) => !pin)) return;
+    const pins = [
+        document.getElementById("beam-pivot"),
+        document.getElementById("beam-pin"),
+        document.getElementById("crank-pin"),
+        document.getElementById("crank-center"),
+        document.getElementById("polished-rod-pin")
+    ];
 
-  const [beamPivotNode, beamPinNode, crankPinNode, crankCenterNode, polishedRodPinNode] = pins;
-  const point = (node) => ({
-    x: node.cx.baseVal.value,
-    y: node.cy.baseVal.value
-  });
-  const transformedPoint = (node) => {
-    const p = point(node);
-    const transform = node.transform.baseVal.consolidate();
-    if (!transform) return p;
-    const m = transform.matrix;
-    return {
-      x: m.a * p.x + m.c * p.y + m.e,
-      y: m.b * p.x + m.d * p.y + m.f
-    };
-  };
-  const rotatePoint = (p, center, angle) => {
-    const cos = Math.cos(angle);
-    const sin = Math.sin(angle);
-    const x = p.x - center.x;
-    const y = p.y - center.y;
-    return {
-      x: center.x + x * cos - y * sin,
-      y: center.y + x * sin + y * cos
-    };
-  };
-  const normalizeAngle = (angle) => {
-    while (angle > Math.PI) angle -= Math.PI * 2;
-    while (angle < -Math.PI) angle += Math.PI * 2;
-    return angle;
-  };
-  const degrees = (angle) => angle * 180 / Math.PI;
-
-  const beamPivot = point(beamPivotNode);
-  // In the edited source, beam-pin is already stored at its visible position
-  // for the beam's initial 21.598285 degree pose. Recover the pin's true local
-  // angle instead of rotating that visible position a second time.
-  const beamPinStart = point(beamPinNode);
-  const crankCenter = point(crankCenterNode);
-  const crankPinStart = transformedPoint(crankPinNode);
-  const beamTransformStart = 21.598285 * Math.PI / 180;
-  const beamStartAngle = Math.atan2(
-    beamPinStart.y - beamPivot.y,
-    beamPinStart.x - beamPivot.x
-  );
-  const beamBaseAngle = beamStartAngle - beamTransformStart;
-  const beamRadius = Math.hypot(
-    beamPinStart.x - beamPivot.x,
-    beamPinStart.y - beamPivot.y
-  );
-  const pitmanLength = Math.hypot(
-    crankPinStart.x - beamPinStart.x,
-    crankPinStart.y - beamPinStart.y
-  );
-  const pitmanWidth = 13.972582;
-  const hiddenTop = 13;
-  const cycleDuration = 8;
-  let previousBeamAngle = beamStartAngle;
-
-  const originalCrankTransform = crank.getAttribute("transform") || "";
-
-  if (pitman.tagName.toLowerCase() !== "path") {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    for (const attribute of Array.from(pitman.attributes)) {
-      if (!["x", "y", "width", "height", "transform"].includes(attribute.name)) {
-        path.setAttribute(attribute.name, attribute.value);
-      }
+    if (
+        !crank ||
+        !beam ||
+        !pitman ||
+        !cable ||
+        pins.some((pin) => !pin)
+    ) {
+        return;
     }
-    pitman.replaceWith(path);
-    pitman = path;
-  }
 
-  const cable = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  cable.setAttribute("id", "polished-rod-cable");
-  cable.setAttribute("fill", "none");
-  cable.setAttribute("stroke", "var(--pump-jack-stroke)");
-  cable.setAttribute("stroke-width", "2.97386");
-  cable.setAttribute("stroke-linecap", "round");
-  cable.setAttribute("stroke-linejoin", "round");
-  rod.parentNode.insertBefore(cable, rod);
-  rod.setAttribute("display", "none");
+    const [
+        beamPivotNode,
+        beamPinNode,
+        crankPinNode,
+        crankCenterNode,
+        polishedRodPinNode
+    ] = pins;
 
-  function solveBeam(crankPin) {
-    const dx = crankPin.x - beamPivot.x;
-    const dy = crankPin.y - beamPivot.y;
-    const distance = Math.hypot(dx, dy);
-    const direction = Math.atan2(dy, dx);
-    const rawCosine = (
-      beamRadius * beamRadius + distance * distance - pitmanLength * pitmanLength
-    ) / (2 * beamRadius * distance);
-    const spread = Math.acos(Math.max(-1, Math.min(1, rawCosine)));
-    const candidates = [direction - spread, direction + spread];
-    const angle = candidates.reduce((best, candidate) => {
-      const bestGap = Math.abs(normalizeAngle(best - previousBeamAngle));
-      const gap = Math.abs(normalizeAngle(candidate - previousBeamAngle));
-      return gap < bestGap ? candidate : best;
+    const point = (node) => ({
+        x: node.cx.baseVal.value,
+        y: node.cy.baseVal.value
     });
-    previousBeamAngle = angle;
-    return {
-      angle,
-      pin: {
-        x: beamPivot.x + beamRadius * Math.cos(angle),
-        y: beamPivot.y + beamRadius * Math.sin(angle)
-      }
+
+    const transformedPoint = (node) => {
+        const p = point(node);
+        const transform = node.transform.baseVal.consolidate();
+
+        if (!transform) {
+            return p;
+        }
+
+        const m = transform.matrix;
+
+        return {
+            x: m.a * p.x + m.c * p.y + m.e,
+            y: m.b * p.x + m.d * p.y + m.f
+        };
     };
-  }
 
-  function drawPitman(topPin, bottomPin) {
-    const dx = bottomPin.x - topPin.x;
-    const dy = bottomPin.y - topPin.y;
-    const length = Math.hypot(dx, dy);
-    const ux = dx / length;
-    const uy = dy / length;
-    const nx = -uy * pitmanWidth / 2;
-    const ny = ux * pitmanWidth / 2;
-    const top = {
-      x: topPin.x - ux * hiddenTop,
-      y: topPin.y - uy * hiddenTop
+    const rotatePoint = (p, center, angle) => {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const x = p.x - center.x;
+        const y = p.y - center.y;
+
+        return {
+            x: center.x + x * cos - y * sin,
+            y: center.y + x * sin + y * cos
+        };
     };
-    pitman.setAttribute("d",
-      `M ${top.x + nx} ${top.y + ny} L ${top.x - nx} ${top.y - ny} `
-      + `L ${bottomPin.x - nx} ${bottomPin.y - ny} `
-      + `L ${bottomPin.x + nx} ${bottomPin.y + ny} Z`
+
+    const normalizeAngle = (angle) => {
+        while (angle > Math.PI) {
+            angle -= Math.PI * 2;
+        }
+
+        while (angle < -Math.PI) {
+            angle += Math.PI * 2;
+        }
+
+        return angle;
+    };
+
+    const degrees = (angle) => {
+        return angle * 180 / Math.PI;
+    };
+
+    const beamPivot = point(beamPivotNode);
+    const beamPinStart = point(beamPinNode);
+    const crankCenter = point(crankCenterNode);
+    const crankPinStart = transformedPoint(crankPinNode);
+
+    const beamTransformStart =
+        21.598285 * Math.PI / 180;
+
+    const beamStartAngle = Math.atan2(
+        beamPinStart.y - beamPivot.y,
+        beamPinStart.x - beamPivot.x
     );
-  }
 
-  function drawRod(beamAngle) {
-    const beamTransformAngle = beamAngle - beamBaseAngle;
-    const lowAngle = -28.5 * Math.PI / 180;
-    const highAngle = 22.1 * Math.PI / 180;
-    const range = highAngle - lowAngle;
-    const raised = Math.max(0, Math.min(1,
-      (beamTransformAngle - lowAngle) / range
-    ));
+    const beamBaseAngle =
+        beamStartAngle - beamTransformStart;
 
-    // Keep only a short, thin vertical cable. Its lower end stays fixed while
-    // the upper end follows the horse-head motion without moving sideways.
-    const rodX = 78.2;
-    const fixedLineBottom = 381.45;
-    const cableTop = 189.0 - raised * 28.0;
-
-    cable.setAttribute("d", `M ${rodX} ${cableTop} V ${fixedLineBottom}`);
-    setPinPosition(polishedRodPinNode, { x: rodX, y: cableTop });
-  }
-
-  function setPinPosition(node, p) {
-    node.removeAttribute("transform");
-    node.setAttribute("cx", p.x);
-    node.setAttribute("cy", p.y);
-  }
-
-  function render(phase) {
-    const crankPin = rotatePoint(crankPinStart, crankCenter, phase);
-    const solved = solveBeam(crankPin);
-    const beamTransformAngle = solved.angle - beamBaseAngle;
-
-    crank.setAttribute(
-      "transform",
-      `rotate(${degrees(phase)} ${crankCenter.x} ${crankCenter.y}) ${originalCrankTransform}`
+    const beamRadius = Math.hypot(
+        beamPinStart.x - beamPivot.x,
+        beamPinStart.y - beamPivot.y
     );
-    beam.setAttribute(
-      "transform",
-      `rotate(${degrees(beamTransformAngle)} ${beamPivot.x} ${beamPivot.y})`
+
+    const pitmanLength = Math.hypot(
+        crankPinStart.x - beamPinStart.x,
+        crankPinStart.y - beamPinStart.y
     );
-    drawPitman(solved.pin, crankPin);
-    drawRod(solved.angle);
-    setPinPosition(beamPinNode, solved.pin);
-    setPinPosition(crankPinNode, crankPin);
-  }
 
-  render(0);
+    const pitmanWidth = 13.972582;
+    const hiddenTop = 13;
+    const cycleDuration = 8;
 
-  let startTime = null;
-  function animate(timestamp) {
-    if (startTime === null) startTime = timestamp;
-    const elapsed = (timestamp - startTime) / 1000;
-    render((elapsed / cycleDuration) * Math.PI * 2);
-    svg.__pumpjackAnimationFrame = requestAnimationFrame(animate);
-  }
-  svg.__pumpjackAnimationFrame = requestAnimationFrame(animate);
+    let previousBeamAngle = beamStartAngle;
+
+    const originalCrankTransform =
+        crank.getAttribute("transform") || "";
+
+    if (pitman.tagName.toLowerCase() !== "path") {
+        const path = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+        );
+
+        for (
+            const attribute of Array.from(pitman.attributes)
+        ) {
+            if (
+                ![
+                    "x",
+                    "y",
+                    "width",
+                    "height",
+                    "transform"
+                ].includes(attribute.name)
+            ) {
+                path.setAttribute(
+                    attribute.name,
+                    attribute.value
+                );
+            }
+        }
+
+        pitman.replaceWith(path);
+        pitman = path;
+    }
+
+    function solveBeam(crankPin) {
+        const dx = crankPin.x - beamPivot.x;
+        const dy = crankPin.y - beamPivot.y;
+        const distance = Math.hypot(dx, dy);
+        const direction = Math.atan2(dy, dx);
+
+        const rawCosine = (
+            beamRadius * beamRadius +
+            distance * distance -
+            pitmanLength * pitmanLength
+        ) / (
+            2 * beamRadius * distance
+        );
+
+        const spread = Math.acos(
+            Math.max(
+                -1,
+                Math.min(1, rawCosine)
+            )
+        );
+
+        const candidates = [
+            direction - spread,
+            direction + spread
+        ];
+
+        const angle = candidates.reduce(
+            (best, candidate) => {
+                const bestGap = Math.abs(
+                    normalizeAngle(
+                        best - previousBeamAngle
+                    )
+                );
+
+                const gap = Math.abs(
+                    normalizeAngle(
+                        candidate -
+                        previousBeamAngle
+                    )
+                );
+
+                return gap < bestGap
+                    ? candidate
+                    : best;
+            }
+        );
+
+        previousBeamAngle = angle;
+
+        return {
+            angle,
+            pin: {
+                x:
+                    beamPivot.x +
+                    beamRadius * Math.cos(angle),
+                y:
+                    beamPivot.y +
+                    beamRadius * Math.sin(angle)
+            }
+        };
+    }
+
+    function drawPitman(topPin, bottomPin) {
+        const dx = bottomPin.x - topPin.x;
+        const dy = bottomPin.y - topPin.y;
+        const length = Math.hypot(dx, dy);
+        const ux = dx / length;
+        const uy = dy / length;
+        const nx = -uy * pitmanWidth / 2;
+        const ny = ux * pitmanWidth / 2;
+
+        const top = {
+            x: topPin.x - ux * hiddenTop,
+            y: topPin.y - uy * hiddenTop
+        };
+
+        pitman.setAttribute(
+            "d",
+            `M ${top.x + nx} ${top.y + ny} ` +
+            `L ${top.x - nx} ${top.y - ny} ` +
+            `L ${bottomPin.x - nx} ${bottomPin.y - ny} ` +
+            `L ${bottomPin.x + nx} ${bottomPin.y + ny} Z`
+        );
+    }
+
+    function drawRod(beamAngle) {
+        const beamTransformAngle =
+            beamAngle - beamBaseAngle;
+
+        const lowAngle =
+            -28.5 * Math.PI / 180;
+
+        const highAngle =
+            22.1 * Math.PI / 180;
+
+        const range =
+            highAngle - lowAngle;
+
+        const raised = Math.max(
+            0,
+            Math.min(
+                1,
+                (
+                    beamTransformAngle -
+                    lowAngle
+                ) / range
+            )
+        );
+
+        const rodX = 78.2;
+        const fixedLineBottom = 381.45;
+        const cableTop =
+            189.0 - raised * 28.0;
+
+        cable.setAttribute(
+            "d",
+            `M ${rodX} ${cableTop} V ${fixedLineBottom}`
+        );
+
+        setPinPosition(
+            polishedRodPinNode,
+            {
+                x: rodX,
+                y: cableTop
+            }
+        );
+    }
+
+    function setPinPosition(node, p) {
+        node.removeAttribute("transform");
+        node.setAttribute("cx", p.x);
+        node.setAttribute("cy", p.y);
+    }
+
+    function render(phase) {
+        const crankPin = rotatePoint(
+            crankPinStart,
+            crankCenter,
+            phase
+        );
+
+        const solved =
+            solveBeam(crankPin);
+
+        const beamTransformAngle =
+            solved.angle - beamBaseAngle;
+
+        crank.setAttribute(
+            "transform",
+            `rotate(${degrees(phase)} ` +
+            `${crankCenter.x} ` +
+            `${crankCenter.y}) ` +
+            originalCrankTransform
+        );
+
+        beam.setAttribute(
+            "transform",
+            `rotate(${degrees(beamTransformAngle)} ` +
+            `${beamPivot.x} ` +
+            `${beamPivot.y})`
+        );
+
+        drawPitman(
+            solved.pin,
+            crankPin
+        );
+
+        drawRod(
+            solved.angle
+        );
+
+        setPinPosition(
+            beamPinNode,
+            solved.pin
+        );
+
+        setPinPosition(
+            crankPinNode,
+            crankPin
+        );
+    }
+
+    render(0);
+
+    let startTime = null;
+
+    function animate(timestamp) {
+        if (startTime === null) {
+            startTime = timestamp;
+        }
+
+        const elapsed =
+            (timestamp - startTime) / 1000;
+
+        render(
+            (
+                elapsed /
+                cycleDuration
+            ) *
+            Math.PI *
+            2
+        );
+
+        svg.__pumpjackAnimationFrame =
+            requestAnimationFrame(animate);
+    }
+
+    svg.__pumpjackAnimationFrame =
+        requestAnimationFrame(animate);
 })();
-     ]]></script></svg>
-
+        ]]>
+    </script>
+</svg>
