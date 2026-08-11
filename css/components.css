@@ -723,10 +723,19 @@
 }
 
 .artwork-preview,
-.detail-preview,
-.preview-placeholder {
+.detail-preview {
     width: 100%;
     overflow: hidden;
+}
+
+.preview-placeholder {
+    overflow: hidden;
+}
+
+.preview-placeholder--icon {
+    width: min(100%, 520px);
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .preview-placeholder > svg {
@@ -756,11 +765,21 @@
 @media (max-width: 767px) {
     .artwork-preview-view,
     .artwork-preview,
-    .detail-preview,
-    .preview-placeholder {
+    .detail-preview {
         width: 100%;
         min-width: 0;
         max-width: 100%;
+    }
+
+    .preview-placeholder {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .preview-placeholder--icon {
+        width: min(100%, 520px);
+        margin-right: auto;
+        margin-left: auto;
     }
 
     .preview-placeholder > svg,
@@ -771,3 +790,4 @@
         max-width: 100%;
     }
 }
+
