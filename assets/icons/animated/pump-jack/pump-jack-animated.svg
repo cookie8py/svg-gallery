@@ -85,7 +85,7 @@
             x="158.55551"
             y="307.22513"
             transform="matrix(0.8721118,-0.48930666,0.42850616,0.90353886,0,0)"
-            style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:3.42245;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+            style="display:inline;opacity:1;fill:var(--pump-jack-fill);stroke:var(--pump-jack-stroke);stroke-width:2.97386;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
         />
 
         <path
