@@ -294,7 +294,6 @@
   }
 
   render(0);
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   let startTime = null;
   function animate(timestamp) {
