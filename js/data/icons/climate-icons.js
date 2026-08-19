@@ -34,12 +34,14 @@ export const climateIcons = [
         title: "LNG 운반선",
         category: "climate",
         motion: "static",
-        colorCount: 2,
-        description: "액화천연가스를 운송하는 LNG 운반선 아이콘입니다.",
-        source: "제작 예정",
-        
+        colorCount: 5,
+        description:
+            "네 개의 구형 저장 탱크가 갑판 위로 드러난 모스형 LNG 운반선 아이콘입니다.",
+        source: "직접 제작",
+    
         environmentalContext: {
-            summary: "LNG는 석탄보다 온실가스 배출량이 낮을 수 있지만 청정에너지는 아닙니다. 생산부터 운송과 소비까지 전 과정에서 온실가스가 배출됩니다.",
+            summary:
+                "LNG는 석탄보다 온실가스 배출량이 낮을 수 있지만 청정에너지는 아닙니다. 생산부터 운송과 소비까지 전 과정에서 온실가스가 배출됩니다.",
             points: [
                 "천연가스의 생산과 운송 과정에서 강력한 온실가스인 메탄이 누출될 수 있습니다.",
                 "가스를 액화하고 선박으로 운송한 뒤 다시 기화하는 과정에 추가 에너지가 필요합니다.",
@@ -57,10 +59,40 @@ export const climateIcons = [
             ]
         },
     
-        previewType: "placeholder",
-        previewPath: "",
-        svgPath: "",
-        htmlPath: ""
+        previewType: "svg",
+        previewPath:
+            "./assets/icons/static/lng-carrier/lng-carrier.svg",
+        svgPath:
+            "./assets/icons/static/lng-carrier/lng-carrier.svg",
+        htmlPath: "",
+    
+        editableColors: [
+            {
+                key: "--lng-hull",
+                label: "선체",
+                defaultValue: "#427eff"
+            },
+            {
+                key: "--lng-tanks",
+                label: "저장 탱크",
+                defaultValue: "#ffffff"
+            },
+            {
+                key: "--lng-bridge",
+                label: "조타실",
+                defaultValue: "#cccccc"
+            },
+            {
+                key: "--lng-mast",
+                label: "선수 구조물",
+                defaultValue: "#b3b3b3"
+            },
+            {
+                key: "--lng-outline",
+                label: "외곽선과 세부 구조",
+                defaultValue: "#000000"
+            }
+        ]
     },
     {
         id: "icon-placeholder-7",

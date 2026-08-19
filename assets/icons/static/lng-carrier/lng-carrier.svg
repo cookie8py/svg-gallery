@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="500"
+    height="106.88423"
+    viewBox="0 0 500 106.88423"
+    version="1.1"
+    id="lng-carrier-icon"
+    role="img"
+    aria-labelledby="lng-carrier-title lng-carrier-description"
+>
+    <title id="lng-carrier-title">
+        LNG 운반선
+    </title>
+
+    <desc id="lng-carrier-description">
+        네 개의 구형 저장 탱크가 갑판 위로 드러난 모스형 LNG 운반선
+    </desc>
+
+    <style>
+        :root {
+            --lng-hull: #427eff;
+            --lng-tanks: #ffffff;
+            --lng-bridge: #cccccc;
+            --lng-mast: #b3b3b3;
+            --lng-outline: #000000;
+        }
+
+        #fore-mast {
+            fill: var(--lng-mast);
+            stroke: var(--lng-outline);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-opacity: 0.933333;
+        }
+
+        #tank-access-system {
+            fill: none;
+            stroke: var(--lng-outline);
+            stroke-width: 4;
+            stroke-linecap: butt;
+            stroke-linejoin: round;
+        }
+
+        #cargo-tanks {
+            fill: var(--lng-tanks);
+            stroke: var(--lng-outline);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #bridge {
+            fill: var(--lng-bridge);
+            stroke: var(--lng-outline);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #bridge-windows {
+            fill: var(--lng-outline);
+            stroke: none;
+        }
+
+        #hull {
+            fill: var(--lng-hull);
+            stroke: var(--lng-outline);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+
+    <g
+        id="lng-carrier"
+        transform="matrix(1.0009616 0 0 1.0009616 -7.4327486 -197.403)"
+    >
+        <rect
+            id="fore-mast"
+            x="437.38034"
+            y="208.0985"
+            width="7.3443995"
+            height="33.031944"
+        />
+
+        <g id="tank-access-system">
+            <path
+                id="tank-access-ladder-1"
+                d="M 195.32737,256.78659 V 207.73158"
+            />
+
+            <path
+                id="tank-access-ladder-2"
+                d="M 270,256 V 207.73158"
+            />
+
+            <path
+                id="tank-access-ladder-3"
+                d="M 344.67264,256.41025 V 207.73158"
+            />
+
+            <path
+                id="tank-access-walkway"
+                d="M 156.25418,207.73158 H 380.27209"
+            />
+        </g>
+
+        <g id="cargo-tanks">
+            <circle
+                id="cargo-tank-1"
+                cx="156.25418"
+                cy="241.85883"
+                r="34.127232"
+            />
+
+            <circle
+                id="cargo-tank-2"
+                cx="233.91373"
+                cy="241.85883"
+                r="34.127232"
+            />
+
+            <circle
+                id="cargo-tank-3"
+                cx="308.58633"
+                cy="241.85883"
+                r="34.127232"
+            />
+
+            <circle
+                id="cargo-tank-4"
+                cx="380.27206"
+                cy="241.85883"
+                r="34.127232"
+            />
+        </g>
+
+        <g id="stern-superstructure">
+            <path
+                id="bridge"
+                d="
+                    m 48.431895,221.74115
+                    40.558035,-0.4946
+                    v -22.03319
+                    h 30.16942
+                    V 245.6108
+                    H 48.555552
+                    Z
+                "
+            />
+
+            <g id="bridge-windows">
+                <rect
+                    id="bridge-window-1"
+                    x="93.8862"
+                    y="205.85832"
+                    width="7.3443995"
+                    height="8.3935986"
+                />
+
+                <rect
+                    id="bridge-window-2"
+                    x="102.84692"
+                    y="205.85832"
+                    width="7.3443995"
+                    height="8.3935986"
+                />
+
+                <rect
+                    id="bridge-window-3"
+                    x="111.80764"
+                    y="205.85832"
+                    width="7.3443995"
+                    height="8.3935986"
+                />
+            </g>
+        </g>
+
+        <path
+            id="hull"
+            d="
+                m 504.94543,243.37061
+                c 0,0
+                  -6.67663,10.61985
+                  -14.0133,19.66291
+                c -7.33668,9.04308
+                  -14.67335,18.74956
+                  -14.67335,21.40318
+                c 0,2.65363
+                  1.89501,7.04319
+                  3.79001,10.76934
+                c 1.89501,3.72613
+                  3.79002,6.78887
+                  3.79002,6.78887
+                H 258.34544
+                32.852074
+                v -6.18246
+                -6.18247
+                c 0,0
+                  -0.09019,-2.87486
+                  -3.063595,-5.74969
+                c -2.973403,-2.87485
+                  -8.83002,-5.74971
+                  -20.362871,-5.74971
+                l 0.000003,-11.0048
+                0.000003,-11.00479
+                h 15.917312
+                15.917312
+                l 3.647657,-5.2551
+                3.647657,-5.25509
+                h 35.301898
+                35.3019
+                l 10.88115,11.87033
+                139.47651,-1.48379
+                144.88231,0.796
+                14.87268,-13.42273
+                z
+            "
+        />
+    </g>
+</svg>
