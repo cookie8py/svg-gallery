@@ -966,4 +966,46 @@ body:has(.environmental-context-dialog[open]) {
         max-width: 100%;
     }
 }
+/* 모바일 상세 미리보기 컨트롤 배치 */
+@media (max-width: 767px) {
+    .detail-preview {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
 
+    .detail-color-editor {
+        position: relative;
+        top: auto;
+        right: auto;
+        order: 1;
+        width: 100%;
+    }
+
+    .detail-color-button {
+        display: block;
+        width: 70px;
+        margin-left: auto;
+    }
+
+    .detail-color-popover {
+        position: static;
+        width: 100%;
+        max-height: none;
+        margin-top: 8px;
+        overflow: visible;
+    }
+
+    .preview-display-controls {
+        position: static;
+        order: 2;
+        align-self: flex-end;
+        width: 70px;
+        margin-top: 8px;
+    }
+
+    .preview-placeholder {
+        order: 3;
+        margin-top: 8px;
+    }
+}
