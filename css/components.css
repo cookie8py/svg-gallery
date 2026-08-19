@@ -618,6 +618,182 @@
     color: #64748b;
 }
 
+/* 환경적 맥락 버튼 */
+
+.environmental-context-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    margin-top: 18px;
+    padding: 8px 14px;
+    color: var(--primary-color);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    cursor: pointer;
+}
+
+.environmental-context-button:hover,
+.environmental-context-button:focus-visible {
+    color: var(--background-color);
+    background-color: var(--primary-color);
+    outline: 2px solid transparent;
+}
+
+.environmental-context-button[hidden] {
+    display: none;
+}
+
+/* 환경적 맥락 모달 */
+
+.environmental-context-dialog {
+    width: min(640px, calc(100% - 48px));
+    max-width: 100%;
+    max-height: min(720px, calc(100dvh - 48px));
+    padding: 0;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 24%);
+}
+
+.environmental-context-dialog::backdrop {
+    background-color: rgb(15 23 42 / 62%);
+}
+
+.environmental-context-dialog__content {
+    display: flex;
+    flex-direction: column;
+    max-height: min(720px, calc(100dvh - 48px));
+}
+
+.environmental-context-dialog__header {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.environmental-context-dialog__header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.4;
+}
+
+.environmental-context-dialog__close {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: -8px -8px -8px 0;
+    padding: 0;
+    color: var(--text-color);
+    font: inherit;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+    background-color: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.environmental-context-dialog__close:hover,
+.environmental-context-dialog__close:focus-visible {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    outline: 2px solid transparent;
+}
+
+.environmental-context-dialog__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.environmental-context-dialog__body > p {
+    margin: 0;
+    line-height: 1.7;
+}
+
+.environmental-context-dialog__points {
+    margin: 20px 0 0;
+    padding-left: 22px;
+}
+
+.environmental-context-dialog__points li {
+    line-height: 1.7;
+}
+
+.environmental-context-dialog__points li + li {
+    margin-top: 8px;
+}
+
+.environmental-context-dialog__points[hidden] {
+    display: none;
+}
+
+.environmental-context-dialog__sources {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.environmental-context-dialog__sources[hidden] {
+    display: none;
+}
+
+.environmental-context-dialog__sources h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.environmental-context-dialog__sources ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+body:has(.environmental-context-dialog[open]) {
+    overflow: hidden;
+}
+
+@media (max-width: 767px) {
+    .environmental-context-button {
+        width: 100%;
+    }
+
+    .environmental-context-dialog {
+        width: calc(100% - 32px);
+        max-height: calc(100dvh - 32px);
+    }
+
+    .environmental-context-dialog__content {
+        max-height: calc(100dvh - 32px);
+    }
+
+    .environmental-context-dialog__header {
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .environmental-context-dialog__body {
+        padding: 20px;
+    }
+}
+
 /* 푸터 */
 
 .site-footer {
