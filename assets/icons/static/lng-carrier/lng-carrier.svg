@@ -89,50 +89,50 @@
         <g id="tank-access-system">
             <path
                 id="tank-access-ladder-1"
-                d="M 195.32737,256.78659 V 207.73158"
+                d="M 203.59721,256.78659 V 207.73158"
             />
-
+        
             <path
                 id="tank-access-ladder-2"
-                d="M 270,256 V 207.73158"
+                d="M 278.26984,256 V 207.73158"
             />
-
+        
             <path
                 id="tank-access-ladder-3"
-                d="M 344.67264,256.41025 V 207.73158"
+                d="M 352.94248,256.41025 V 207.73158"
             />
-
+        
             <path
                 id="tank-access-walkway"
-                d="M 156.25418,207.73158 H 380.27209"
+                d="M 164.52402,207.73158 H 388.54193"
             />
         </g>
-
+        
         <g id="cargo-tanks">
             <circle
                 id="cargo-tank-1"
-                cx="156.25418"
+                cx="166.26089"
                 cy="241.85883"
                 r="34.127232"
             />
-
+        
             <circle
                 id="cargo-tank-2"
-                cx="233.91373"
+                cx="240.93353"
                 cy="241.85883"
                 r="34.127232"
             />
-
+        
             <circle
                 id="cargo-tank-3"
-                cx="308.58633"
+                cx="315.60616"
                 cy="241.85883"
                 r="34.127232"
             />
-
+        
             <circle
                 id="cargo-tank-4"
-                cx="380.27206"
+                cx="390.27880"
                 cy="241.85883"
                 r="34.127232"
             />
