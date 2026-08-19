@@ -30,13 +30,13 @@ export const climateIcons = [
         ]
     },
     {
-        id: "기존 아이디",
-        title: "기존 제목",
+        id: "lng-carrier",
+        title: "LNG 운반선",
         category: "climate",
         motion: "static",
         colorCount: 2,
-        description: "기존 설명",
-        source: "기존 출처",
+        description: "액화천연가스를 운송하는 LNG 운반선 아이콘입니다.",
+        source: "제작 예정",
         
         environmentalContext: {
             summary: "LNG는 석탄보다 온실가스 배출량이 낮을 수 있지만 청정에너지는 아닙니다. 생산부터 운송과 소비까지 전 과정에서 온실가스가 배출됩니다.",
