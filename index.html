@@ -278,6 +278,17 @@
                                     <h3>작품 정보</h3>
 
                                     <p data-preview-description></p>
+
+                                    <button
+                                        class="environmental-context-button"
+                                        type="button"
+                                        data-environmental-context-button
+                                        aria-haspopup="dialog"
+                                        aria-controls="environmental-context-dialog"
+                                        hidden
+                                    >
+                                        환경적 맥락
+                                    </button>
                                 </section>
 
                                 <section class="artwork-source panel">
@@ -515,6 +526,17 @@
                                     <h3>아이콘 정보</h3>
 
                                     <p data-preview-description></p>
+
+                                    <button
+                                        class="environmental-context-button"
+                                        type="button"
+                                        data-environmental-context-button
+                                        aria-haspopup="dialog"
+                                        aria-controls="environmental-context-dialog"
+                                        hidden
+                                    >
+                                        환경적 맥락
+                                    </button>
                                 </section>
 
                                 <section class="artwork-source panel">
@@ -584,6 +606,56 @@
             </div>
         </section>
     </main>
+
+    <dialog
+        class="environmental-context-dialog"
+        id="environmental-context-dialog"
+        aria-labelledby="environmental-context-title"
+        data-environmental-context-dialog
+    >
+        <div class="environmental-context-dialog__content">
+            <header class="environmental-context-dialog__header">
+                <h2
+                    id="environmental-context-title"
+                    data-environmental-context-title
+                >
+                    환경적 맥락
+                </h2>
+
+                <button
+                    class="environmental-context-dialog__close"
+                    type="button"
+                    data-environmental-context-close
+                    aria-label="환경적 맥락 닫기"
+                >
+                    ×
+                </button>
+            </header>
+
+            <div class="environmental-context-dialog__body">
+                <p data-environmental-context-summary></p>
+
+                <ul
+                    class="environmental-context-dialog__points"
+                    data-environmental-context-points
+                    hidden
+                ></ul>
+
+                <section
+                    class="environmental-context-dialog__sources"
+                    data-environmental-context-sources-section
+                    aria-labelledby="environmental-context-sources-title"
+                    hidden
+                >
+                    <h3 id="environmental-context-sources-title">
+                        출처
+                    </h3>
+
+                    <ul data-environmental-context-sources></ul>
+                </section>
+            </div>
+        </div>
+    </dialog>
 
     <footer class="site-footer">
         <div class="site-container">

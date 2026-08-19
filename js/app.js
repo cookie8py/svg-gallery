@@ -21,6 +21,225 @@ const galleryDefinitions = [
     }
 ];
 
+const environmentalContextDialog =
+    document.querySelector(
+        "[data-environmental-context-dialog]"
+    );
+
+const environmentalContextTitle =
+    document.querySelector(
+        "[data-environmental-context-title]"
+    );
+
+const environmentalContextSummary =
+    document.querySelector(
+        "[data-environmental-context-summary]"
+    );
+
+const environmentalContextPoints =
+    document.querySelector(
+        "[data-environmental-context-points]"
+    );
+
+const environmentalContextSourcesSection =
+    document.querySelector(
+        "[data-environmental-context-sources-section]"
+    );
+
+const environmentalContextSources =
+    document.querySelector(
+        "[data-environmental-context-sources]"
+    );
+
+const environmentalContextClose =
+    document.querySelector(
+        "[data-environmental-context-close]"
+    );
+
+let environmentalContextTrigger = null;
+
+function hasEnvironmentalContext(item) {
+    return Boolean(
+        item &&
+        item.environmentalContext &&
+        typeof item.environmentalContext.summary ===
+            "string" &&
+        item.environmentalContext.summary.trim()
+    );
+}
+
+function isSafeHttpUrl(value) {
+    if (typeof value !== "string") {
+        return false;
+    }
+
+    try {
+        const url = new URL(
+            value,
+            window.location.href
+        );
+
+        return (
+            url.protocol === "http:" ||
+            url.protocol === "https:"
+        );
+    } catch {
+        return false;
+    }
+}
+
+function openEnvironmentalContextDialog(
+    item,
+    trigger
+) {
+    if (
+        !environmentalContextDialog ||
+        !hasEnvironmentalContext(item)
+    ) {
+        return;
+    }
+
+    const context = item.environmentalContext;
+
+    const points = Array.isArray(
+        context.points
+    )
+        ? context.points.filter(
+            function (point) {
+                return (
+                    typeof point === "string" &&
+                    point.trim()
+                );
+            }
+        )
+        : [];
+
+    const sources = Array.isArray(
+        context.sources
+    )
+        ? context.sources.filter(
+            function (source) {
+                return Boolean(
+                    source &&
+                    typeof source.label ===
+                        "string" &&
+                    source.label.trim() &&
+                    isSafeHttpUrl(source.url)
+                );
+            }
+        )
+        : [];
+
+    environmentalContextTitle.textContent =
+        (item.title || "작품") +
+        "의 환경적 맥락";
+
+    environmentalContextSummary.textContent =
+        context.summary.trim();
+
+    environmentalContextPoints
+        .replaceChildren();
+
+    points.forEach(
+        function (point) {
+            const listItem =
+                document.createElement("li");
+
+            listItem.textContent =
+                point.trim();
+
+            environmentalContextPoints.append(
+                listItem
+            );
+        }
+    );
+
+    environmentalContextPoints.hidden =
+        points.length === 0;
+
+    environmentalContextSources
+        .replaceChildren();
+
+    sources.forEach(
+        function (source) {
+            const listItem =
+                document.createElement("li");
+
+            const link =
+                document.createElement("a");
+
+            link.className = "text-link";
+            link.href = source.url;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent =
+                source.label.trim();
+
+            listItem.append(link);
+
+            environmentalContextSources.append(
+                listItem
+            );
+        }
+    );
+
+    environmentalContextSourcesSection.hidden =
+        sources.length === 0;
+
+    environmentalContextTrigger = trigger;
+
+    environmentalContextDialog.showModal();
+}
+
+function closeEnvironmentalContextDialog() {
+    if (
+        environmentalContextDialog &&
+        environmentalContextDialog.open
+    ) {
+        environmentalContextDialog.close();
+    }
+}
+
+if (
+    environmentalContextDialog &&
+    environmentalContextClose
+) {
+    environmentalContextClose.addEventListener(
+        "click",
+        closeEnvironmentalContextDialog
+    );
+
+    environmentalContextDialog.addEventListener(
+        "click",
+        function (event) {
+            if (
+                event.target ===
+                environmentalContextDialog
+            ) {
+                closeEnvironmentalContextDialog();
+            }
+        }
+    );
+
+    environmentalContextDialog.addEventListener(
+        "close",
+        function () {
+            const trigger =
+                environmentalContextTrigger;
+
+            environmentalContextTrigger = null;
+
+            if (
+                trigger &&
+                trigger.isConnected &&
+                !trigger.hidden
+            ) {
+                trigger.focus();
+            }
+        }
+    );
+}
+
 function createPreviewMedia(
     item,
     className,
@@ -185,6 +404,11 @@ function createGallery(definition) {
     const previewSource = root.querySelector(
         "[data-preview-source]"
     );
+
+    const environmentalContextButton =
+        root.querySelector(
+            "[data-environmental-context-button]"
+        );
 
     const svgDownload = root.querySelector(
         "[data-svg-download]"
@@ -1383,6 +1607,26 @@ function createGallery(definition) {
             item.source ||
             "등록된 출처 및 참고 자료가 없습니다.";
 
+        if (environmentalContextButton) {
+            const contextAvailable =
+                hasEnvironmentalContext(item);
+        
+            environmentalContextButton.hidden =
+                !contextAvailable;
+        
+            if (contextAvailable) {
+                environmentalContextButton.setAttribute(
+                    "aria-label",
+                    (item.title || "작품") +
+                        "의 환경적 맥락 보기"
+                );
+            } else {
+                environmentalContextButton.removeAttribute(
+                    "aria-label"
+                );
+            }
+        }
+
         showColorEditor(item);
         resetPreviewBackground();
         renderLargePreview(item);
@@ -1408,6 +1652,15 @@ function createGallery(definition) {
         previewRenderId += 1;
         selectedItem = null;
         currentColors.clear();
+
+        if (environmentalContextButton) {
+            environmentalContextButton.hidden =
+                true;
+        
+            environmentalContextButton.removeAttribute(
+                "aria-label"
+            );
+        }
 
         if (hasColorEditor()) {
             colorEditor.hidden = true;
@@ -1833,6 +2086,25 @@ function createGallery(definition) {
         );
     }
 
+    if (environmentalContextButton) {
+        environmentalContextButton.addEventListener(
+            "click",
+            function () {
+                if (
+                    selectedItem &&
+                    hasEnvironmentalContext(
+                        selectedItem
+                    )
+                ) {
+                    openEnvironmentalContextDialog(
+                        selectedItem,
+                        environmentalContextButton
+                    );
+                }
+            }
+        );
+    }
+
     if (svgDownload) {
         svgDownload.addEventListener(
             "click",
@@ -1936,10 +2208,17 @@ document.addEventListener(
     "keydown",
     function (event) {
         if (event.key !== "Escape") {
-            return;
-        }
-
-        const galleryWithOpenColorPopover =
+        return;
+    }
+    
+    if (
+        environmentalContextDialog &&
+        environmentalContextDialog.open
+    ) {
+        return;
+    }
+    
+    const galleryWithOpenColorPopover =
             galleries.find(
                 function (gallery) {
                     return gallery
