@@ -844,10 +844,13 @@ body:has(.environmental-context-dialog[open]) {
     }
 
     .detail-color-button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         width: 100%;
-        min-height: 34px;
-        padding: 6px 8px;
-        font-size: 12px;
+        min-height: 42px;
+        margin: 0;
+        text-align: left;
     }
 
     .detail-color-popover {
