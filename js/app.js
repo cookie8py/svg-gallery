@@ -1610,10 +1610,10 @@ function createGallery(definition) {
         if (environmentalContextButton) {
             const contextAvailable =
                 hasEnvironmentalContext(item);
-        
+
             environmentalContextButton.hidden =
                 !contextAvailable;
-        
+
             if (contextAvailable) {
                 environmentalContextButton.setAttribute(
                     "aria-label",
@@ -1637,9 +1637,22 @@ function createGallery(definition) {
             "is-preview-open"
         );
 
+        if (
+            window.matchMedia(
+                "(max-width: 767px)"
+            ).matches
+        ) {
+            previewView.scrollIntoView({
+                behavior: "auto",
+                block: "start"
+            });
+        }
+
         window.setTimeout(
             function () {
-                closeButton.focus();
+                closeButton.focus({
+                    preventScroll: true
+                });
             },
             SLIDE_DURATION
         );
