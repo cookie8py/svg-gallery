@@ -18,17 +18,15 @@ const galleryDefinitions = [
         placeholderText: "일러스트 자리"
     },
     {
-        {
-            selector: '[data-gallery="icon"]',
-            kind: "icon",
-            items: icons,
-            pageSize: function () {
-                return mobilePageSizeQuery.matches
-                    ? 10
-                    : 20;
-            },
-            placeholderText: "아이콘\n자리"
-        }
+        selector: '[data-gallery="icon"]',
+        kind: "icon",
+        items: icons,
+        pageSize: function () {
+            return mobilePageSizeQuery.matches
+                ? 10
+                : 20;
+        },
+        placeholderText: "아이콘\n자리"
     }
 ];
 
@@ -2238,12 +2236,12 @@ function createGallery(definition) {
             "change",
             function () {
                 currentPage = 1;
-            
+
                 renderList();
             }
         );
     }
-    
+
     resetPreviewBackground();
     setAccessibility(false);
     renderList();
