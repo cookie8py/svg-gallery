@@ -1831,26 +1831,27 @@ function createGallery(definition) {
         label,
         pageNumber,
         disabled = false,
-        current = false
+        current = false,
+        ariaLabel = ""
     ) {
         const button =
             document.createElement(
                 "button"
             );
-
+        
         button.className =
             "pagination-button";
-
+        
         button.type = "button";
         button.textContent = label;
         button.disabled = disabled;
-
+        
         if (current) {
             button.setAttribute(
                 "aria-current",
                 "page"
             );
-
+        
             button.setAttribute(
                 "aria-label",
                 `${pageNumber}페이지, 현재 페이지`
@@ -1858,10 +1859,11 @@ function createGallery(definition) {
         } else {
             button.setAttribute(
                 "aria-label",
-                `${pageNumber}페이지로 이동`
+                ariaLabel ||
+                    `${pageNumber}페이지로 이동`
             );
         }
-
+    
         button.addEventListener(
             "click",
             function () {
@@ -1872,76 +1874,149 @@ function createGallery(definition) {
                 ) {
                     return;
                 }
-
+            
                 currentPage =
                     pageNumber;
-
+            
                 renderList();
             }
         );
-
+    
         return button;
     }
-
+    
     function renderPagination(
         totalItemCount
     ) {
         pagination.replaceChildren();
-
+    
         const pageSize =
             getPageSize();
-
+    
         const totalPages = Math.ceil(
             totalItemCount /
             pageSize
         );
-
+    
         if (totalPages <= 1) {
             pagination.hidden = true;
-
+        
             return;
         }
-
+    
         pagination.hidden = false;
-
+    
+        const previousPage =
+            Math.max(
+                1,
+                currentPage - 1
+            );
+        
         const previousButton =
             createPaginationButton(
                 "이전",
-                currentPage - 1,
-                currentPage === 1
+                previousPage,
+                currentPage === 1,
+                false,
+                "이전 페이지"
             );
-
+        
         pagination.append(
             previousButton
         );
-
-        for (
-            let pageNumber = 1;
-            pageNumber <= totalPages;
-            pageNumber += 1
-        ) {
-            const pageButton =
-                createPaginationButton(
-                    String(pageNumber),
-                    pageNumber,
-                    false,
-                    pageNumber ===
-                        currentPage
+    
+        if (mobilePageSizeQuery.matches) {
+            const pagesPerGroup = 3;
+        
+            const groupStart =
+                Math.floor(
+                    (currentPage - 1) /
+                    pagesPerGroup
+                ) *
+                    pagesPerGroup +
+                1;
+            
+            const groupEnd =
+                Math.min(
+                    groupStart +
+                        pagesPerGroup -
+                        1,
+                    totalPages
                 );
-
-            pagination.append(
-                pageButton
-            );
+            
+            for (
+                let pageNumber = groupStart;
+                pageNumber <= groupEnd;
+                pageNumber += 1
+            ) {
+                const pageButton =
+                    createPaginationButton(
+                        String(pageNumber),
+                        pageNumber,
+                        false,
+                        pageNumber ===
+                            currentPage
+                    );
+                
+                pagination.append(
+                    pageButton
+                );
+            }
+        
+            if (groupEnd < totalPages) {
+                const nextGroupPage =
+                    groupEnd + 1;
+            
+                const moreButton =
+                    createPaginationButton(
+                        "...",
+                        nextGroupPage,
+                        false,
+                        false,
+                        `${nextGroupPage}페이지부터 보기`
+                    );
+                
+                pagination.append(
+                    moreButton
+                );
+            }
+        } else {
+            for (
+                let pageNumber = 1;
+                pageNumber <= totalPages;
+                pageNumber += 1
+            ) {
+                const pageButton =
+                    createPaginationButton(
+                        String(pageNumber),
+                        pageNumber,
+                        false,
+                        pageNumber ===
+                            currentPage
+                    );
+                
+                pagination.append(
+                    pageButton
+                );
+            }
         }
-
+    
+        const nextPage =
+            Math.min(
+                totalPages,
+                currentPage + 1
+            );
+        
         const nextButton =
             createPaginationButton(
                 "다음",
-                currentPage + 1,
+                nextPage,
                 currentPage ===
-                    totalPages
+                    totalPages,
+                false,
+                "다음 페이지"
             );
-
+        
         pagination.append(
             nextButton
         );
