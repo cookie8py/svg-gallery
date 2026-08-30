@@ -1642,9 +1642,13 @@ function createGallery(definition) {
                 "(max-width: 767px)"
             ).matches
         ) {
-            previewView.scrollIntoView({
-                behavior: "auto",
-                block: "start"
+            const galleryTop =
+                window.scrollY +
+                root.getBoundingClientRect().top;
+                    
+            window.scrollTo({
+                top: galleryTop,
+                behavior: "auto"
             });
         }
 
