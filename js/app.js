@@ -1857,11 +1857,6 @@ function createGallery(definition) {
                     pageNumber;
 
                 renderList();
-
-                list.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
             }
         );
 
