@@ -1875,43 +1875,69 @@ function createGallery(definition) {
                     return;
                 }
             
+                const paginationTopBeforeRender =
+                    pagination
+                        .getBoundingClientRect()
+                        .top;
+            
                 currentPage =
                     pageNumber;
             
                 renderList();
+            
+                if (
+                    mobilePageSizeQuery.matches
+                ) {
+                    const paginationTopAfterRender =
+                        pagination
+                            .getBoundingClientRect()
+                            .top;
+                
+                    const scrollAdjustment =
+                        paginationTopAfterRender -
+                        paginationTopBeforeRender;
+                
+                    if (scrollAdjustment !== 0) {
+                        window.scrollBy({
+                            top: scrollAdjustment,
+                            left: 0,
+                            behavior: "auto"
+                        });
+                    }
+                }
             }
         );
     
         return button;
     }
-    
+
     function renderPagination(
         totalItemCount
     ) {
         pagination.replaceChildren();
-    
+
         const pageSize =
             getPageSize();
-    
+
         const totalPages = Math.ceil(
             totalItemCount /
             pageSize
         );
-    
+
         if (totalPages <= 1) {
             pagination.hidden = true;
-        
+
             return;
         }
-    
+
         pagination.hidden = false;
-    
+
         const previousPage =
             Math.max(
                 1,
                 currentPage - 1
             );
-        
+
         const previousButton =
             createPaginationButton(
                 "이전",
@@ -1920,14 +1946,14 @@ function createGallery(definition) {
                 false,
                 "이전 페이지"
             );
-        
+
         pagination.append(
             previousButton
         );
-    
+
         if (mobilePageSizeQuery.matches) {
             const pagesPerGroup = 3;
-        
+
             const groupStart =
                 Math.floor(
                     (currentPage - 1) /
@@ -1935,7 +1961,7 @@ function createGallery(definition) {
                 ) *
                     pagesPerGroup +
                 1;
-            
+
             const groupEnd =
                 Math.min(
                     groupStart +
@@ -1943,7 +1969,7 @@ function createGallery(definition) {
                         1,
                     totalPages
                 );
-            
+
             for (
                 let pageNumber = groupStart;
                 pageNumber <= groupEnd;
@@ -1957,16 +1983,16 @@ function createGallery(definition) {
                         pageNumber ===
                             currentPage
                     );
-                
+
                 pagination.append(
                     pageButton
                 );
             }
-        
+
             if (groupEnd < totalPages) {
                 const nextGroupPage =
                     groupEnd + 1;
-            
+
                 const moreButton =
                     createPaginationButton(
                         "...",
@@ -1975,7 +2001,7 @@ function createGallery(definition) {
                         false,
                         `${nextGroupPage}페이지부터 보기`
                     );
-                
+
                 pagination.append(
                     moreButton
                 );
@@ -1994,19 +2020,19 @@ function createGallery(definition) {
                         pageNumber ===
                             currentPage
                     );
-                
+
                 pagination.append(
                     pageButton
                 );
             }
         }
-    
+
         const nextPage =
             Math.min(
                 totalPages,
                 currentPage + 1
             );
-        
+
         const nextButton =
             createPaginationButton(
                 "다음",
@@ -2016,7 +2042,7 @@ function createGallery(definition) {
                 false,
                 "다음 페이지"
             );
-        
+
         pagination.append(
             nextButton
         );
