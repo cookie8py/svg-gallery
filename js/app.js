@@ -476,6 +476,7 @@ function createGallery(definition) {
     let currentPage = 1;
     let previewRenderId = 0;
     let isDownloading = false;
+    let listScrollPosition = null;
 
     const currentColors = new Map();
 
@@ -1642,10 +1643,13 @@ function createGallery(definition) {
                 "(max-width: 767px)"
             ).matches
         ) {
+            listScrollPosition =
+                window.scrollY;
+        
             const galleryTop =
                 window.scrollY +
                 root.getBoundingClientRect().top;
-                    
+        
             window.scrollTo({
                 top: galleryTop,
                 behavior: "auto"
@@ -1691,23 +1695,39 @@ function createGallery(definition) {
         track.classList.remove(
             "is-preview-open"
         );
-
+        
+        if (
+            window.matchMedia(
+                "(max-width: 767px)"
+            ).matches &&
+            listScrollPosition !== null
+        ) {
+            window.scrollTo({
+                top: listScrollPosition,
+                behavior: "auto"
+            });
+        }
+        
         window.setTimeout(
             function () {
                 if (!selectedItemId) {
                     return;
                 }
-
+            
                 const selectedButton =
                     list.querySelector(
                         `[data-artwork-id="${CSS.escape(
                             selectedItemId
                         )}"]`
                     );
-
+                
                 if (selectedButton) {
-                    selectedButton.focus();
+                    selectedButton.focus({
+                        preventScroll: true
+                    });
                 }
+            
+                listScrollPosition = null;
             },
             SLIDE_DURATION
         );
