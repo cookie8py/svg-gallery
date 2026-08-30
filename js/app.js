@@ -4,6 +4,11 @@ import { icons } from "./data/icons.js";
 const SLIDE_DURATION = 500;
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
+const mobilePageSizeQuery =
+    window.matchMedia(
+        "(max-width: 767px)"
+    );
+
 const galleryDefinitions = [
     {
         selector: '[data-gallery="illustration"]',
@@ -13,11 +18,17 @@ const galleryDefinitions = [
         placeholderText: "일러스트 자리"
     },
     {
-        selector: '[data-gallery="icon"]',
-        kind: "icon",
-        items: icons,
-        pageSize: 20,
-        placeholderText: "아이콘\n자리"
+        {
+            selector: '[data-gallery="icon"]',
+            kind: "icon",
+            items: icons,
+            pageSize: function () {
+                return mobilePageSizeQuery.matches
+                    ? 10
+                    : 20;
+            },
+            placeholderText: "아이콘\n자리"
+        }
     }
 ];
 
@@ -479,6 +490,17 @@ function createGallery(definition) {
     let listScrollPosition = null;
 
     const currentColors = new Map();
+
+    function getPageSize() {
+        if (
+            typeof definition.pageSize ===
+            "function"
+        ) {
+            return definition.pageSize();
+        }
+
+        return definition.pageSize;
+    }
 
     function getEditableColors(item) {
         if (
@@ -1868,9 +1890,12 @@ function createGallery(definition) {
     ) {
         pagination.replaceChildren();
 
+        const pageSize =
+            getPageSize();
+
         const totalPages = Math.ceil(
             totalItemCount /
-            definition.pageSize
+            pageSize
         );
 
         if (totalPages <= 1) {
@@ -2007,11 +2032,14 @@ function createGallery(definition) {
         const filteredItems =
             getFilteredItems();
 
+        const pageSize =
+            getPageSize();
+
         const totalPages = Math.max(
             1,
             Math.ceil(
                 filteredItems.length /
-                definition.pageSize
+                pageSize
             )
         );
 
@@ -2023,11 +2051,11 @@ function createGallery(definition) {
 
         const startIndex =
             (currentPage - 1) *
-            definition.pageSize;
+            pageSize;
 
         const endIndex =
             startIndex +
-            definition.pageSize;
+            pageSize;
 
         const visibleItems =
             filteredItems.slice(
@@ -2203,6 +2231,19 @@ function createGallery(definition) {
         resetPageAndRender
     );
 
+    if (
+        definition.kind === "icon"
+    ) {
+        mobilePageSizeQuery.addEventListener(
+            "change",
+            function () {
+                currentPage = 1;
+            
+                renderList();
+            }
+        );
+    }
+    
     resetPreviewBackground();
     setAccessibility(false);
     renderList();
