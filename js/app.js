@@ -4,6 +4,61 @@ import { icons } from "./data/icons.js";
 const SLIDE_DURATION = 500;
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
+const COLOR_PRESETS = [
+    "#F2A7A7",
+    "#F3BE8C",
+    "#F1E3A0",
+    "#A9D6B0",
+    "#AFC4ED",
+    "#C7B5E3",
+    "#FFFFFF",
+    "#000000"
+];
+
+const COLOR_PRESET_LIST_ID =
+    "svg-gallery-color-presets";
+
+function ensureColorPresetList() {
+    let presetList =
+        document.getElementById(
+            COLOR_PRESET_LIST_ID
+        );
+
+    if (presetList) {
+        return presetList;
+    }
+
+    presetList =
+        document.createElement(
+            "datalist"
+        );
+
+    presetList.id =
+        COLOR_PRESET_LIST_ID;
+
+    COLOR_PRESETS.forEach(
+        function (color) {
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+            option.value = color;
+
+            presetList.append(
+                option
+            );
+        }
+    );
+
+    document.body.append(
+        presetList
+    );
+
+    return presetList;
+}
+
+
 const mobilePageSizeQuery =
     window.matchMedia(
         "(max-width: 767px)"
@@ -463,6 +518,15 @@ function createGallery(definition) {
     const backgroundColor = root.querySelector(
         "[data-preview-background-color]"
     );
+
+    if (backgroundColor) {
+        ensureColorPresetList();
+
+        backgroundColor.setAttribute(
+            "list",
+            COLOR_PRESET_LIST_ID
+        );
+    }
 
     const pagination =
         document.createElement("nav");
@@ -1165,6 +1229,13 @@ function createGallery(definition) {
                 .defaultValue
                 .toLowerCase();
 
+        ensureColorPresetList();
+
+        picker.setAttribute(
+            "list",
+            COLOR_PRESET_LIST_ID
+        );
+
         picker.setAttribute(
             "aria-label",
             `${label.textContent} 팔레트`
@@ -1268,10 +1339,19 @@ function createGallery(definition) {
                     return;
                 }
 
-                valueInput.value =
+                const restoredValue =
                     currentValue ||
-                    colorDefinition
-                        .defaultValue;
+                    normalizeHexColor(
+                        colorDefinition
+                            .defaultValue
+                    );
+
+                valueInput.value =
+                    restoredValue;
+
+                picker.value =
+                    restoredValue
+                        .toLowerCase();
 
                 valueInput.setAttribute(
                     "aria-invalid",
