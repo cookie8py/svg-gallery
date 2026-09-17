@@ -6,7 +6,7 @@ export const animalIllustrations = [
         motion: "static",
         colorCount: 10,
         description:
-            "도시를 함께 살아가는 집비둘기를 로즈토프와 모브 계열로 표현한 정적 일러스트입니다.",
+            "도시 비둘기의 형태와 깃털 색감을 단순화해 표현한 정적 SVG 일러스트입니다. 편집 가능한 색상 요소를 포함하고 있습니다.",
         source: "직접 제작",
 
         environmentalContext: {
