@@ -2606,7 +2606,7 @@ const galleries =
         .map(createGallery)
         .filter(Boolean);
 
-    function getPreviewLocationState() {
+function getPreviewLocationState() {
         const searchParams =
             new URLSearchParams(
                 window.location.search
@@ -2622,9 +2622,9 @@ const galleries =
                     "preview"
                 )
         };
-    }
+}
 
-    function findPreviewGallery(
+function findPreviewGallery(
         galleryKind,
         itemId
     ) {
@@ -2648,9 +2648,9 @@ const galleries =
                 }
             ) || null
         );
-    }
+}
 
-    function closeOpenPreviews(
+function closeOpenPreviews(
         exceptGallery = null
     ) {
         galleries.forEach(
@@ -2665,9 +2665,9 @@ const galleries =
                 gallery.closePreview();
             }
         );
-    }
+}
 
-    function syncPreviewFromLocation() {
+function syncPreviewFromLocation() {
         const {
             galleryKind,
             itemId
@@ -2711,9 +2711,9 @@ const galleries =
         );
 
         return true;
-    }
+}
 
-    function initializeHistoryState() {
+function initializeHistoryState() {
         const {
             galleryKind,
             itemId
@@ -2785,16 +2785,16 @@ const galleries =
                 updateHistory: false
             }
         );
-    }
+}
 
-    window.addEventListener(
+window.addEventListener(
         "popstate",
         function () {
             syncPreviewFromLocation();
         }
-    );
+);
 
-    initializeHistoryState();
+initializeHistoryState();
 
 document.addEventListener(
     "keydown",
