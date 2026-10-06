@@ -85,6 +85,51 @@ const galleryDefinitions = [
     }
 ];
 
+function createListUrl() {
+    const url = new URL(
+        window.location.href
+    );
+
+    url.searchParams.delete(
+        "gallery"
+    );
+
+    url.searchParams.delete(
+        "preview"
+    );
+
+    return (
+        url.pathname +
+        url.search +
+        url.hash
+    );
+}
+
+function createPreviewUrl(
+    galleryKind,
+    itemId
+) {
+    const url = new URL(
+        window.location.href
+    );
+
+    url.searchParams.set(
+        "gallery",
+        galleryKind
+    );
+
+    url.searchParams.set(
+        "preview",
+        itemId
+    );
+
+    return (
+        url.pathname +
+        url.search +
+        url.hash
+    );
+}
+
 const environmentalContextDialog =
     document.querySelector(
         "[data-environmental-context-dialog]"
@@ -1692,7 +1737,30 @@ function createGallery(definition) {
         updatePreviewBackground();
     }
 
-    function openPreview(item) {
+    function openPreview(
+        item,
+        options = {}
+    ) {
+        const shouldUpdateHistory =
+            options.updateHistory !== false;
+
+        if (shouldUpdateHistory) {
+            window.history.pushState(
+                {
+                    view: "preview",
+                    gallery:
+                        definition.kind,
+                    itemId:
+                        item.id
+                },
+                "",
+                createPreviewUrl(
+                    definition.kind,
+                    item.id
+                )
+            );
+        }
+
         selectedItemId = item.id;
         selectedItem = item;
 
@@ -1831,6 +1899,70 @@ function createGallery(definition) {
             },
             SLIDE_DURATION
         );
+    }
+
+    function getItemById(itemId) {
+        return (
+            definition.items.find(
+                function (item) {
+                    return item.id === itemId;
+                }
+            ) || null
+        );
+    }
+
+    function openPreviewById(
+        itemId,
+        options = {}
+    ) {
+        const item =
+            getItemById(itemId);
+
+        if (!item) {
+            return false;
+        }
+
+        openPreview(
+            item,
+            options
+        );
+
+        return true;
+    }
+
+    function requestClosePreview() {
+        if (
+            !track.classList.contains(
+                "is-preview-open"
+            )
+        ) {
+            return;
+        }
+
+        const historyState =
+            window.history.state;
+
+        if (
+            historyState &&
+            historyState.view ===
+                "preview" &&
+            historyState.gallery ===
+                definition.kind
+        ) {
+            window.history.back();
+
+            return;
+        }
+
+        window.history.replaceState(
+            {
+                view: "list"
+            },
+            "",
+            createListUrl()
+        );
+
+        closePreview();
     }
 
     function createItemButton(item) {
@@ -2392,7 +2524,7 @@ function createGallery(definition) {
 
     closeButton.addEventListener(
         "click",
-        closePreview
+        requestClosePreview
     );
 
     search.addEventListener(
@@ -2428,9 +2560,27 @@ function createGallery(definition) {
     renderList();
 
     return {
+        kind: definition.kind,
+
         closePreview,
 
+        requestClosePreview,
+
+        openPreviewById,
+
         closeColorPopover,
+
+        hasItem:
+            function (itemId) {
+                return Boolean(
+                    getItemById(itemId)
+                );
+            },
+
+        getSelectedItemId:
+            function () {
+                return selectedItemId;
+            },
 
         isPreviewOpen:
             function () {
@@ -2455,6 +2605,196 @@ const galleries =
     galleryDefinitions
         .map(createGallery)
         .filter(Boolean);
+
+    function getPreviewLocationState() {
+        const searchParams =
+            new URLSearchParams(
+                window.location.search
+            );
+
+        return {
+            galleryKind:
+                searchParams.get(
+                    "gallery"
+                ),
+            itemId:
+                searchParams.get(
+                    "preview"
+                )
+        };
+    }
+
+    function findPreviewGallery(
+        galleryKind,
+        itemId
+    ) {
+        if (
+            !galleryKind ||
+            !itemId
+        ) {
+            return null;
+        }
+
+        return (
+            galleries.find(
+                function (gallery) {
+                    return (
+                        gallery.kind ===
+                            galleryKind &&
+                        gallery.hasItem(
+                            itemId
+                        )
+                    );
+                }
+            ) || null
+        );
+    }
+
+    function closeOpenPreviews(
+        exceptGallery = null
+    ) {
+        galleries.forEach(
+            function (gallery) {
+                if (
+                    gallery === exceptGallery ||
+                    !gallery.isPreviewOpen()
+                ) {
+                    return;
+                }
+
+                gallery.closePreview();
+            }
+        );
+    }
+
+    function syncPreviewFromLocation() {
+        const {
+            galleryKind,
+            itemId
+        } = getPreviewLocationState();
+
+        const targetGallery =
+            findPreviewGallery(
+                galleryKind,
+                itemId
+            );
+
+        if (!targetGallery) {
+            closeOpenPreviews();
+
+            return false;
+        }
+
+        closeOpenPreviews(
+            targetGallery
+        );
+
+        if (
+            targetGallery.isPreviewOpen() &&
+            targetGallery.getSelectedItemId() ===
+                itemId
+        ) {
+            return true;
+        }
+
+        if (
+            targetGallery.isPreviewOpen()
+        ) {
+            targetGallery.closePreview();
+        }
+
+        targetGallery.openPreviewById(
+            itemId,
+            {
+                updateHistory: false
+            }
+        );
+
+        return true;
+    }
+
+    function initializeHistoryState() {
+        const {
+            galleryKind,
+            itemId
+        } = getPreviewLocationState();
+
+        const targetGallery =
+            findPreviewGallery(
+                galleryKind,
+                itemId
+            );
+
+        if (!targetGallery) {
+            window.history.replaceState(
+                {
+                    view: "list"
+                },
+                "",
+                createListUrl()
+            );
+
+            closeOpenPreviews();
+
+            return;
+        }
+
+        const previewState = {
+            view: "preview",
+            gallery: galleryKind,
+            itemId
+        };
+
+        const currentState =
+            window.history.state;
+
+        const alreadyInitialized = Boolean(
+            currentState &&
+            currentState.view ===
+                "preview" &&
+            currentState.gallery ===
+                galleryKind &&
+            currentState.itemId ===
+                itemId
+        );
+
+        if (!alreadyInitialized) {
+            const previewUrl =
+                window.location.pathname +
+                window.location.search +
+                window.location.hash;
+
+            window.history.replaceState(
+                {
+                    view: "list"
+                },
+                "",
+                createListUrl()
+            );
+
+            window.history.pushState(
+                previewState,
+                "",
+                previewUrl
+            );
+        }
+
+        targetGallery.openPreviewById(
+            itemId,
+            {
+                updateHistory: false
+            }
+        );
+    }
+
+    window.addEventListener(
+        "popstate",
+        function () {
+            syncPreviewFromLocation();
+        }
+    );
+
+    initializeHistoryState();
 
 document.addEventListener(
     "keydown",
@@ -2487,16 +2827,17 @@ document.addEventListener(
             return;
         }
 
-        galleries.forEach(
-            function (gallery) {
-                if (
-                    gallery
-                        .isPreviewOpen()
-                ) {
-                    gallery
-                        .closePreview();
+        const galleryWithOpenPreview =
+            galleries.find(
+                function (gallery) {
+                    return gallery
+                        .isPreviewOpen();
                 }
-            }
-        );
+            );
+        
+        if (galleryWithOpenPreview) {
+            galleryWithOpenPreview
+                .requestClosePreview();
+        }
     }
 );
