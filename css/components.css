@@ -1068,12 +1068,13 @@ body:has(.environmental-context-dialog[open]) {
     width: 76px;
 }
 
+
 /* 배경색 컨트롤이 펼쳐진 경우 */
 
 .detail-preview:has(
     .preview-background-color:not([hidden])
 ) .detail-shadow-editor {
-    top: 190px;
+    top: 202px;
 }
 
 
@@ -1225,31 +1226,38 @@ body:has(.environmental-context-dialog[open]) {
    그림자 모드 - 모바일
    ======================================== */
 
+
+/* ========================================
+   그림자 모드 - 모바일
+   ======================================== */
+
 @media (max-width: 767px) {
 
     /*
-       배경 컨트롤에 더 넓은 공간을 배분
        색상 | 배경 표시 | 그림자
-    */
 
-    
+       중앙 버튼에 공간 우선 배분
+       넓은 화면에서도 최대 200px 제한
+    */
 
     .detail-preview {
         grid-template-columns:
             minmax(0, 1fr)
-            minmax(0, min(44%, 180px))
+            minmax(0, min(54%, 200px))
             minmax(0, 1fr);
         column-gap: 8px;
         row-gap: 8px;
     }
 
-
-
     /* 색상 버튼 */
 
     .detail-color-editor {
+        position: relative;
+        top: auto;
+        right: auto;
         grid-column: 1;
         grid-row: 1;
+        width: 100%;
         min-width: 0;
         align-self: center;
     }
@@ -1262,7 +1270,6 @@ body:has(.environmental-context-dialog[open]) {
         box-sizing: border-box;
     }
 
-
     /* 배경 표시 컨트롤 */
 
     .preview-display-controls {
@@ -1272,40 +1279,52 @@ body:has(.environmental-context-dialog[open]) {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
-        gap: 4px;
+        justify-content: space-between;
+        gap: 0;
         width: 100%;
         height: 42px;
         min-height: 42px;
         min-width: 0;
-        padding: 5px 6px;
+        padding: 5px 8px;
         box-sizing: border-box;
     }
 
-    /* 텍스트와 토글을 가로로 배치 */
+    /*
+       텍스트와 토글
+
+       텍스트는 왼쪽
+       토글은 남은 공간의 오른쪽
+    */
 
     .preview-background-toggle {
         display: flex;
-        flex: 0 1 auto;
+        flex: 1 1 auto;
         flex-direction: row-reverse;
         align-items: center;
-        justify-content: center;
-        gap: 6px;
+        justify-content: space-between;
+        gap: 4px;
         min-width: 0;
-        font-size: 11px;
+        font-size: 13px;
+        font-weight: 700;
         line-height: 1.2;
         text-align: left;
         white-space: nowrap;
     }
 
+    /* 배경 표시 텍스트 축소 방지 */
 
-    /* 좁은 모바일 화면에 맞춘 토글 */
+    .preview-background-toggle > span:last-child {
+        flex: 0 0 auto;
+    }
+
+    /* 토글 크기 */
 
     .preview-background-switch {
         position: relative;
         flex: 0 0 34px;
         width: 34px;
         height: 22px;
+        box-sizing: border-box;
     }
 
     .preview-background-switch::after {
@@ -1320,8 +1339,11 @@ body:has(.environmental-context-dialog[open]) {
         transform: translateX(12px);
     }
 
+    /*
+       배경색 견본
 
-    /* 배경색 선택 영역 */
+       세로 구분선 양쪽 간격 동일
+    */
 
     .preview-background-color {
         display: flex;
@@ -1330,22 +1352,18 @@ body:has(.environmental-context-dialog[open]) {
         align-items: center;
         justify-content: center;
         gap: 0;
-        margin: 0;
+        margin: 0 0 0 6px;
         padding: 0 0 0 6px;
         border-top: 0;
         border-left: 1px solid var(--border-color);
         white-space: nowrap;
     }
 
-
     .preview-background-color[hidden] {
         display: none;
     }
 
-    /*
-       배경색 텍스트는 시각적으로 숨김.
-       접근성 이름은 유지
-    */
+    /* 배경색 텍스트는 시각적으로만 숨김 */
 
     .preview-background-color > span {
         position: absolute;
@@ -1400,7 +1418,7 @@ body:has(.environmental-context-dialog[open]) {
         text-align: left;
     }
 
-    /* SVG 미리보기는 컨트롤 아래 */
+    /* SVG 미리보기는 버튼 아래 */
 
     .preview-placeholder {
         grid-column: 1 / -1;
@@ -1408,10 +1426,7 @@ body:has(.environmental-context-dialog[open]) {
         margin-top: 0;
     }
 
-    /*
-       색상 팝업이 열린 경우
-       해당 영역을 전체 너비로 확장
-    */
+    /* 색상 팝업 펼침 */
 
     .detail-color-editor:has(
         .detail-color-popover:not([hidden])
@@ -1420,10 +1435,7 @@ body:has(.environmental-context-dialog[open]) {
         align-self: stretch;
     }
 
-    /*
-       색상 팝업이 열린 동안
-       다른 컨트롤 숨김
-    */
+    /* 색상 팝업 열림 시 다른 컨트롤 숨김 */
 
     .detail-preview:has(
         .detail-color-popover:not([hidden])
@@ -1458,4 +1470,59 @@ body:has(.environmental-context-dialog[open]) {
         gap: 10px;
     }
 }
+
+/* ========================================
+   매우 좁은 모바일 화면
+   ======================================== */
+
+@media (max-width: 380px) {
+
+    /*
+       중앙 컨트롤의 요소 크기를 축소
+       바깥쪽 패딩 8px은 유지
+    */
+
+    .preview-background-toggle {
+        font-size: 12px;
+        gap: 3px;
+    }
+
+    .preview-background-switch {
+        flex-basis: 28px;
+        width: 28px;
+        height: 20px;
+    }
+
+    .preview-background-switch::after {
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .preview-background-toggle input:checked
+        + .preview-background-switch::after {
+        transform: translateX(8px);
+    }
+
+    .preview-background-color {
+        margin-left: 4px;
+        padding-left: 4px;
+    }
+
+    .preview-background-color input[type="color"] {
+        flex-basis: 20px;
+        width: 20px;
+        height: 22px;
+        padding: 1px;
+    }
+
+    .detail-color-button,
+    .detail-shadow-button {
+        padding-right: 6px;
+        padding-left: 6px;
+        font-size: 12px;
+    }
+}
+
 
