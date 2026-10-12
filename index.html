@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -271,6 +272,173 @@
                                                 </button>
                                             </div>
                                         </div>
+
+                                        <div
+                                            class="detail-shadow-editor"
+                                            data-detail-shadow-editor
+                                        >
+                                            <button
+                                                class="detail-shadow-button"
+                                                type="button"
+                                                data-detail-shadow-button
+                                                aria-expanded="false"
+                                                aria-controls="illustration-shadow-panel"
+                                            >
+                                                그림자
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section
+                                    class="artwork-shadow panel"
+                                    id="illustration-shadow-panel"
+                                    data-shadow-panel
+                                    aria-label="그림자 설정"
+                                    hidden
+                                >
+                                    <h3>그림자 설정</h3>
+
+                                    <div class="shadow-controls">
+                                        <label class="shadow-enable">
+                                            <input
+                                                type="checkbox"
+                                                data-shadow-enabled
+                                            >
+
+                                            <span>그림자 사용</span>
+                                        </label>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="illustration-shadow-angle"
+                                            >
+                                                방향
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="illustration-shadow-angle"
+                                                    type="range"
+                                                    min="0"
+                                                    max="360"
+                                                    step="1"
+                                                    value="135"
+                                                    data-shadow-angle
+                                                >
+
+                                                <output
+                                                    for="illustration-shadow-angle"
+                                                    data-shadow-angle-value
+                                                >
+                                                    135°
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="illustration-shadow-distance"
+                                            >
+                                                거리
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="illustration-shadow-distance"
+                                                    type="range"
+                                                    min="0"
+                                                    max="50"
+                                                    step="1"
+                                                    value="12"
+                                                    data-shadow-distance
+                                                >
+
+                                                <output
+                                                    for="illustration-shadow-distance"
+                                                    data-shadow-distance-value
+                                                >
+                                                    12
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="illustration-shadow-blur"
+                                            >
+                                                흐림
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="illustration-shadow-blur"
+                                                    type="range"
+                                                    min="0"
+                                                    max="30"
+                                                    step="1"
+                                                    value="6"
+                                                    data-shadow-blur
+                                                >
+
+                                                <output
+                                                    for="illustration-shadow-blur"
+                                                    data-shadow-blur-value
+                                                >
+                                                    6
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="illustration-shadow-opacity"
+                                            >
+                                                불투명도
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="illustration-shadow-opacity"
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    value="40"
+                                                    data-shadow-opacity
+                                                >
+
+                                                <output
+                                                    for="illustration-shadow-opacity"
+                                                    data-shadow-opacity-value
+                                                >
+                                                    40%
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="illustration-shadow-color"
+                                            >
+                                                그림자 색상
+                                            </label>
+
+                                            <input
+                                                id="illustration-shadow-color"
+                                                type="color"
+                                                value="#333333"
+                                                data-shadow-color
+                                            >
+                                        </div>
+
+                                        <button
+                                            class="shadow-reset"
+                                            type="button"
+                                            data-shadow-reset
+                                        >
+                                            그림자 설정 초기화
+                                        </button>
                                     </div>
                                 </section>
 
@@ -519,6 +687,173 @@
                                                 </button>
                                             </div>
                                         </div>
+
+                                        <div
+                                            class="detail-shadow-editor"
+                                            data-detail-shadow-editor
+                                        >
+                                            <button
+                                                class="detail-shadow-button"
+                                                type="button"
+                                                data-detail-shadow-button
+                                                aria-expanded="false"
+                                                aria-controls="icon-shadow-panel"
+                                            >
+                                                그림자
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section
+                                    class="artwork-shadow panel"
+                                    id="icon-shadow-panel"
+                                    data-shadow-panel
+                                    aria-label="그림자 설정"
+                                    hidden
+                                >
+                                    <h3>그림자 설정</h3>
+
+                                    <div class="shadow-controls">
+                                        <label class="shadow-enable">
+                                            <input
+                                                type="checkbox"
+                                                data-shadow-enabled
+                                            >
+
+                                            <span>그림자 사용</span>
+                                        </label>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="icon-shadow-angle"
+                                            >
+                                                방향
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="icon-shadow-angle"
+                                                    type="range"
+                                                    min="0"
+                                                    max="360"
+                                                    step="1"
+                                                    value="135"
+                                                    data-shadow-angle
+                                                >
+
+                                                <output
+                                                    for="icon-shadow-angle"
+                                                    data-shadow-angle-value
+                                                >
+                                                    135°
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="icon-shadow-distance"
+                                            >
+                                                거리
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="icon-shadow-distance"
+                                                    type="range"
+                                                    min="0"
+                                                    max="50"
+                                                    step="1"
+                                                    value="12"
+                                                    data-shadow-distance
+                                                >
+
+                                                <output
+                                                    for="icon-shadow-distance"
+                                                    data-shadow-distance-value
+                                                >
+                                                    12
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="icon-shadow-blur"
+                                            >
+                                                흐림
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="icon-shadow-blur"
+                                                    type="range"
+                                                    min="0"
+                                                    max="30"
+                                                    step="1"
+                                                    value="6"
+                                                    data-shadow-blur
+                                                >
+
+                                                <output
+                                                    for="icon-shadow-blur"
+                                                    data-shadow-blur-value
+                                                >
+                                                    6
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="icon-shadow-opacity"
+                                            >
+                                                불투명도
+                                            </label>
+
+                                            <div class="shadow-input-row">
+                                                <input
+                                                    id="icon-shadow-opacity"
+                                                    type="range"
+                                                    min="0"
+                                                    max="100"
+                                                    step="1"
+                                                    value="40"
+                                                    data-shadow-opacity
+                                                >
+
+                                                <output
+                                                    for="icon-shadow-opacity"
+                                                    data-shadow-opacity-value
+                                                >
+                                                    40%
+                                                </output>
+                                            </div>
+                                        </div>
+
+                                        <div class="shadow-field">
+                                            <label
+                                                for="icon-shadow-color"
+                                            >
+                                                그림자 색상
+                                            </label>
+
+                                            <input
+                                                id="icon-shadow-color"
+                                                type="color"
+                                                value="#333333"
+                                                data-shadow-color
+                                            >
+                                        </div>
+
+                                        <button
+                                            class="shadow-reset"
+                                            type="button"
+                                            data-shadow-reset
+                                        >
+                                            그림자 설정 초기화
+                                        </button>
                                     </div>
                                 </section>
 
