@@ -1241,14 +1241,16 @@ body:has(.environmental-context-dialog[open]) {
     */
 
 
+
     .detail-preview {
         grid-template-columns:
-            minmax(0, 1fr)
-            max-content
-            minmax(0, 1fr);
+            minmax(62px, 1fr)
+            minmax(0, 2fr)
+            minmax(76px, 1fr);
         column-gap: 8px;
         row-gap: 8px;
     }
+
 
 
     /* 색상 버튼 */
@@ -1272,11 +1274,11 @@ body:has(.environmental-context-dialog[open]) {
         box-sizing: border-box;
     }
 
+
     /* 배경 표시 컨트롤 */
 
-
     .preview-display-controls {
-        --background-control-gap: clamp(3px, 1vw, 7px);
+        --background-control-gap: 6px;
 
         position: static;
         grid-column: 2;
@@ -1284,7 +1286,7 @@ body:has(.environmental-context-dialog[open]) {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         gap: var(--background-control-gap);
         width: 100%;
         height: 42px;
@@ -1294,20 +1296,14 @@ body:has(.environmental-context-dialog[open]) {
         box-sizing: border-box;
     }
 
-
-    /*
-       텍스트와 토글
-
-       텍스트는 왼쪽
-       토글은 남은 공간의 오른쪽
-    */
+    /* 배경 표시 텍스트와 토글 */
 
     .preview-background-toggle {
         display: flex;
-        flex: 0 1 auto;
+        flex: 1 1 auto;
         flex-direction: row-reverse;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         gap: var(--background-control-gap);
         min-width: 0;
         font-size: 13px;
@@ -1316,6 +1312,7 @@ body:has(.environmental-context-dialog[open]) {
         text-align: left;
         white-space: nowrap;
     }
+
 
 
     /* 배경 표시 텍스트 축소 방지 */
@@ -1537,3 +1534,13 @@ body:has(.environmental-context-dialog[open]) {
 }
 
 
+/* 넓은 모바일 화면의 컨트롤 비율 */
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .detail-preview {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 210px)
+            minmax(0, 1fr);
+    }
+}
