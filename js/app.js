@@ -2060,6 +2060,7 @@ function createGallery(definition) {
         }
 
         selectedItemId = item.id;
+        selectedItem = item;
         
         
         if (playbackButton) {
@@ -2902,14 +2903,14 @@ function createGallery(definition) {
                 ) {
                     return;
                 }
-            
+
                 const frame =
                     previewPlaceholder.querySelector("iframe");
-            
+
                 if (!frame?.contentWindow) {
                     return;
                 }
-            
+
                 frame.contentWindow.postMessage(
                     {
                         type: "svg-gallery-playback",
