@@ -1942,7 +1942,7 @@ function createGallery(definition) {
                         isPreviewPlaying &&
                         selectedItem?.id === item.id
                     ) {
-                        playbackButton?.click();
+                        togglePreviewPlayback();
                     }
 
                     frame.contentWindow.postMessage(
@@ -2179,7 +2179,7 @@ function createGallery(definition) {
             clearTimeout(playbackTimeoutId);
             playbackTimeoutId = null;
         }
-        
+
         playbackElapsed = 0;
         playbackStartedAt = null;
         isPreviewPlaying = false;
@@ -2933,85 +2933,96 @@ function createGallery(definition) {
         }
     );
 
+    function togglePreviewPlayback() {
+        if (!selectedItem?.supportsPlayback) {
+            return;
+        }
+    
+        const frame =
+            previewPlaceholder.querySelector("iframe");
+    
+        if (!frame?.contentWindow) {
+            return;
+        }
+    
+        if (isPreviewPlaying) {
+            playbackElapsed +=
+                performance.now() - playbackStartedAt;
+        
+            playbackStartedAt = null;
+        } else {
+            if (playbackElapsed >= 30000) {
+                playbackElapsed = 0;
+            }
+        
+            playbackStartedAt = performance.now();
+        }
+    
+        isPreviewPlaying = !isPreviewPlaying;
+    
+        if (playbackTimeoutId !== null) {
+            clearTimeout(playbackTimeoutId);
+            playbackTimeoutId = null;
+        }
+    
+        if (isPreviewPlaying) {
+            const remainingTime =
+                Math.max(0, 30000 - playbackElapsed);
+        
+            playbackTimeoutId = setTimeout(
+                function () {
+                    playbackTimeoutId = null;
+                
+                    if (isPreviewPlaying) {
+                        togglePreviewPlayback();
+                    }
+                },
+                remainingTime
+            );
+        }
+    
+        frame.contentWindow.postMessage(
+            {
+                type: "svg-gallery-playback",
+                action: isPreviewPlaying
+                    ? "play"
+                    : "pause"
+            },
+            window.location.origin
+        );
+    
+        updatePlaybackButton();
+    }
+
+    function updatePlaybackButton() {
+        if (!playbackButton) {
+            return;
+        }
+
+        const playbackIcon =
+            playbackButton.querySelector("svg path");
+
+        if (playbackIcon) {
+            playbackIcon.setAttribute(
+                "d",
+                isPreviewPlaying
+                    ? "M6 6H18V18H6Z"
+                    : "M8 5L19 12L8 19Z"
+            );
+        }
+
+        playbackButton.setAttribute(
+            "aria-label",
+            isPreviewPlaying
+                ? "애니메이션 정지"
+                : "애니메이션 재생"
+        );
+    }
+
     if (playbackButton) {
         playbackButton.addEventListener(
             "click",
-            function () {
-                if (!selectedItem?.supportsPlayback) {
-                    return;
-                }
-
-                const frame =
-                    previewPlaceholder.querySelector("iframe");
-
-                if (!frame?.contentWindow) {
-                    return;
-                }
-
-                if (isPreviewPlaying) {
-                    playbackElapsed +=
-                        performance.now() - playbackStartedAt;
-
-                    playbackStartedAt = null;
-                } else {
-                    if (playbackElapsed >= 30000) {
-                        playbackElapsed = 0;
-                    }
-                
-                    playbackStartedAt = performance.now();
-                }
-
-                isPreviewPlaying = !isPreviewPlaying;
-                
-                if (playbackTimeoutId !== null) {
-                    clearTimeout(playbackTimeoutId);
-                    playbackTimeoutId = null;
-                }
-
-                if (isPreviewPlaying) {
-                    const remainingTime =
-                        Math.max(0, 30000 - playbackElapsed);
-                
-                    playbackTimeoutId = setTimeout(
-                        function () {
-                            playbackTimeoutId = null;
-                        
-                            if (isPreviewPlaying) {
-                                playbackButton.click();
-                            }
-                        },
-                        remainingTime
-                    );
-                }
-
-                frame.contentWindow.postMessage(
-                    {
-                        type: "svg-gallery-playback",
-                        action: isPreviewPlaying
-                            ? "play"
-                            : "pause"
-                    },
-                    window.location.origin
-                );
-
-                const playbackIcon = playbackButton.querySelector("svg path");
-
-                if (playbackIcon) {
-                    playbackIcon.setAttribute(
-                        "d",
-                        isPreviewPlaying
-                            ? "M6 6H18V18H6Z"
-                            : "M8 5L19 12L8 19Z"
-                    );
-                }
-
-                playbackButton.setAttribute(
-                    "aria-label",
-                    isPreviewPlaying
-                        ? "애니메이션 정지"
-                        : "애니메이션 재생"
-                );
-            }
+            togglePreviewPlayback
         );
     }
 
@@ -3026,7 +3037,7 @@ function createGallery(definition) {
                 return;
             }
 
-            playbackButton?.click();
+            togglePreviewPlayback();
         }
     );
 
