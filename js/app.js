@@ -786,6 +786,23 @@ function createGallery(definition) {
         }
     }
 
+    function prepareShadowEditor(item) {
+        if (!shadowEditor) {
+            return;
+        }
+
+        const supportsShadow =
+            item.previewType === "svg" &&
+            Boolean(item.previewPath);
+
+        shadowEditor.hidden = !supportsShadow;
+
+        if (!supportsShadow) {
+            closeShadowPanel();
+            resetShadowSettings();
+        }
+    }
+
     function getPageSize() {
         if (
             typeof definition.pageSize ===
@@ -1989,6 +2006,7 @@ function createGallery(definition) {
         resetPreviewBackground();
         resetShadowSettings();
         closeShadowPanel();
+        prepareShadowEditor(item);
         renderLargePreview(item);
         updateDownloadArea(item);
         setAccessibility(true);
