@@ -1891,18 +1891,28 @@ function createGallery(definition) {
         }
     }
 
+    let previewVisibilityObserver = null;
+
+    function disconnectPreviewVisibilityObserver() {
+        if (previewVisibilityObserver) {
+            previewVisibilityObserver.disconnect();
+            previewVisibilityObserver = null;
+        }
+    }
+
     function renderHtmlPreview(item) {
+        disconnectPreviewVisibilityObserver();
+
         const frame =
             document.createElement("iframe");
-        
+
         frame.src = item.previewPath;
-        
+
         frame.title =
             `${item.title} 실행 미리보기`;
-        
+
         frame.loading = "lazy";
-        
-        // 펌프잭 미리보기의 화면 표시 여부 감지
+
         if (
             item.id === "pump-jack" &&
             "IntersectionObserver" in window
@@ -1910,11 +1920,15 @@ function createGallery(definition) {
             const observer = new IntersectionObserver(
                 function (entries) {
                     const entry = entries[0];
-                
-                    if (!entry || !frame.contentWindow) {
+
+                    if (
+                        !entry ||
+                        !frame.isConnected ||
+                        !frame.contentWindow
+                    ) {
                         return;
                     }
-                
+
                     frame.contentWindow.postMessage(
                         {
                             type: "svg-gallery-visibility",
@@ -1927,55 +1941,11 @@ function createGallery(definition) {
                     threshold: 0
                 }
             );
-        
+
+            previewVisibilityObserver = observer;
             observer.observe(frame);
-        
-            frame.addEventListener(
-                "load",
-                function () {
-                    // iframe 문서 로드 후 실제 가시성을 다시 전달
-                    const bounds =
-                        frame.getBoundingClientRect();
-                
-                    const visible =
-                        bounds.width > 0 &&
-                        bounds.height > 0 &&
-                        bounds.bottom > 0 &&
-                        bounds.right > 0 &&
-                        bounds.top < window.innerHeight &&
-                        bounds.left < window.innerWidth;
-                
-                    frame.contentWindow?.postMessage(
-                        {
-                            type: "svg-gallery-visibility",
-                            visible
-                        },
-                        window.location.origin
-                    );
-                }
-            );
-        
-            frame.addEventListener(
-                "load",
-                function () {
-                    // 미리보기가 제거되면 관찰 종료
-                    const cleanup = new MutationObserver(
-                        function () {
-                            if (!frame.isConnected) {
-                                observer.disconnect();
-                                cleanup.disconnect();
-                            }
-                        }
-                    );
-                
-                    cleanup.observe(
-                        previewPlaceholder,
-                        { childList: true }
-                    );
-                }
-            );
         }
-    
+
         frame.addEventListener(
             "load",
             function () {
@@ -1985,16 +1955,43 @@ function createGallery(definition) {
                 ) {
                     return;
                 }
-            
+
                 applyColorsToFrame(frame);
                 updatePreviewBackground();
+
+                if (
+                    item.id === "pump-jack" &&
+                    frame.contentWindow
+                ) {
+                    const bounds =
+                        frame.getBoundingClientRect();
+
+                    const visible =
+                        frame.isConnected &&
+                        bounds.width > 0 &&
+                        bounds.height > 0 &&
+                        bounds.bottom > 0 &&
+                        bounds.right > 0 &&
+                        bounds.top < window.innerHeight &&
+                        bounds.left < window.innerWidth;
+
+                    frame.contentWindow.postMessage(
+                        {
+                            type: "svg-gallery-visibility",
+                            visible
+                        },
+                        window.location.origin
+                    );
+                }
             }
         );
-    
+
         previewPlaceholder.replaceChildren(frame);
     }
 
     function renderLargePreview(item) {
+        disconnectPreviewVisibilityObserver();
+
         previewRenderId += 1;
 
         const currentRenderId =
@@ -2135,6 +2132,8 @@ function createGallery(definition) {
     }
 
     function closePreview() {
+        disconnectPreviewVisibilityObserver();
+        
         closeColorPopover();
         closeShadowPanel();
         resetShadowSettings();
