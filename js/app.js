@@ -507,6 +507,10 @@ function createGallery(definition) {
         "[data-preview-placeholder]"
     );
 
+    const playbackButton = root.querySelector(
+        "[data-preview-playback-button]"
+    );
+
     const previewDescription = root.querySelector(
         "[data-preview-description]"
     );
@@ -2056,7 +2060,12 @@ function createGallery(definition) {
         }
 
         selectedItemId = item.id;
-        selectedItem = item;
+        
+        
+        if (playbackButton) {
+            playbackButton.hidden =
+                item.previewType !== "html";
+        }
 
         previewTitle.textContent =
             item.title ||
@@ -2882,6 +2891,35 @@ function createGallery(definition) {
             closeColorPopover();
         }
     );
+
+    if (playbackButton) {
+        playbackButton.addEventListener(
+            "click",
+            function () {
+                if (
+                    !selectedItem ||
+                    selectedItem.id !== "pump-jack"
+                ) {
+                    return;
+                }
+            
+                const frame =
+                    previewPlaceholder.querySelector("iframe");
+            
+                if (!frame?.contentWindow) {
+                    return;
+                }
+            
+                frame.contentWindow.postMessage(
+                    {
+                        type: "svg-gallery-playback",
+                        action: "play"
+                    },
+                    window.location.origin
+                );
+            }
+        );
+    }
 
     closeButton.addEventListener(
         "click",
