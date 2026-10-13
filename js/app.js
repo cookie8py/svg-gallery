@@ -2660,6 +2660,41 @@ function createGallery(definition) {
             applyPreviewShadow
         );
     }
+    
+    const shadowInputs = [
+        shadowAngle,
+        shadowDistance,
+        shadowBlur,
+        shadowOpacity,
+        shadowColor
+    ];
+
+    shadowInputs.forEach(
+        function (input) {
+            if (!input) {
+                return;
+            }
+
+            input.addEventListener(
+                "input",
+                function () {
+                    readShadowInputs();
+                    updateShadowOutputs();
+                    applyPreviewShadow();
+                }
+            );
+        }
+    );
+    
+    if (shadowReset) {
+        shadowReset.addEventListener(
+            "click",
+            function () {
+                resetShadowSettings();
+                applyPreviewShadow();
+            }
+        );
+    }
 
     if (backgroundToggle) {
         backgroundToggle.addEventListener(
