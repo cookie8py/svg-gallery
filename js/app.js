@@ -2078,7 +2078,7 @@ function createGallery(definition) {
         
         if (playbackButton) {
             playbackButton.hidden =
-                item.previewType !== "html";
+                !item.supportsPlayback;
         }
 
         previewTitle.textContent =
