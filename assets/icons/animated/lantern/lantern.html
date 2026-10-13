@@ -134,6 +134,11 @@
             }
         }
 
+        .lantern-glow,
+        .lantern-flame-group {
+            animation-play-state: paused;
+        }
+
 
     </style>
 
@@ -351,5 +356,39 @@
             </svg>
         </div>
     </div>
+    <script>
+        const animatedLanternParts = document.querySelectorAll(
+            ".lantern-glow, .lantern-flame-group"
+        );
+        
+        function stopLantern() {
+            animatedLanternParts.forEach(function (element) {
+                element.style.animationPlayState = "paused";
+            });
+        }
+    
+        function startLantern() {
+            animatedLanternParts.forEach(function (element) {
+                // CSS 애니메이션을 처음부터 다시 시작
+                element.getAnimations().forEach(function (animation) {
+                    animation.cancel();
+                    animation.play();
+                });
+            
+                element.style.animationPlayState = "running";
+            });
+        }
+    
+        window.addEventListener("message", function (event) {
+            if (event.origin !== window.location.origin) return;
+            if (event.data?.type !== "svg-gallery-playback") return;
+        
+            if (event.data.action === "play") {
+                startLantern();
+            } else if (event.data.action === "pause") {
+                stopLantern();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -2912,7 +2912,7 @@ function createGallery(definition) {
             function () {
                 if (
                     !selectedItem ||
-                    !["pump-jack", "umbrella"].includes(selectedItem.id)
+                    !["pump-jack", "umbrella", "lantern"].includes(selectedItem.id)
                 ) {
                     return;
                 }
