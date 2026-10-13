@@ -151,8 +151,8 @@ function createShadowShape(source, color) {
 
     return clone;
 }
+function copyShadowGeometry(source, target, color, pairs) {
 
-function copyShadowGeometry(source, target, color) {
     if (
         source.nodeType !== Node.ELEMENT_NODE ||
         source.getAttribute("data-shadow-exclude") === "true"
@@ -186,6 +186,14 @@ function copyShadowGeometry(source, target, color) {
         }
 
         target.append(shape);
+
+        if (pairs) {
+            pairs.push({
+                source,
+                shadow: shape
+            });
+        }
+
         return;
     }
 
@@ -227,19 +235,28 @@ function copyShadowGeometry(source, target, color) {
         copyShadowGeometry(
             child,
             group,
-            color
+            color,
+            pairs
         );
     }
 
     if (group.childNodes.length > 0) {
         target.append(group);
+
+        if (pairs) {
+            pairs.push({
+                source,
+                shadow: group
+            });
+        }
     }
 }
 
 function populateShadowLayer(
     svgElement,
     layer,
-    color
+    color,
+    pairs
 ) {
     for (const child of svgElement.children) {
         if (
@@ -252,7 +269,8 @@ function populateShadowLayer(
         copyShadowGeometry(
             child,
             layer,
-            color
+            color,
+            pairs
         );
     }
 }
@@ -483,10 +501,13 @@ export function createShadowLayer(
 
     layer.style.pointerEvents = "none";
 
+    const animationPairs = [];
+
     populateShadowLayer(
         svgElement,
         layer,
-        normalized.color
+        normalized.color,
+        animationPairs
     );
 
     const firstDrawable =
@@ -519,7 +540,8 @@ export function createShadowLayer(
         baseSize,
         originalViewBox,
         originalViewBoxAttribute,
-        options: normalized
+        options: normalized,
+        animationPairs
     };
 
     shadowStates.set(
@@ -597,7 +619,8 @@ export function removeShadow(svgElement) {
 }
 
 /**
- * 원본 SVG의 현재 도형 상태를 그림자에 반영한다.
+ * 원본 SVG의 애니메이션 상태를 그림자에 동기화한다.
+ * 기존 그림자 도형을 유지하고 변경된 속성만 갱신한다.
  */
 export function syncShadowAnimation(svgElement) {
     const state = shadowStates.get(svgElement);
@@ -606,15 +629,30 @@ export function syncShadowAnimation(svgElement) {
         return;
     }
 
-    const newLayer = createSvgElement("g");
+    const attributes = [
+        "transform",
+        "d",
+        "x",
+        "y",
+        "cx",
+        "cy",
+        "width",
+        "height"
+    ];
 
-    populateShadowLayer(
-        svgElement,
-        newLayer,
-        state.options.color
-    );
+    for (const { source, shadow } of state.animationPairs) {
+        for (const attribute of attributes) {
+            const value = source.getAttribute(attribute);
 
-    state.layer.replaceChildren(
-        ...Array.from(newLayer.children)
-    );
+            if (value === null) {
+                if (shadow.hasAttribute(attribute)) {
+                    shadow.removeAttribute(attribute);
+                }
+            } else if (
+                shadow.getAttribute(attribute) !== value
+            ) {
+                shadow.setAttribute(attribute, value);
+            }
+        }
+    }
 }
