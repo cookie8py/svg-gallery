@@ -655,6 +655,9 @@ function createGallery(definition) {
     let selectedItemId = null;
     let selectedItem = null;
     let isPreviewPlaying = false;
+    let playbackElapsed = 0;
+    let playbackStartedAt = null;
+    let playbackTimeoutId = null;
     let currentPage = 1;
     let previewRenderId = 0;
     let isDownloading = false;
@@ -2070,8 +2073,15 @@ function createGallery(definition) {
 
         selectedItemId = item.id;
         selectedItem = item;
-
+            
         isPreviewPlaying = false;
+        playbackElapsed = 0;
+        playbackStartedAt = null;
+            
+        if (playbackTimeoutId !== null) {
+            clearTimeout(playbackTimeoutId);
+            playbackTimeoutId = null;
+        }
 
         if (playbackButton) {
             playbackButton.innerHTML =
@@ -2164,6 +2174,15 @@ function createGallery(definition) {
 
     function closePreview() {
         disconnectPreviewVisibilityObserver();
+
+        if (playbackTimeoutId !== null) {
+            clearTimeout(playbackTimeoutId);
+            playbackTimeoutId = null;
+        }
+        
+        playbackElapsed = 0;
+        playbackStartedAt = null;
+        isPreviewPlaying = false;
         
         closeColorPopover();
         closeShadowPanel();
@@ -2929,7 +2948,41 @@ function createGallery(definition) {
                     return;
                 }
 
+                if (isPreviewPlaying) {
+                    playbackElapsed +=
+                        performance.now() - playbackStartedAt;
+
+                    playbackStartedAt = null;
+                } else {
+                    if (playbackElapsed >= 30000) {
+                        playbackElapsed = 0;
+                    }
+                
+                    playbackStartedAt = performance.now();
+                }
+
                 isPreviewPlaying = !isPreviewPlaying;
+                
+                if (playbackTimeoutId !== null) {
+                    clearTimeout(playbackTimeoutId);
+                    playbackTimeoutId = null;
+                }
+
+                if (isPreviewPlaying) {
+                    const remainingTime =
+                        Math.max(0, 30000 - playbackElapsed);
+                
+                    playbackTimeoutId = setTimeout(
+                        function () {
+                            playbackTimeoutId = null;
+                        
+                            if (isPreviewPlaying) {
+                                playbackButton.click();
+                            }
+                        },
+                        remainingTime
+                    );
+                }
 
                 frame.contentWindow.postMessage(
                     {
