@@ -2910,10 +2910,7 @@ function createGallery(definition) {
         playbackButton.addEventListener(
             "click",
             function () {
-                if (
-                    !selectedItem ||
-                    !["pump-jack", "umbrella", "lantern"].includes(selectedItem.id)
-                ) {
+                if (!selectedItem?.supportsPlayback) {
                     return;
                 }
 

@@ -4,6 +4,7 @@ export const animatedIcons = [
         title: "등불",
         category: "general",
         motion: "animated",
+        supportsPlayback: true,
         description:
             "빛의 번짐과 불꽃이 부드럽게 움직이는 애니메이션 등불 아이콘입니다.",
         source: "직접 제작",
@@ -40,6 +41,7 @@ export const animatedIcons = [
         title: "비와 우산",
         category: "climate",
         motion: "animated",
+        supportsPlayback: true,
         description:
             "우산 위로 비가 내리는 애니메이션 아이콘입니다. HTML 버전에서는 빗방울이 우산에 부딪혀 양옆으로 튀는 효과가 적용됩니다.",
         source: "직접 제작",
@@ -71,6 +73,7 @@ export const animatedIcons = [
         title: "펌프잭",
         category: "climate",
         motion: "animated",
+        supportsPlayback: true,
         description:
             "크랭크의 회전이 핏맨 암과 워킹빔으로 전달되는 석유 시추용 펌프잭 애니메이션 아이콘입니다.",
         source: "직접 제작",
