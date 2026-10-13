@@ -515,11 +515,56 @@
         );
 
         resizeUmbrella();
-
-        setInterval(
-            createRaindrop,
-            rainInterval
+        let rainTimer = null;
+            
+        function stopRain() {
+            if (rainTimer !== null) {
+                clearInterval(rainTimer);
+                rainTimer = null;
+            }
+        
+            // 기존 빗방울 애니메이션 중단
+            rainLayer.getAnimations().forEach(
+                function (animation) {
+                    animation.cancel();
+                }
+            );
+            
+            // 화면에 남아 있는 빗방울 제거
+            rainLayer.replaceChildren();
+        }
+        
+        function startRain() {
+            // 다시 재생할 때 처음부터 시작
+            stopRain();
+        
+            createRaindrop();
+        
+            rainTimer = setInterval(
+                createRaindrop,
+                rainInterval
+            );
+        }
+        
+        window.addEventListener(
+            "message",
+            function (event) {
+                if (event.origin !== window.location.origin) {
+                    return;
+                }
+            
+                if (event.data?.type !== "svg-gallery-playback") {
+                    return;
+                }
+            
+                if (event.data.action === "play") {
+                    startRain();
+                } else if (event.data.action === "pause") {
+                    stopRain();
+                }
+            }
         );
+        
     </script>
 </body>
 </html>

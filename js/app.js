@@ -2912,7 +2912,7 @@ function createGallery(definition) {
             function () {
                 if (
                     !selectedItem ||
-                    selectedItem.id !== "pump-jack"
+                    !["pump-jack", "umbrella"].includes(selectedItem.id)
                 ) {
                     return;
                 }
@@ -2937,7 +2937,7 @@ function createGallery(definition) {
                 );
 
                 const playbackIcon = playbackButton.querySelector("svg path");
-                            
+
                 if (playbackIcon) {
                     playbackIcon.setAttribute(
                         "d",
