@@ -369,6 +369,10 @@ function applyShadowOptions(
     state,
     options
 ) {
+    const previous = state.initialized
+        ? state.options
+        : null;
+
     const dimensions = getShadowDimensions(
         options,
         state.baseSize
@@ -379,46 +383,80 @@ function applyShadowOptions(
         dimensions.distance
     );
 
-    state.layer.setAttribute(
-        "transform",
-        `translate(${offset.x} ${offset.y})`
-    );
-
-    state.layer.setAttribute(
-        "opacity",
-        String(options.opacity)
-    );
-
-    state.blur.setAttribute(
-        "stdDeviation",
-        String(dimensions.blur)
-    );
-
-    for (
-        const shape of
-        state.layer.querySelectorAll("*")
+    // 방향이나 거리가 바뀐 경우에만 이동
+    if (
+        !previous ||
+        previous.direction !== options.direction ||
+        previous.distance !== options.distance
     ) {
-        if (!DRAWABLE_TAGS.has(shape.localName)) {
-            continue;
-        }
+        state.layer.setAttribute(
+            "transform",
+            `translate(${offset.x} ${offset.y})`
+        );
+    }
 
-        if (shape.style.fill !== "none") {
-            shape.style.fill = options.color;
-        }
+    // 투명도가 바뀐 경우에만 갱신
+    if (
+        !previous ||
+        previous.opacity !== options.opacity
+    ) {
+        state.layer.setAttribute(
+            "opacity",
+            String(options.opacity)
+        );
+    }
 
-        if (shape.style.stroke !== "none") {
-            shape.style.stroke = options.color;
+    // 블러 값이 바뀐 경우에만 갱신
+    if (
+        !previous ||
+        previous.blur !== options.blur
+    ) {
+        state.blur.setAttribute(
+            "stdDeviation",
+            String(dimensions.blur)
+        );
+    }
+
+    // 색상이 바뀐 경우에만 도형 순회
+    if (
+        !previous ||
+        previous.color !== options.color
+    ) {
+        for (
+            const shape of
+            state.layer.querySelectorAll("*")
+        ) {
+            if (!DRAWABLE_TAGS.has(shape.localName)) {
+                continue;
+            }
+
+            if (shape.style.fill !== "none") {
+                shape.style.fill = options.color;
+            }
+
+            if (shape.style.stroke !== "none") {
+                shape.style.stroke = options.color;
+            }
         }
     }
 
-    updateViewBox(
-        svgElement,
-        state,
-        offset,
-        dimensions.blur
-    );
+    // 그림자 이동 또는 블러 변경 시에만 viewBox 갱신
+    if (
+        !previous ||
+        previous.direction !== options.direction ||
+        previous.distance !== options.distance ||
+        previous.blur !== options.blur
+    ) {
+        updateViewBox(
+            svgElement,
+            state,
+            offset,
+            dimensions.blur
+        );
+    }
 
     state.options = options;
+    state.initialized = true;
 }
 
 /**
@@ -540,7 +578,7 @@ export function createShadowLayer(
         baseSize,
         originalViewBox,
         originalViewBoxAttribute,
-        options: normalized,
+        options: null,
         animationPairs
     };
 
