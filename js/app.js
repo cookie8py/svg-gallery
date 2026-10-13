@@ -1973,7 +1973,7 @@ function createGallery(definition) {
                 updatePreviewBackground();
 
                 if (
-                    item.id === "pump-jack" &&
+                    item.supportsPlayback &&
                     frame.contentWindow
                 ) {
                     const bounds =
