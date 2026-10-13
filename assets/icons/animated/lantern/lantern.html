@@ -369,10 +369,10 @@
     
         function startLantern() {
             animatedLanternParts.forEach(function (element) {
-                // CSS 애니메이션을 처음부터 다시 시작
+                element.style.animationPlayState = "paused";
+            
                 element.getAnimations().forEach(function (animation) {
-                    animation.cancel();
-                    animation.play();
+                    animation.currentTime = 0;
                 });
             
                 element.style.animationPlayState = "running";

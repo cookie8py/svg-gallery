@@ -2954,6 +2954,21 @@ function createGallery(definition) {
         );
     }
 
+    document.addEventListener(
+        "visibilitychange",
+        function () {
+            if (
+                !document.hidden ||
+                !isPreviewPlaying ||
+                !selectedItem?.supportsPlayback
+            ) {
+                return;
+            }
+        
+            playbackButton?.click();
+        }
+    );
+
     closeButton.addEventListener(
         "click",
         requestClosePreview
