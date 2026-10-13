@@ -2936,11 +2936,16 @@ function createGallery(definition) {
                     window.location.origin
                 );
 
-                playbackButton.querySelector(
-                    "span:first-child"
-                ).textContent = isPreviewPlaying
-                    ? "■"
-                    : "▶";
+                const playbackIcon = playbackButton.querySelector("svg path");
+                            
+                if (playbackIcon) {
+                    playbackIcon.setAttribute(
+                        "d",
+                        isPreviewPlaying
+                            ? "M6 6H18V18H6Z"
+                            : "M8 5L19 12L8 19Z"
+                    );
+                }
 
                 playbackButton.setAttribute(
                     "aria-label",
