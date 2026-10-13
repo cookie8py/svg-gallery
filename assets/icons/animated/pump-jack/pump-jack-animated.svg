@@ -190,6 +190,47 @@
         <![CDATA[
 (() => {
     const svg = document.documentElement;
+    let syncShadowAnimation = null;
+    let shadowModulePromise = null;
+
+function loadShadowModule() {
+    if (!shadowModulePromise) {
+        shadowModulePromise = import(
+            "../../../../js/shadow.js"
+        );
+    }
+
+    return shadowModulePromise;
+}
+    window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin) {
+        return;
+    }
+
+    if (event.data?.type !== "svg-gallery-shadow") {
+        return;
+    }
+
+    loadShadowModule()
+    .then(({
+        updateShadow,
+        removeShadow,
+        syncShadowAnimation: syncShadow
+    }) => {
+        syncShadowAnimation = syncShadow;
+        if (event.data.enabled) {
+            updateShadow(svg, event.data.options);
+        } else {
+            removeShadow(svg);
+        }
+    })
+    .catch((error) => {
+        console.error(
+            "[Pump Jack] 그림자 모듈 연결 실패:",
+            error
+        );
+    });
+});
     const crank = document.getElementById("crank-assembly");
     const beam = document.getElementById("walking-beam-group");
     let pitman = document.getElementById("pitman-arm");
@@ -514,6 +555,10 @@
             crankPinNode,
             crankPin
         );
+
+        if (syncShadowAnimation) {
+            syncShadowAnimation(svg);
+        }
     }
 
     render(0);

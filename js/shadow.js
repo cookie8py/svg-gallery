@@ -595,3 +595,26 @@ export function removeShadow(svgElement) {
 
     shadowStates.delete(svgElement);
 }
+
+/**
+ * 원본 SVG의 현재 도형 상태를 그림자에 반영한다.
+ */
+export function syncShadowAnimation(svgElement) {
+    const state = shadowStates.get(svgElement);
+
+    if (!state) {
+        return;
+    }
+
+    const newLayer = createSvgElement("g");
+
+    populateShadowLayer(
+        svgElement,
+        newLayer,
+        state.options.color
+    );
+
+    state.layer.replaceChildren(
+        ...Array.from(newLayer.children)
+    );
+}

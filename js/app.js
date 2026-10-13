@@ -746,6 +746,27 @@ function createGallery(definition) {
             return;
         }
 
+        const frame =
+            previewPlaceholder.querySelector("iframe");
+            
+        if (
+            selectedItem?.id === "pump-jack" &&
+            frame?.contentWindow
+        ) {
+            frame.contentWindow.postMessage(
+                {
+                    type: "svg-gallery-shadow",
+                    enabled: Boolean(
+                        shadowEnabled?.checked
+                    ),
+                    options: { ...shadowOptions }
+                },
+                window.location.origin
+            );
+        
+            return;
+        }
+
         const svgElement =
             previewPlaceholder.querySelector("svg");
 
@@ -792,7 +813,10 @@ function createGallery(definition) {
         }
 
         const supportsShadow =
-            item.previewType === "svg" &&
+            (
+                item.previewType === "svg" ||
+                item.id === "pump-jack"
+            ) &&
             Boolean(item.previewPath);
 
         shadowEditor.hidden = !supportsShadow;
