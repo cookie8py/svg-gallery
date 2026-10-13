@@ -1,5 +1,6 @@
 import { illustrations } from "./data/illustrations.js";
 import { icons } from "./data/icons.js";
+import { updateShadow, removeShadow } from "./shadow.js";
 
 const SLIDE_DURATION = 500;
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
@@ -564,6 +565,64 @@ function createGallery(definition) {
         "[data-preview-background-color]"
     );
 
+    
+    const shadowEditor = root.querySelector(
+        "[data-detail-shadow-editor]"
+    );
+
+    const shadowButton = root.querySelector(
+        "[data-detail-shadow-button]"
+    );
+
+    const shadowPanel = root.querySelector(
+        "[data-shadow-panel]"
+    );
+
+    const shadowEnabled = root.querySelector(
+        "[data-shadow-enabled]"
+    );
+
+    const shadowAngle = root.querySelector(
+        "[data-shadow-angle]"
+    );
+
+    const shadowDistance = root.querySelector(
+        "[data-shadow-distance]"
+    );
+
+    const shadowBlur = root.querySelector(
+        "[data-shadow-blur]"
+    );
+
+    const shadowOpacity = root.querySelector(
+        "[data-shadow-opacity]"
+    );
+
+    const shadowColor = root.querySelector(
+        "[data-shadow-color]"
+    );
+
+    const shadowReset = root.querySelector(
+        "[data-shadow-reset]"
+    );
+
+    const shadowAngleValue = root.querySelector(
+        "[data-shadow-angle-value]"
+    );
+
+    const shadowDistanceValue = root.querySelector(
+        "[data-shadow-distance-value]"
+    );
+
+    const shadowBlurValue = root.querySelector(
+        "[data-shadow-blur-value]"
+    );
+
+    const shadowOpacityValue = root.querySelector(
+        "[data-shadow-opacity-value]"
+    );
+
+
     if (backgroundColor) {
         ensureColorPresetList();
 
@@ -597,6 +656,135 @@ function createGallery(definition) {
     let listScrollPosition = null;
 
     const currentColors = new Map();
+    
+    const DEFAULT_SHADOW_OPTIONS = {
+        direction: 135,
+        distance: 2,
+        blur: 1,
+        opacity: 0.3,
+        color: "#000000"
+    };
+
+    let shadowOptions = {
+        ...DEFAULT_SHADOW_OPTIONS
+    };
+    
+    function readShadowInputs() {
+        if (
+            !shadowAngle ||
+            !shadowDistance ||
+            !shadowBlur ||
+            !shadowOpacity ||
+            !shadowColor
+        ) {
+            return;
+        }
+
+        shadowOptions = {
+            direction: Number(shadowAngle.value),
+            distance: Number(shadowDistance.value),
+            blur: Number(shadowBlur.value),
+            opacity: Number(shadowOpacity.value) / 100,
+            color: shadowColor.value
+        };
+    }
+
+    function updateShadowOutputs() {
+        if (shadowAngleValue) {
+            shadowAngleValue.textContent =
+                `${shadowOptions.direction}°`;
+        }
+
+        if (shadowDistanceValue) {
+            shadowDistanceValue.textContent =
+                `${shadowOptions.distance}%`;
+        }
+
+        if (shadowBlurValue) {
+            shadowBlurValue.textContent =
+                `${shadowOptions.blur}%`;
+        }
+
+        if (shadowOpacityValue) {
+            shadowOpacityValue.textContent =
+                `${Math.round(shadowOptions.opacity * 100)}%`;
+        }
+    }
+
+    function syncShadowInputs() {
+        if (shadowAngle) {
+            shadowAngle.value =
+                String(shadowOptions.direction);
+        }
+
+        if (shadowDistance) {
+            shadowDistance.value =
+                String(shadowOptions.distance);
+        }
+
+        if (shadowBlur) {
+            shadowBlur.value =
+                String(shadowOptions.blur);
+        }
+
+        if (shadowOpacity) {
+            shadowOpacity.value =
+                String(shadowOptions.opacity * 100);
+        }
+
+        if (shadowColor) {
+            shadowColor.value =
+                shadowOptions.color;
+        }
+
+        updateShadowOutputs();
+    }
+
+    
+    function applyPreviewShadow() {
+        if (!previewPlaceholder) {
+            return;
+        }
+
+        const svgElement =
+            previewPlaceholder.querySelector("svg");
+
+        if (!svgElement) {
+            return;
+        }
+
+        if (!shadowEnabled || !shadowEnabled.checked) {
+            removeShadow(svgElement);
+            return;
+        }
+
+        updateShadow(svgElement, shadowOptions);
+    }
+    
+    function resetShadowSettings() {
+        shadowOptions = {
+            ...DEFAULT_SHADOW_OPTIONS
+        };
+
+        if (shadowEnabled) {
+            shadowEnabled.checked = false;
+        }
+
+        syncShadowInputs();
+    }
+   
+    function closeShadowPanel() {
+        if (shadowPanel) {
+            shadowPanel.hidden = true;
+        }
+
+        if (shadowButton) {
+            shadowButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+    }
 
     function getPageSize() {
         if (
@@ -1627,6 +1815,7 @@ function createGallery(definition) {
                     svgElement
                 );
 
+            applyPreviewShadow();
             updatePreviewBackground();
         } catch (error) {
             if (
@@ -1798,6 +1987,8 @@ function createGallery(definition) {
 
         showColorEditor(item);
         resetPreviewBackground();
+        resetShadowSettings();
+        closeShadowPanel();
         renderLargePreview(item);
         updateDownloadArea(item);
         setAccessibility(true);
@@ -1836,6 +2027,8 @@ function createGallery(definition) {
 
     function closePreview() {
         closeColorPopover();
+        closeShadowPanel();
+        resetShadowSettings();
         resetPreviewBackground();
 
         previewRenderId += 1;
@@ -2440,6 +2633,31 @@ function createGallery(definition) {
         colorReset.addEventListener(
             "click",
             resetColors
+        );
+    }
+    
+    if (shadowButton && shadowPanel) {
+        shadowButton.addEventListener(
+            "click",
+            function () {
+                const shouldOpen =
+                    shadowPanel.hidden;
+
+                shadowPanel.hidden =
+                    !shouldOpen;
+
+                shadowButton.setAttribute(
+                    "aria-expanded",
+                    String(shouldOpen)
+                );
+            }
+        );
+    }
+    
+    if (shadowEnabled) {
+        shadowEnabled.addEventListener(
+            "change",
+            applyPreviewShadow
         );
     }
 
