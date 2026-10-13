@@ -201,11 +201,10 @@
     margin-bottom: 16px;
 }
 
-.preview-heading h3 {
+.artwork-preview .preview-heading h3 {
     display: flex;
     align-items: center;
     min-height: 36px;
-    margin: 0;
 }
 
 .preview-heading .preview-playback-button {
@@ -313,6 +312,10 @@
 .artwork-preview h3,
 .panel h3 {
     margin: 0 0 16px;
+}
+
+.artwork-preview .preview-heading h3 {
+    margin: 0;
 }
 
 .preview-placeholder {
