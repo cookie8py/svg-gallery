@@ -2064,11 +2064,10 @@ function createGallery(definition) {
         selectedItem = item;
 
         isPreviewPlaying = false;
-            
+
         if (playbackButton) {
-            playbackButton.querySelector(
-                "span:first-child"
-            ).textContent = "▶";
+            playbackButton.innerHTML =
+                '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M8 5L19 12L8 19Z" fill="currentColor"/></svg>';
         
             playbackButton.setAttribute(
                 "aria-label",
