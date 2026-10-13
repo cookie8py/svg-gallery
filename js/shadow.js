@@ -271,9 +271,8 @@ function getShadowBaseSize(layer, originalViewBox) {
             bounds.width > 0 &&
             bounds.height > 0
         ) {
-            return Math.min(
-                bounds.width,
-                bounds.height
+            return Math.sqrt(
+                bounds.width * bounds.height
             );
         }
     } catch (error) {

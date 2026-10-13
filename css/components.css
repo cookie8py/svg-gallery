@@ -1108,7 +1108,33 @@ body:has(.environmental-context-dialog[open]) {
     content: "▴";
 }
 
-/* 그림자 설정 패널 */
+/* 그림자 설정 팝오버 */
+
+.detail-shadow-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 21;
+    width: min(320px, calc(100vw - 48px));
+    max-height: 360px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 16px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.detail-shadow-popover[hidden] {
+    display: none;
+}
+
+.detail-shadow-popover .shadow-controls {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+}
 
 .artwork-shadow {
     grid-column: 1 / -1;
