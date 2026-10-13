@@ -1893,38 +1893,105 @@ function createGallery(definition) {
 
     function renderHtmlPreview(item) {
         const frame =
-            document.createElement(
-                "iframe"
-            );
-
+            document.createElement("iframe");
+        
         frame.src = item.previewPath;
-
+        
         frame.title =
             `${item.title} 실행 미리보기`;
-
+        
         frame.loading = "lazy";
-
+        
+        // 펌프잭 미리보기의 화면 표시 여부 감지
+        if (
+            item.id === "pump-jack" &&
+            "IntersectionObserver" in window
+        ) {
+            const observer = new IntersectionObserver(
+                function (entries) {
+                    const entry = entries[0];
+                
+                    if (!entry || !frame.contentWindow) {
+                        return;
+                    }
+                
+                    frame.contentWindow.postMessage(
+                        {
+                            type: "svg-gallery-visibility",
+                            visible: entry.isIntersecting
+                        },
+                        window.location.origin
+                    );
+                },
+                {
+                    threshold: 0
+                }
+            );
+        
+            observer.observe(frame);
+        
+            frame.addEventListener(
+                "load",
+                function () {
+                    // iframe 문서 로드 후 실제 가시성을 다시 전달
+                    const bounds =
+                        frame.getBoundingClientRect();
+                
+                    const visible =
+                        bounds.width > 0 &&
+                        bounds.height > 0 &&
+                        bounds.bottom > 0 &&
+                        bounds.right > 0 &&
+                        bounds.top < window.innerHeight &&
+                        bounds.left < window.innerWidth;
+                
+                    frame.contentWindow?.postMessage(
+                        {
+                            type: "svg-gallery-visibility",
+                            visible
+                        },
+                        window.location.origin
+                    );
+                }
+            );
+        
+            frame.addEventListener(
+                "load",
+                function () {
+                    // 미리보기가 제거되면 관찰 종료
+                    const cleanup = new MutationObserver(
+                        function () {
+                            if (!frame.isConnected) {
+                                observer.disconnect();
+                                cleanup.disconnect();
+                            }
+                        }
+                    );
+                
+                    cleanup.observe(
+                        previewPlaceholder,
+                        { childList: true }
+                    );
+                }
+            );
+        }
+    
         frame.addEventListener(
             "load",
             function () {
                 if (
                     !selectedItem ||
-                    selectedItem.id !==
-                        item.id
+                    selectedItem.id !== item.id
                 ) {
                     return;
                 }
-
-                applyColorsToFrame(
-                    frame
-                );
-
+            
+                applyColorsToFrame(frame);
                 updatePreviewBackground();
             }
         );
-
-        previewPlaceholder
-            .replaceChildren(frame);
+    
+        previewPlaceholder.replaceChildren(frame);
     }
 
     function renderLargePreview(item) {

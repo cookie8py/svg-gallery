@@ -566,9 +566,10 @@ function loadShadowModule() {
         let startTime = null;
         let elapsedBeforePause = 0;
         let animationFrame = null;
+        let previewVisible = true;
     
         function animate(timestamp) {
-            if (document.hidden) {
+            if (document.hidden || !previewVisible) {
                 pauseAnimation();
                 return;
             }
@@ -615,17 +616,46 @@ function loadShadowModule() {
         function resumeAnimation() {
             if (
                 document.hidden ||
+                !previewVisible ||
                 animationFrame !== null
             ) {
                 return;
             }
-    
+
             animationFrame =
                 requestAnimationFrame(animate);
-    
+
             svg.__pumpjackAnimationFrame =
                 animationFrame;
         }
+
+        window.addEventListener(
+            "message",
+            function (event) {
+                if (event.origin !== window.location.origin) {
+                    return;
+                }
+
+                if (
+                    event.data?.type !==
+                    "svg-gallery-visibility"
+                ) {
+                    return;
+                }
+
+                if (typeof event.data.visible !== "boolean") {
+                    return;
+                }
+
+                previewVisible = event.data.visible;
+
+                if (previewVisible) {
+                    resumeAnimation();
+                } else {
+                    pauseAnimation();
+                }
+            }
+        );
     
         document.addEventListener(
             "visibilitychange",
