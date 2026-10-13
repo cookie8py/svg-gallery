@@ -1919,7 +1919,7 @@ function createGallery(definition) {
         frame.loading = "lazy";
 
         if (
-            item.id === "pump-jack" &&
+            item.supportsPlayback &&
             "IntersectionObserver" in window
         ) {
             const observer = new IntersectionObserver(
@@ -1932,6 +1932,14 @@ function createGallery(definition) {
                         !frame.contentWindow
                     ) {
                         return;
+                    }
+
+                    if (
+                        !entry.isIntersecting &&
+                        isPreviewPlaying &&
+                        selectedItem?.id === item.id
+                    ) {
+                        playbackButton?.click();
                     }
 
                     frame.contentWindow.postMessage(
@@ -2964,7 +2972,7 @@ function createGallery(definition) {
             ) {
                 return;
             }
-        
+
             playbackButton?.click();
         }
     );
