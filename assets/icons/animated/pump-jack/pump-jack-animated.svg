@@ -567,6 +567,7 @@ function loadShadowModule() {
         let elapsedBeforePause = 0;
         let animationFrame = null;
         let previewVisible = true;
+        let playbackRequested = false;
     
         function animate(timestamp) {
             if (document.hidden || !previewVisible) {
@@ -617,6 +618,7 @@ function loadShadowModule() {
             if (
                 document.hidden ||
                 !previewVisible ||
+                !playbackRequested ||
                 animationFrame !== null
             ) {
                 return;
@@ -656,6 +658,37 @@ function loadShadowModule() {
                 }
             }
         );
+
+        window.addEventListener(
+            "message",
+            function (event) {
+                if (event.origin !== window.location.origin) {
+                    return;
+                }
+        
+                if (
+                    event.data?.type !==
+                    "svg-gallery-playback"
+                ) {
+                    return;
+                }
+        
+                if (event.data.action === "play") {
+                    // 매번 처음부터 재생
+                    pauseAnimation();
+        
+                    elapsedBeforePause = 0;
+                    startTime = null;
+                    playbackRequested = true;
+        
+                    render(0);
+                    resumeAnimation();
+                } else if (event.data.action === "pause") {
+                    playbackRequested = false;
+                    pauseAnimation();
+                }
+            }
+        );
     
         document.addEventListener(
             "visibilitychange",
@@ -667,8 +700,7 @@ function loadShadowModule() {
                 }
             }
         );
-    
-        resumeAnimation();
+
     })();
         ]]>
     </script>
