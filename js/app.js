@@ -654,6 +654,7 @@ function createGallery(definition) {
 
     let selectedItemId = null;
     let selectedItem = null;
+    let isPreviewPlaying = false;
     let currentPage = 1;
     let previewRenderId = 0;
     let isDownloading = false;
@@ -2061,6 +2062,19 @@ function createGallery(definition) {
 
         selectedItemId = item.id;
         selectedItem = item;
+
+        isPreviewPlaying = false;
+            
+        if (playbackButton) {
+            playbackButton.querySelector(
+                "span:first-child"
+            ).textContent = "▶";
+        
+            playbackButton.setAttribute(
+                "aria-label",
+                "애니메이션 재생"
+            );
+        }
         
         
         if (playbackButton) {
@@ -2911,12 +2925,29 @@ function createGallery(definition) {
                     return;
                 }
 
+                isPreviewPlaying = !isPreviewPlaying;
+
                 frame.contentWindow.postMessage(
                     {
                         type: "svg-gallery-playback",
-                        action: "play"
+                        action: isPreviewPlaying
+                            ? "play"
+                            : "pause"
                     },
                     window.location.origin
+                );
+
+                playbackButton.querySelector(
+                    "span:first-child"
+                ).textContent = isPreviewPlaying
+                    ? "■"
+                    : "▶";
+
+                playbackButton.setAttribute(
+                    "aria-label",
+                    isPreviewPlaying
+                        ? "애니메이션 정지"
+                        : "애니메이션 재생"
                 );
             }
         );
