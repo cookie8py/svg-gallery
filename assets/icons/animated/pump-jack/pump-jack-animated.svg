@@ -561,34 +561,85 @@ function loadShadowModule() {
         }
     }
 
-    render(0);
-
-    let startTime = null;
-
-    function animate(timestamp) {
-        if (startTime === null) {
-            startTime = timestamp;
+        render(0);
+    
+        let startTime = null;
+        let elapsedBeforePause = 0;
+        let animationFrame = null;
+    
+        function animate(timestamp) {
+            if (document.hidden) {
+                pauseAnimation();
+                return;
+            }
+    
+            if (startTime === null) {
+                startTime = timestamp;
+            }
+    
+            const elapsed =
+                elapsedBeforePause +
+                (timestamp - startTime) / 1000;
+    
+            render(
+                (
+                    elapsed /
+                    cycleDuration
+                ) *
+                Math.PI *
+                2
+            );
+    
+            animationFrame =
+                requestAnimationFrame(animate);
+    
+            svg.__pumpjackAnimationFrame =
+                animationFrame;
         }
-
-        const elapsed =
-            (timestamp - startTime) / 1000;
-
-        render(
-            (
-                elapsed /
-                cycleDuration
-            ) *
-            Math.PI *
-            2
+    
+        function pauseAnimation() {
+            if (animationFrame !== null) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+                svg.__pumpjackAnimationFrame = null;
+            }
+    
+            if (startTime !== null) {
+                elapsedBeforePause +=
+                    (performance.now() - startTime) / 1000;
+    
+                startTime = null;
+            }
+        }
+    
+        function resumeAnimation() {
+            if (
+                document.hidden ||
+                animationFrame !== null
+            ) {
+                return;
+            }
+    
+            animationFrame =
+                requestAnimationFrame(animate);
+    
+            svg.__pumpjackAnimationFrame =
+                animationFrame;
+        }
+    
+        document.addEventListener(
+            "visibilitychange",
+            function () {
+                if (document.hidden) {
+                    pauseAnimation();
+                } else {
+                    resumeAnimation();
+                }
+            }
         );
-
-        svg.__pumpjackAnimationFrame =
-            requestAnimationFrame(animate);
-    }
-
-    svg.__pumpjackAnimationFrame =
-        requestAnimationFrame(animate);
-})();
+    
+        resumeAnimation();
+    })();
         ]]>
     </script>
 </svg>
