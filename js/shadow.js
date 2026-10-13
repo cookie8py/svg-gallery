@@ -619,8 +619,8 @@ export function removeShadow(svgElement) {
 }
 
 /**
- * 원본 SVG의 애니메이션 상태를 그림자에 동기화한다.
- * 기존 그림자 도형을 유지하고 변경된 속성만 갱신한다.
+ * 실제 움직이는 요소만 그림자에 동기화한다.
+ * 정적인 도형은 최초 복제된 상태를 유지한다.
  */
 export function syncShadowAnimation(svgElement) {
     const state = shadowStates.get(svgElement);
@@ -629,30 +629,36 @@ export function syncShadowAnimation(svgElement) {
         return;
     }
 
-    const attributes = [
-        "transform",
-        "d",
-        "x",
-        "y",
-        "cx",
-        "cy",
-        "width",
-        "height"
-    ];
+    // 최초 실행 시 움직이는 요소만 선별한다.
+    if (!state.movingPairs) {
+        const movingIds = new Set([
+            "crank-assembly",
+            "walking-beam-group",
+            "pitman-arm",
+            "polished-rod-cable"
+        ]);
 
-    for (const { source, shadow } of state.animationPairs) {
-        for (const attribute of attributes) {
-            const value = source.getAttribute(attribute);
+        state.movingPairs = state.animationPairs.filter(
+            ({ source }) => movingIds.has(source.id)
+        );
+    }
 
-            if (value === null) {
-                if (shadow.hasAttribute(attribute)) {
-                    shadow.removeAttribute(attribute);
-                }
-            } else if (
-                shadow.getAttribute(attribute) !== value
-            ) {
-                shadow.setAttribute(attribute, value);
+    for (const { source, shadow } of state.movingPairs) {
+        const attribute =
+            source.localName === "g"
+                ? "transform"
+                : "d";
+
+        const value = source.getAttribute(attribute);
+
+        if (value === null) {
+            if (shadow.hasAttribute(attribute)) {
+                shadow.removeAttribute(attribute);
             }
+        } else if (
+            shadow.getAttribute(attribute) !== value
+        ) {
+            shadow.setAttribute(attribute, value);
         }
     }
 }
