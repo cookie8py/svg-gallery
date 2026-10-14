@@ -1,0 +1,83 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 220 240"
+    role="img"
+    aria-labelledby="umbrellaTitle umbrellaDescription"
+>
+    <title id="umbrellaTitle">
+        비를 막아주는 우산
+    </title>
+
+    <desc id="umbrellaDescription">
+        우산만 보여주는 정적 썸네일
+    </desc>
+
+    <style>
+        :root {
+            --umbrella-color: #427eff;
+        }
+
+        .umbrella-part {
+            fill: var(--umbrella-color);
+        }
+
+        .umbrella-line {
+            fill: none;
+            stroke: var(--umbrella-color);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+
+    <g id="umbrella-group">
+        <path
+            class="umbrella-line"
+            d="
+                M 110 10
+                L 110 210
+            "
+        />
+
+        <path
+            class="umbrella-part"
+            d="
+                M 10 120
+
+                C 10 65,
+                  55 22,
+                  110 22
+
+                C 165 22,
+                  210 65,
+                  210 120
+
+                C 192 100,
+                  161 100,
+                  143.33 120
+
+                C 125 100,
+                  95 100,
+                  76.67 120
+
+                C 59 100,
+                  28 100,
+                  10 120
+
+                Z
+            "
+        />
+
+        <path
+            class="umbrella-line"
+            d="
+                M 110 210
+                L 110 218
+
+                C 110 232,
+                  135 232,
+                  135 218
+            "
+        />
+    </g>
+</svg>

@@ -1,3 +1,4 @@
+
 export const animatedIcons = [
     {
         id: "lantern",
@@ -12,7 +13,7 @@ export const animatedIcons = [
         previewPath:
             "./assets/icons/animated/lantern/lantern.html",
         thumbnailPath:
-            "./assets/icons/animated/lantern/lantern.svg",
+            "./assets/icons/animated/lantern/lantern-thumbnail.svg",
         svgPath:
             "./assets/icons/animated/lantern/lantern.svg",
         htmlPath:
@@ -49,7 +50,7 @@ export const animatedIcons = [
         previewPath:
             "./assets/icons/animated/umbrella/umbrella.html",
         thumbnailPath:
-            "./assets/icons/animated/umbrella/umbrella.svg",
+            "./assets/icons/animated/umbrella/umbrella-thumbnail.svg",
         svgPath:
             "./assets/icons/animated/umbrella/umbrella.svg",
         htmlPath:
