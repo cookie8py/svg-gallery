@@ -1911,111 +1911,111 @@ function createGallery(definition) {
             previewVisibilityObserver.disconnect();
             previewVisibilityObserver = null;
         }
-    }
+    }    
     
     function renderHtmlPreview(item) {
-    disconnectPreviewVisibilityObserver();
+        disconnectPreviewVisibilityObserver();
 
-    const frame =
-        document.createElement("iframe");
+        const frame =
+            document.createElement("iframe");
 
-    frame.src = item.previewPath;
+        frame.src = item.previewPath;
 
-    frame.title =
-        `${item.title} 실행 미리보기`;
+        frame.title =
+            `${item.title} 실행 미리보기`;
 
-    frame.loading = "lazy";
+        frame.loading = "lazy";
 
-    if (
-        item.supportsPlayback &&
-        "IntersectionObserver" in window
-    ) {
-        const observer = new IntersectionObserver(
-            function (entries) {
-                const entry = entries[0];
+        if (
+            item.supportsPlayback &&
+            "IntersectionObserver" in window
+        ) {
+            const observer = new IntersectionObserver(
+                function (entries) {
+                    const entry = entries[0];
 
+                    if (
+                        !entry ||
+                        !frame.isConnected ||
+                        !frame.contentWindow
+                    ) {
+                        return;
+                    }
+
+                    if (
+                        !entry.isIntersecting &&
+                        isPreviewPlaying &&
+                        selectedItem?.id === item.id
+                    ) {
+                        togglePreviewPlayback();
+                    }
+
+                    frame.contentWindow.postMessage(
+                        {
+                            type: "svg-gallery-visibility",
+                            visible: entry.isIntersecting
+                        },
+                        window.location.origin
+                    );
+                },
+                {
+                    threshold: 0
+                }
+            );
+
+            previewVisibilityObserver = observer;
+            observer.observe(frame);
+        }
+
+        frame.addEventListener(
+            "load",
+            function () {
                 if (
-                    !entry ||
-                    !frame.isConnected ||
-                    !frame.contentWindow
+                    !selectedItem ||
+                    selectedItem.id !== item.id
                 ) {
                     return;
                 }
 
+                applyColorsToFrame(frame);
+                updatePreviewBackground();
+
                 if (
-                    !entry.isIntersecting &&
-                    isPreviewPlaying &&
-                    selectedItem?.id === item.id
+                    ["umbrella", "lantern", "pump-jack"].includes(
+                        item.id
+                    )
                 ) {
-                    togglePreviewPlayback();
+                    applyPreviewShadow();
                 }
 
-                frame.contentWindow.postMessage(
-                    {
-                        type: "svg-gallery-visibility",
-                        visible: entry.isIntersecting
-                    },
-                    window.location.origin
-                );
-            },
-            {
-                threshold: 0
+                if (
+                    item.supportsPlayback &&
+                    frame.contentWindow
+                ) {
+                    const bounds =
+                        frame.getBoundingClientRect();
+
+                    const visible =
+                        frame.isConnected &&
+                        bounds.width > 0 &&
+                        bounds.height > 0 &&
+                        bounds.bottom > 0 &&
+                        bounds.right > 0 &&
+                        bounds.top < window.innerHeight &&
+                        bounds.left < window.innerWidth;
+
+                    frame.contentWindow.postMessage(
+                        {
+                            type: "svg-gallery-visibility",
+                            visible
+                        },
+                        window.location.origin
+                    );
+                }
             }
         );
 
-        previewVisibilityObserver = observer;
-        observer.observe(frame);
-    }
-
-    frame.addEventListener(
-        "load",
-        function () {
-            if (
-                !selectedItem ||
-                selectedItem.id !== item.id
-            ) {
-                return;
-            }
-
-            applyColorsToFrame(frame);
-            updatePreviewBackground();
-
-            if (
-                ["umbrella", "lantern", "pump-jack"].includes(
-                    item.id
-                )
-            ) {
-                applyPreviewShadow();
-            }
-
-            if (
-                item.supportsPlayback &&
-                frame.contentWindow
-            ) {
-                const bounds =
-                    frame.getBoundingClientRect();
-
-                const visible =
-                    frame.isConnected &&
-                    bounds.width > 0 &&
-                    bounds.height > 0 &&
-                    bounds.bottom > 0 &&
-                    bounds.right > 0 &&
-                    bounds.top < window.innerHeight &&
-                    bounds.left < window.innerWidth;
-
-                frame.contentWindow.postMessage(
-                    {
-                        type: "svg-gallery-visibility",
-                        visible
-                    },
-                    window.location.origin
-                );
-            }
-        }
-    );
-
-    previewPlaceholder.replaceChildren(frame);
+        previewPlaceholder.replaceChildren(frame);
     }
 
     function renderLargePreview(item) {
