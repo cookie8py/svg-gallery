@@ -818,8 +818,8 @@ function createGallery(definition) {
 
     
     function prepareShadowEditor(item) {
-    if (!shadowEditor) {
-        return;
+        if (!shadowEditor) {
+            return;
     }
 
     const supportsShadow =
