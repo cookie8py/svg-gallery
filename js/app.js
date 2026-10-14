@@ -815,28 +815,28 @@ function createGallery(definition) {
             );
         }
     }
-
+    
     
     function prepareShadowEditor(item) {
         if (!shadowEditor) {
             return;
-    }
+        }
 
-    const supportsShadow =
-        (
-            item.previewType === "svg" ||
-            ["pump-jack", "umbrella", "lantern"].includes(
-                item.id
-            )
-        ) &&
-        Boolean(item.previewPath);
+        const supportsShadow =
+            (
+                item.previewType === "svg" ||
+                ["pump-jack", "umbrella", "lantern"].includes(
+                    item.id
+                )
+            ) &&
+            Boolean(item.previewPath);
 
-    shadowEditor.hidden = !supportsShadow;
+        shadowEditor.hidden = !supportsShadow;
 
-    if (!supportsShadow) {
-        closeShadowPanel();
-        resetShadowSettings();
-    }
+        if (!supportsShadow) {
+            closeShadowPanel();
+            resetShadowSettings();
+        }
     }
 
 
