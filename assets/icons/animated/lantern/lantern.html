@@ -251,9 +251,10 @@
                         />
                     </linearGradient>
                 </defs>
-
+                
                 <circle
                     class="lantern-glow"
+                    data-shadow-exclude="true"
                     cx="90"
                     cy="130"
                     r="72"
@@ -297,9 +298,11 @@
                         L 65 176
                         Z
                     "
-                />
-
-                <g class="lantern-flame-group">
+                />                
+                <g
+                    class="lantern-flame-group"
+                    data-shadow-exclude="true"
+                >
                     <path
                         class="lantern-flame-outer"
                         d="
@@ -389,6 +392,57 @@
                 stopLantern();
             }
         });
+    </script>
+
+    <script type="module">
+        import {
+            updateShadow,
+            removeShadow
+        } from "../../../../js/shadow.js";
+
+        const lanternSvg =
+            document.querySelector(
+                ".lantern"
+            );
+
+        window.addEventListener(
+            "message",
+            function (event) {
+                if (
+                    event.origin !==
+                    window.location.origin
+                ) {
+                    return;
+                }
+
+                if (
+                    event.data?.type !==
+                    "svg-gallery-shadow"
+                ) {
+                    return;
+                }
+
+                if (!lanternSvg) {
+                    return;
+                }
+
+                try {
+                    if (event.data.enabled) {
+                        updateShadow(
+                            lanternSvg,
+                            event.data.options
+                        );
+                    } else {
+                        removeShadow(lanternSvg);
+                    }
+                } catch (error) {
+                    console.error(
+                        "[Lantern] 그림자 적용 실패:",
+                        error
+                    );
+                }
+            }
+        );
     </script>
 </body>
 </html>

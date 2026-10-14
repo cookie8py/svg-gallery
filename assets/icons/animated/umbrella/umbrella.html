@@ -566,5 +566,56 @@
         );
         
     </script>
+    
+    <script type="module">
+        import {
+            updateShadow,
+            removeShadow
+        } from "../../../../js/shadow.js";
+
+        const umbrellaSvg =
+            document.querySelector(
+                ".umbrella-graphic"
+            );
+
+        window.addEventListener(
+            "message",
+            function (event) {
+                if (
+                    event.origin !==
+                    window.location.origin
+                ) {
+                    return;
+                }
+
+                if (
+                    event.data?.type !==
+                    "svg-gallery-shadow"
+                ) {
+                    return;
+                }
+
+                if (!umbrellaSvg) {
+                    return;
+                }
+
+                try {
+                    if (event.data.enabled) {
+                        updateShadow(
+                            umbrellaSvg,
+                            event.data.options
+                        );
+                    } else {
+                        removeShadow(umbrellaSvg);
+                    }
+                } catch (error) {
+                    console.error(
+                        "[Umbrella] 그림자 적용 실패:",
+                        error
+                    );
+                }
+            }
+        );
+    </script>
 </body>
 </html>
