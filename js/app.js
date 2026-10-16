@@ -1055,30 +1055,27 @@ function createGallery(definition) {
             );
         }
     }
-
+    
     function createSvgDownloadContent(
         sourceText
     ) {
-        let downloadSource =
-            sourceText;
-    
+        let downloadSource = sourceText;
+
+        // 기존 색상 편집값을 SVG에 반영
         currentColors.forEach(
-            function (
-                colorValue,
-                colorKey
-            ) {
+            function (colorValue, colorKey) {
                 const escapedColorKey =
                     colorKey.replace(
                         /[.*+?^${}()|[\]\\]/g,
                         "\\$&"
                     );
-                
+
                 const colorVariablePattern =
                     new RegExp(
                         `var\\(\\s*${escapedColorKey}\\s*(?:,\\s*[^)]+)?\\)`,
                         "g"
                     );
-                
+
                 downloadSource =
                     downloadSource.replace(
                         colorVariablePattern,
@@ -1086,56 +1083,137 @@ function createGallery(definition) {
                     );
             }
         );
-    
-        const parser =
-            new DOMParser();
-    
+
+        const parser = new DOMParser();
+
         const svgDocument =
             parser.parseFromString(
                 downloadSource,
                 "image/svg+xml"
             );
-        
+
         const parserError =
             svgDocument.querySelector(
                 "parsererror"
             );
-        
+
         if (parserError) {
             throw new Error(
                 "SVG 파일을 해석하지 못했습니다."
             );
         }
-    
+
         const svgElement =
             svgDocument.documentElement;
-    
-        if (
-            !svgElement.hasAttribute(
-                "xmlns"
-            )
-        ) {
+
+        if (!svgElement.hasAttribute("xmlns")) {
             svgElement.setAttribute(
                 "xmlns",
                 "http://www.w3.org/2000/svg"
             );
         }
-    
+
         currentColors.forEach(
-            function (
-                colorValue,
-                colorKey
-            ) {
-                svgElement.style
-                    .removeProperty(
-                        colorKey
-                    );
+            function (colorValue, colorKey) {
+                svgElement.style.removeProperty(
+                    colorKey
+                );
             }
         );
-    
+
+        // 정적 SVG에서 그림자 모드가 활성화된 경우
+        const shouldExportShadow =
+            selectedItem?.previewType === "svg" &&
+            shadowEnabled?.checked === true;
+
+        if (shouldExportShadow) {
+            const previewSvg =
+                previewPlaceholder.querySelector(
+                    "svg"
+                );
+
+            if (!previewSvg) {
+                throw new Error(
+                    "그림자가 적용된 SVG 미리보기를 찾을 수 없습니다."
+                );
+            }
+
+            const shadowLayer =
+                previewSvg.querySelector(
+                    "[data-svg-gallery-shadow]"
+                );
+
+            const shadowDefs =
+                previewSvg.querySelector(
+                    "[data-svg-gallery-shadow-filter]"
+                );
+
+            if (!shadowLayer || !shadowDefs) {
+                throw new Error(
+                    "그림자 레이어 또는 필터를 찾을 수 없습니다."
+                );
+            }
+
+            // 미리보기에서 생성한 그림자 요소를
+            // 다운로드용 SVG 문서로 복사
+            const exportedDefs =
+                svgDocument.importNode(
+                    shadowDefs,
+                    true
+                );
+
+            const exportedLayer =
+                svgDocument.importNode(
+                    shadowLayer,
+                    true
+                );
+
+            // 원본 그래픽보다 뒤에 그려지도록
+            // 그림자 요소를 앞쪽에 배치
+            const nonGraphicTags = new Set([
+                "defs",
+                "style",
+                "title",
+                "desc",
+                "metadata"
+            ]);
+
+            const firstGraphic =
+                Array.from(svgElement.children)
+                    .find(
+                        child =>
+                            !nonGraphicTags.has(
+                                child.localName
+                            )
+                    );
+
+            svgElement.insertBefore(
+                exportedDefs,
+                firstGraphic || null
+            );
+
+            svgElement.insertBefore(
+                exportedLayer,
+                firstGraphic || null
+            );
+
+            // 그림자로 인해 확장된 viewBox 유지
+            const expandedViewBox =
+                previewSvg.getAttribute(
+                    "viewBox"
+                );
+
+            if (expandedViewBox) {
+                svgElement.setAttribute(
+                    "viewBox",
+                    expandedViewBox
+                );
+            }
+        }
+
         const serializer =
             new XMLSerializer();
-    
+
         return serializer.serializeToString(
             svgDocument
         );
@@ -1267,13 +1345,13 @@ function createGallery(definition) {
         }
     }
 
+    
     function handleDownload(
         event,
         fileType
     ) {
         if (!selectedItem) {
             event.preventDefault();
-
             return;
         }
 
@@ -1284,15 +1362,20 @@ function createGallery(definition) {
 
         if (!filePath) {
             event.preventDefault();
-
             return;
         }
 
-        if (
-            !hasEditableColors(
-                selectedItem
-            )
-        ) {
+        const hasColors =
+            hasEditableColors(selectedItem);
+
+        const hasStaticShadow =
+            fileType === "svg" &&
+            selectedItem.previewType === "svg" &&
+            shadowEnabled?.checked === true;
+
+        // 색상 편집이나 정적 그림자가 없으면
+        // 기존 원본 다운로드 링크를 사용
+        if (!hasColors && !hasStaticShadow) {
             return;
         }
 
@@ -1303,6 +1386,7 @@ function createGallery(definition) {
             fileType
         );
     }
+
 
     function closeColorPopover() {
         if (!hasColorEditor()) {
