@@ -756,8 +756,9 @@ function createGallery(definition) {
         const frame =
             previewPlaceholder.querySelector("iframe");
 
+        // iframe 기반 미리보기만 메시지 전달
         if (
-            ["pump-jack", "umbrella", "lantern"].includes(
+            ["pump-jack", "lantern"].includes(
                 selectedItem?.id
             ) &&
             frame?.contentWindow
@@ -825,7 +826,7 @@ function createGallery(definition) {
         const supportsShadow =
             (
                 item.previewType === "svg" ||
-                ["pump-jack", "umbrella", "lantern"].includes(
+                ["pump-jack", "lantern"].includes(
                     item.id
                 )
             ) &&
@@ -1918,12 +1919,11 @@ function createGallery(definition) {
         item,
         currentRenderId
     ) {
-        previewPlaceholder
-            .replaceChildren(
-                createPreviewMessage(
-                    `${item.title} 미리보기를 불러오는 중입니다.`
-                )
-            );
+        previewPlaceholder.replaceChildren(
+            createPreviewMessage(
+                `${item.title} 미리보기를 불러오는 중입니다.`
+            )
+        );
 
         try {
             const response = await fetch(
@@ -1967,25 +1967,14 @@ function createGallery(definition) {
             }
 
             const svgElement =
-                svgDocument
-                    .documentElement;
+                svgDocument.documentElement;
 
-            svgElement.removeAttribute(
-                "width"
-            );
+            svgElement.removeAttribute("width");
+            svgElement.removeAttribute("height");
 
-            svgElement.removeAttribute(
-                "height"
-            );
-
-            svgElement.style.width =
-                "100%";
-
-            svgElement.style.height =
-                "100%";
-
-            svgElement.style.display =
-                "block";
+            svgElement.style.width = "100%";
+            svgElement.style.height = "100%";
+            svgElement.style.display = "block";
 
             svgElement.setAttribute(
                 "role",
@@ -1997,14 +1986,26 @@ function createGallery(definition) {
                 `${item.title} 미리보기`
             );
 
-            applyColorsToSvg(
+            applyColorsToSvg(svgElement);
+
+            // 우산 SVG는 갤러리에서 기본 정지
+            if (item.id === "umbrella") {
+                const rainDrops =
+                    svgElement.querySelectorAll(
+                        ".rain-drop"
+                    );
+
+                rainDrops.forEach(
+                    function (drop) {
+                        drop.style.animationPlayState =
+                            "paused";
+                    }
+                );
+            }
+
+            previewPlaceholder.replaceChildren(
                 svgElement
             );
-
-            previewPlaceholder
-                .replaceChildren(
-                    svgElement
-                );
 
             applyPreviewShadow();
             updatePreviewBackground();
@@ -2022,9 +2023,7 @@ function createGallery(definition) {
             );
 
             const image =
-                document.createElement(
-                    "img"
-                );
+                document.createElement("img");
 
             image.src =
                 item.previewPath;
@@ -2032,10 +2031,9 @@ function createGallery(definition) {
             image.alt =
                 `${item.title} 미리보기`;
 
-            previewPlaceholder
-                .replaceChildren(
-                    image
-                );
+            previewPlaceholder.replaceChildren(
+                image
+            );
 
             updatePreviewBackground();
         }
@@ -2118,7 +2116,7 @@ function createGallery(definition) {
                 updatePreviewBackground();
 
                 if (
-                    ["umbrella", "lantern", "pump-jack"].includes(
+                    ["lantern", "pump-jack"].includes(
                         item.id
                     )
                 ) {
@@ -3082,47 +3080,69 @@ function createGallery(definition) {
             closeColorPopover();
         }
     );
-
+    
     function togglePreviewPlayback() {
         if (!selectedItem?.supportsPlayback) {
             return;
         }
-    
+
+        const isUmbrella =
+            selectedItem.id === "umbrella" &&
+            selectedItem.previewType === "svg";
+
         const frame =
-            previewPlaceholder.querySelector("iframe");
-    
-        if (!frame?.contentWindow) {
+            previewPlaceholder.querySelector(
+                "iframe"
+            );
+
+        const umbrellaSvg =
+            isUmbrella
+                ? previewPlaceholder.querySelector(
+                    "svg"
+                )
+                : null;
+
+        if (isUmbrella) {
+            if (!umbrellaSvg) {
+                return;
+            }
+        } else if (!frame?.contentWindow) {
             return;
         }
-    
+
         if (isPreviewPlaying) {
             playbackElapsed +=
-                performance.now() - playbackStartedAt;
-        
+                performance.now() -
+                playbackStartedAt;
+
             playbackStartedAt = null;
         } else {
             if (playbackElapsed >= 30000) {
                 playbackElapsed = 0;
             }
-        
-            playbackStartedAt = performance.now();
+
+            playbackStartedAt =
+                performance.now();
         }
-    
+
         isPreviewPlaying = !isPreviewPlaying;
-    
+
         if (playbackTimeoutId !== null) {
             clearTimeout(playbackTimeoutId);
             playbackTimeoutId = null;
         }
-    
+
         if (isPreviewPlaying) {
             const remainingTime =
-                Math.max(0, 30000 - playbackElapsed);
-        
+                Math.max(
+                    0,
+                    30000 - playbackElapsed
+                );
+
             playbackTimeoutId = setTimeout(
                 function () {
                     playbackTimeoutId = null;
-                
+
                     if (isPreviewPlaying) {
                         togglePreviewPlayback();
                     }
@@ -3130,17 +3150,45 @@ function createGallery(definition) {
                 remainingTime
             );
         }
-    
-        frame.contentWindow.postMessage(
-            {
-                type: "svg-gallery-playback",
-                action: isPreviewPlaying
-                    ? "play"
-                    : "pause"
-            },
-            window.location.origin
-        );
-    
+
+        if (isUmbrella) {
+            const rainDrops =
+                umbrellaSvg.querySelectorAll(
+                    ".rain-drop"
+                );
+
+            rainDrops.forEach(
+                function (drop) {
+                    if (isPreviewPlaying) {
+                        // 정지 후 재생 시 처음부터 시작
+                        if (playbackElapsed < 100) {
+                            drop.getAnimations().forEach(
+                                function (animation) {
+                                    animation.currentTime = 0;
+                                }
+                            );
+                        }
+
+                        drop.style.animationPlayState =
+                            "running";
+                    } else {
+                        drop.style.animationPlayState =
+                            "paused";
+                    }
+                }
+            );
+        } else {
+            frame.contentWindow.postMessage(
+                {
+                    type: "svg-gallery-playback",
+                    action: isPreviewPlaying
+                        ? "play"
+                        : "pause"
+                },
+                window.location.origin
+            );
+        }
+
         updatePlaybackButton();
     }
 
