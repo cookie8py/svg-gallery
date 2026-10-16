@@ -1054,14 +1054,14 @@ function createGallery(definition) {
                 item.htmlPath
             );
         }
-    }
+    }    
     
     function createSvgDownloadContent(
         sourceText
     ) {
         let downloadSource = sourceText;
 
-        // 기존 색상 편집값을 SVG에 반영
+        // 기존 색상 편집값 반영
         currentColors.forEach(
             function (colorValue, colorKey) {
                 const escapedColorKey =
@@ -1093,9 +1093,7 @@ function createGallery(definition) {
             );
 
         const parserError =
-            svgDocument.querySelector(
-                "parsererror"
-            );
+            svgDocument.querySelector("parsererror");
 
         if (parserError) {
             throw new Error(
@@ -1121,18 +1119,48 @@ function createGallery(definition) {
             }
         );
 
-        // 정적 SVG에서 그림자 모드가 활성화된 경우
+        const isPumpJack =
+            selectedItem?.id === "pump-jack";
+
+        // 펌프잭 다운로드 파일은 갤러리 밖에서
+        // 독립적으로 애니메이션을 실행한다.
+        if (isPumpJack) {
+            svgElement.setAttribute(
+                "data-svg-gallery-export",
+                "animated"
+            );
+        }
+
         const shouldExportShadow =
-            selectedItem?.previewType === "svg" &&
-            shadowEnabled?.checked === true;
+            shadowEnabled?.checked === true &&
+            (
+                selectedItem?.previewType === "svg" ||
+                isPumpJack
+            );
 
         if (shouldExportShadow) {
-            const previewSvg =
-                previewPlaceholder.querySelector(
-                    "svg"
-                );
+            let previewSvg = null;
 
-            if (!previewSvg) {
+            if (isPumpJack) {
+                const frame =
+                    previewPlaceholder.querySelector(
+                        "iframe"
+                    );
+
+                previewSvg =
+                    frame?.contentDocument
+                        ?.documentElement || null;
+            } else {
+                previewSvg =
+                    previewPlaceholder.querySelector(
+                        "svg"
+                    );
+            }
+
+            if (
+                !previewSvg ||
+                previewSvg.localName !== "svg"
+            ) {
                 throw new Error(
                     "그림자가 적용된 SVG 미리보기를 찾을 수 없습니다."
                 );
@@ -1154,8 +1182,6 @@ function createGallery(definition) {
                 );
             }
 
-            // 미리보기에서 생성한 그림자 요소를
-            // 다운로드용 SVG 문서로 복사
             const exportedDefs =
                 svgDocument.importNode(
                     shadowDefs,
@@ -1168,8 +1194,6 @@ function createGallery(definition) {
                     true
                 );
 
-            // 원본 그래픽보다 뒤에 그려지도록
-            // 그림자 요소를 앞쪽에 배치
             const nonGraphicTags = new Set([
                 "defs",
                 "style",
@@ -1197,17 +1221,39 @@ function createGallery(definition) {
                 firstGraphic || null
             );
 
-            // 그림자로 인해 확장된 viewBox 유지
+            // 그림자 여백을 포함한 viewBox
             const expandedViewBox =
-                previewSvg.getAttribute(
-                    "viewBox"
-                );
+                previewSvg.getAttribute("viewBox");
 
             if (expandedViewBox) {
                 svgElement.setAttribute(
                     "viewBox",
                     expandedViewBox
                 );
+            }
+
+            // 다운로드 시점의 그림자 도형이
+            // 원본과 연결되어 있는지 검증
+            if (isPumpJack) {
+                const movingIds = [
+                    "crank-assembly",
+                    "walking-beam-group",
+                    "pitman-arm",
+                    "polished-rod-cable"
+                ];
+
+                for (const id of movingIds) {
+                    const shadowPart =
+                        exportedLayer.querySelector(
+                            `[data-shadow-source-id="${id}"]`
+                        );
+
+                    if (!shadowPart) {
+                        throw new Error(
+                            `펌프잭 그림자 부품 누락: ${id}`
+                        );
+                    }
+                }
             }
         }
 
@@ -1368,14 +1414,21 @@ function createGallery(definition) {
         const hasColors =
             hasEditableColors(selectedItem);
 
+        const isPumpJackExport =
+            fileType === "svg" &&
+            selectedItem.id === "pump-jack";
+
         const hasStaticShadow =
             fileType === "svg" &&
             selectedItem.previewType === "svg" &&
             shadowEnabled?.checked === true;
 
-        // 색상 편집이나 정적 그림자가 없으면
-        // 기존 원본 다운로드 링크를 사용
-        if (!hasColors && !hasStaticShadow) {
+        // 기존 다운로드 경로 유지
+        if (
+            !hasColors &&
+            !hasStaticShadow &&
+            !isPumpJackExport
+        ) {
             return;
         }
 
