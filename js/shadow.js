@@ -132,6 +132,14 @@ function createShadowShape(source, color) {
     clone.removeAttribute("data-shadow-exclude");
     clone.removeAttribute("style");
 
+    // 원본 부품과 그림자를 연결하기 위한 식별자
+    if (source.id) {
+        clone.setAttribute(
+            "data-shadow-source-id",
+            source.id
+        );
+    }
+
     clone.style.fill =
         style.fill === "none" ? "none" : color;
 
@@ -151,8 +159,8 @@ function createShadowShape(source, color) {
 
     return clone;
 }
-function copyShadowGeometry(source, target, color, pairs) {
 
+function copyShadowGeometry(source, target, color, pairs) {
     if (
         source.nodeType !== Node.ELEMENT_NODE ||
         source.getAttribute("data-shadow-exclude") === "true"
@@ -198,6 +206,14 @@ function copyShadowGeometry(source, target, color, pairs) {
     }
 
     const group = createSvgElement("g");
+
+    // 그룹도 원본 부품과 연결
+    if (source.id) {
+        group.setAttribute(
+            "data-shadow-source-id",
+            source.id
+        );
+    }
 
     const transform =
         source.getAttribute("transform");

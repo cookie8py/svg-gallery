@@ -152,6 +152,7 @@
     <!-- 주변 불빛 -->
     <circle
         class="lantern-glow"
+        data-shadow-exclude="true"
         cx="90"
         cy="130"
         r="72"
@@ -202,7 +203,10 @@
     />
 
     <!-- 불꽃 -->
-    <g class="lantern-flame-group">
+        <g
+            class="lantern-flame-group"
+            data-shadow-exclude="true"
+        >
         <path
             class="lantern-flame-outer"
             d="

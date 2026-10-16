@@ -44,17 +44,16 @@ export const animatedIcons = [
         motion: "animated",
         supportsPlayback: true,
         description:
-            "우산 위로 비가 내리는 애니메이션 아이콘입니다. HTML 버전에서는 빗방울이 우산에 부딪혀 양옆으로 튀는 효과가 적용됩니다.",
+            "고정된 우산 위로 빗방울이 수직으로 내리는 애니메이션 SVG 아이콘입니다.",
         source: "직접 제작",
-        previewType: "html",
+        previewType: "svg",
         previewPath:
-            "./assets/icons/animated/umbrella/umbrella.html",
+            "./assets/icons/animated/umbrella/umbrella.svg",
         thumbnailPath:
             "./assets/icons/animated/umbrella/umbrella-thumbnail.svg",
         svgPath:
             "./assets/icons/animated/umbrella/umbrella.svg",
-        htmlPath:
-            "./assets/icons/animated/umbrella/umbrella.html",
+        htmlPath: "",
         colorCount: 2,
         editableColors: [
             {

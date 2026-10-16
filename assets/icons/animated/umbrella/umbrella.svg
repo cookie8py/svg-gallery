@@ -54,12 +54,6 @@
             animation-delay: -0.85s;
         }
 
-        .rain-drop-3 {
-            --rain-start: -24px;
-            --rain-end: 10px;
-            animation-delay: -0.45s;
-        }
-
         .rain-drop-4 {
             --rain-start: -32px;
             --rain-end: 20px;
@@ -106,10 +100,11 @@
 
     </style>
 
-    <!-- 수직으로 내리는 비 -->
+    <!-- 수직으로 내리는 비: 그림자 적용 제외 -->
     <g
         id="rain-group"
         aria-hidden="true"
+        data-shadow-exclude="true"
     >
         <line
             class="rain-drop rain-drop-1"
@@ -124,14 +119,6 @@
             x1="74"
             y1="0"
             x2="74"
-            y2="18"
-        />
-
-        <line
-            class="rain-drop rain-drop-3"
-            x1="110"
-            y1="0"
-            x2="110"
             y2="18"
         />
 

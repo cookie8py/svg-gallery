@@ -359,29 +359,19 @@ function createPreviewMedia(
 
     container.className = className;
 
-    if (
-        item.previewType === "svg" &&
-        item.previewPath
-    ) {
+    // 목록은 정적 썸네일을 우선 사용한다.
+    const thumbnailPath =
+        item.thumbnailPath ||
+        (
+            item.previewType === "svg"
+                ? item.previewPath
+                : null
+        );
+
+    if (thumbnailPath) {
         const image = document.createElement("img");
 
-        image.src = item.previewPath;
-        image.alt = "";
-        image.loading = "lazy";
-
-        container.append(image);
-
-        return container;
-    }
-
-    if (
-        item.previewType === "html" &&
-        item.previewPath &&
-        item.thumbnailPath
-    ) {
-        const image = document.createElement("img");
-
-        image.src = item.thumbnailPath;
+        image.src = thumbnailPath;
         image.alt = "";
         image.loading = "lazy";
 
@@ -756,8 +746,9 @@ function createGallery(definition) {
         const frame =
             previewPlaceholder.querySelector("iframe");
 
+        // iframe 기반 미리보기만 메시지 전달
         if (
-            ["pump-jack", "umbrella", "lantern"].includes(
+            ["pump-jack", "lantern"].includes(
                 selectedItem?.id
             ) &&
             frame?.contentWindow
@@ -825,7 +816,7 @@ function createGallery(definition) {
         const supportsShadow =
             (
                 item.previewType === "svg" ||
-                ["pump-jack", "umbrella", "lantern"].includes(
+                ["pump-jack", "lantern"].includes(
                     item.id
                 )
             ) &&
@@ -1054,31 +1045,29 @@ function createGallery(definition) {
                 item.htmlPath
             );
         }
-    }
-
+    }    
+    
+    
     function createSvgDownloadContent(
         sourceText
     ) {
-        let downloadSource =
-            sourceText;
-    
+        let downloadSource = sourceText;
+
+        // 기존 색상 편집값 반영
         currentColors.forEach(
-            function (
-                colorValue,
-                colorKey
-            ) {
+            function (colorValue, colorKey) {
                 const escapedColorKey =
                     colorKey.replace(
                         /[.*+?^${}()|[\]\\]/g,
                         "\\$&"
                     );
-                
+
                 const colorVariablePattern =
                     new RegExp(
                         `var\\(\\s*${escapedColorKey}\\s*(?:,\\s*[^)]+)?\\)`,
                         "g"
                     );
-                
+
                 downloadSource =
                     downloadSource.replace(
                         colorVariablePattern,
@@ -1086,60 +1075,207 @@ function createGallery(definition) {
                     );
             }
         );
-    
-        const parser =
-            new DOMParser();
-    
+
+        const parser = new DOMParser();
+
         const svgDocument =
             parser.parseFromString(
                 downloadSource,
                 "image/svg+xml"
             );
-        
+
         const parserError =
             svgDocument.querySelector(
                 "parsererror"
             );
-        
+
         if (parserError) {
             throw new Error(
                 "SVG 파일을 해석하지 못했습니다."
             );
         }
-    
+
         const svgElement =
             svgDocument.documentElement;
-    
-        if (
-            !svgElement.hasAttribute(
-                "xmlns"
-            )
-        ) {
+
+        if (!svgElement.hasAttribute("xmlns")) {
             svgElement.setAttribute(
                 "xmlns",
                 "http://www.w3.org/2000/svg"
             );
         }
-    
+
         currentColors.forEach(
-            function (
-                colorValue,
-                colorKey
-            ) {
-                svgElement.style
-                    .removeProperty(
-                        colorKey
-                    );
+            function (colorValue, colorKey) {
+                svgElement.style.removeProperty(
+                    colorKey
+                );
             }
         );
-    
+
+        const isPumpJack =
+            selectedItem?.id === "pump-jack";
+
+        const isLantern =
+            selectedItem?.id === "lantern";
+
+        // 펌프잭 독립 애니메이션 설정 유지
+        if (isPumpJack) {
+            svgElement.setAttribute(
+                "data-svg-gallery-export",
+                "animated"
+            );
+        }
+
+        const shouldExportShadow =
+            shadowEnabled?.checked === true &&
+            (
+                selectedItem?.previewType === "svg" ||
+                isPumpJack ||
+                isLantern
+            );
+
+        if (shouldExportShadow) {
+            let previewSvg = null;
+
+            if (isPumpJack || isLantern) {
+                const frame =
+                    previewPlaceholder.querySelector(
+                        "iframe"
+                    );
+
+                const frameDocument =
+                    frame?.contentDocument;
+
+                if (isPumpJack) {
+                    previewSvg =
+                        frameDocument?.documentElement ||
+                        null;
+                } else {
+                    // 랜턴은 HTML 내부의 SVG를 사용
+                    previewSvg =
+                        frameDocument?.querySelector(
+                            "svg.lantern"
+                        ) || null;
+                }
+            } else {
+                previewSvg =
+                    previewPlaceholder.querySelector(
+                        "svg"
+                    );
+            }
+
+            if (
+                !previewSvg ||
+                previewSvg.localName !== "svg"
+            ) {
+                throw new Error(
+                    "그림자가 적용된 SVG 미리보기를 찾을 수 없습니다."
+                );
+            }
+
+            const shadowLayer =
+                previewSvg.querySelector(
+                    "[data-svg-gallery-shadow]"
+                );
+
+            const shadowDefs =
+                previewSvg.querySelector(
+                    "[data-svg-gallery-shadow-filter]"
+                );
+
+            if (!shadowLayer || !shadowDefs) {
+                throw new Error(
+                    "그림자 레이어 또는 필터를 찾을 수 없습니다."
+                );
+            }
+
+            // 미리보기 그림자 요소 복사
+            const exportedDefs =
+                svgDocument.importNode(
+                    shadowDefs,
+                    true
+                );
+
+            const exportedLayer =
+                svgDocument.importNode(
+                    shadowLayer,
+                    true
+                );
+
+            const nonGraphicTags = new Set([
+                "defs",
+                "style",
+                "title",
+                "desc",
+                "metadata"
+            ]);
+
+            const firstGraphic =
+                Array.from(svgElement.children)
+                    .find(
+                        child =>
+                            !nonGraphicTags.has(
+                                child.localName
+                            )
+                    );
+
+            // 원본 그래픽보다 그림자를 뒤에 배치
+            svgElement.insertBefore(
+                exportedDefs,
+                firstGraphic || null
+            );
+
+            svgElement.insertBefore(
+                exportedLayer,
+                firstGraphic || null
+            );
+
+            // 확장된 viewBox 반영
+            const expandedViewBox =
+                previewSvg.getAttribute(
+                    "viewBox"
+                );
+
+            if (expandedViewBox) {
+                svgElement.setAttribute(
+                    "viewBox",
+                    expandedViewBox
+                );
+            }
+
+            // 펌프잭 그림자 동기화 요소 검증 유지
+            if (isPumpJack) {
+                const movingIds = [
+                    "crank-assembly",
+                    "walking-beam-group",
+                    "pitman-arm",
+                    "polished-rod-cable"
+                ];
+
+                for (const id of movingIds) {
+                    const shadowPart =
+                        exportedLayer.querySelector(
+                            `[data-shadow-source-id="${id}"]`
+                        );
+
+                    if (!shadowPart) {
+                        throw new Error(
+                            `펌프잭 그림자 부품 누락: ${id}`
+                        );
+                    }
+                }
+            }
+        }
+
         const serializer =
             new XMLSerializer();
-    
+
         return serializer.serializeToString(
             svgDocument
         );
     }
+
 
     function createHtmlDownloadContent(
         sourceText
@@ -1267,13 +1403,13 @@ function createGallery(definition) {
         }
     }
 
+    
     function handleDownload(
         event,
         fileType
     ) {
         if (!selectedItem) {
             event.preventDefault();
-
             return;
         }
 
@@ -1284,14 +1420,26 @@ function createGallery(definition) {
 
         if (!filePath) {
             event.preventDefault();
-
             return;
         }
 
+        const hasColors =
+            hasEditableColors(selectedItem);
+
+        const isPumpJackExport =
+            fileType === "svg" &&
+            selectedItem.id === "pump-jack";
+
+        const hasStaticShadow =
+            fileType === "svg" &&
+            selectedItem.previewType === "svg" &&
+            shadowEnabled?.checked === true;
+
+        // 기존 다운로드 경로 유지
         if (
-            !hasEditableColors(
-                selectedItem
-            )
+            !hasColors &&
+            !hasStaticShadow &&
+            !isPumpJackExport
         ) {
             return;
         }
@@ -1303,6 +1451,7 @@ function createGallery(definition) {
             fileType
         );
     }
+
 
     function closeColorPopover() {
         if (!hasColorEditor()) {
@@ -1781,12 +1930,11 @@ function createGallery(definition) {
         item,
         currentRenderId
     ) {
-        previewPlaceholder
-            .replaceChildren(
-                createPreviewMessage(
-                    `${item.title} 미리보기를 불러오는 중입니다.`
-                )
-            );
+        previewPlaceholder.replaceChildren(
+            createPreviewMessage(
+                `${item.title} 미리보기를 불러오는 중입니다.`
+            )
+        );
 
         try {
             const response = await fetch(
@@ -1830,25 +1978,14 @@ function createGallery(definition) {
             }
 
             const svgElement =
-                svgDocument
-                    .documentElement;
+                svgDocument.documentElement;
 
-            svgElement.removeAttribute(
-                "width"
-            );
+            svgElement.removeAttribute("width");
+            svgElement.removeAttribute("height");
 
-            svgElement.removeAttribute(
-                "height"
-            );
-
-            svgElement.style.width =
-                "100%";
-
-            svgElement.style.height =
-                "100%";
-
-            svgElement.style.display =
-                "block";
+            svgElement.style.width = "100%";
+            svgElement.style.height = "100%";
+            svgElement.style.display = "block";
 
             svgElement.setAttribute(
                 "role",
@@ -1860,14 +1997,26 @@ function createGallery(definition) {
                 `${item.title} 미리보기`
             );
 
-            applyColorsToSvg(
+            applyColorsToSvg(svgElement);
+
+            // 우산 SVG는 갤러리에서 기본 정지
+            if (item.id === "umbrella") {
+                const rainDrops =
+                    svgElement.querySelectorAll(
+                        ".rain-drop"
+                    );
+
+                rainDrops.forEach(
+                    function (drop) {
+                        drop.style.animationPlayState =
+                            "paused";
+                    }
+                );
+            }
+
+            previewPlaceholder.replaceChildren(
                 svgElement
             );
-
-            previewPlaceholder
-                .replaceChildren(
-                    svgElement
-                );
 
             applyPreviewShadow();
             updatePreviewBackground();
@@ -1885,9 +2034,7 @@ function createGallery(definition) {
             );
 
             const image =
-                document.createElement(
-                    "img"
-                );
+                document.createElement("img");
 
             image.src =
                 item.previewPath;
@@ -1895,10 +2042,9 @@ function createGallery(definition) {
             image.alt =
                 `${item.title} 미리보기`;
 
-            previewPlaceholder
-                .replaceChildren(
-                    image
-                );
+            previewPlaceholder.replaceChildren(
+                image
+            );
 
             updatePreviewBackground();
         }
@@ -1981,7 +2127,7 @@ function createGallery(definition) {
                 updatePreviewBackground();
 
                 if (
-                    ["umbrella", "lantern", "pump-jack"].includes(
+                    ["lantern", "pump-jack"].includes(
                         item.id
                     )
                 ) {
@@ -2945,47 +3091,69 @@ function createGallery(definition) {
             closeColorPopover();
         }
     );
-
+    
     function togglePreviewPlayback() {
         if (!selectedItem?.supportsPlayback) {
             return;
         }
-    
+
+        const isUmbrella =
+            selectedItem.id === "umbrella" &&
+            selectedItem.previewType === "svg";
+
         const frame =
-            previewPlaceholder.querySelector("iframe");
-    
-        if (!frame?.contentWindow) {
+            previewPlaceholder.querySelector(
+                "iframe"
+            );
+
+        const umbrellaSvg =
+            isUmbrella
+                ? previewPlaceholder.querySelector(
+                    "svg"
+                )
+                : null;
+
+        if (isUmbrella) {
+            if (!umbrellaSvg) {
+                return;
+            }
+        } else if (!frame?.contentWindow) {
             return;
         }
-    
+
         if (isPreviewPlaying) {
             playbackElapsed +=
-                performance.now() - playbackStartedAt;
-        
+                performance.now() -
+                playbackStartedAt;
+
             playbackStartedAt = null;
         } else {
             if (playbackElapsed >= 30000) {
                 playbackElapsed = 0;
             }
-        
-            playbackStartedAt = performance.now();
+
+            playbackStartedAt =
+                performance.now();
         }
-    
+
         isPreviewPlaying = !isPreviewPlaying;
-    
+
         if (playbackTimeoutId !== null) {
             clearTimeout(playbackTimeoutId);
             playbackTimeoutId = null;
         }
-    
+
         if (isPreviewPlaying) {
             const remainingTime =
-                Math.max(0, 30000 - playbackElapsed);
-        
+                Math.max(
+                    0,
+                    30000 - playbackElapsed
+                );
+
             playbackTimeoutId = setTimeout(
                 function () {
                     playbackTimeoutId = null;
-                
+
                     if (isPreviewPlaying) {
                         togglePreviewPlayback();
                     }
@@ -2993,17 +3161,45 @@ function createGallery(definition) {
                 remainingTime
             );
         }
-    
-        frame.contentWindow.postMessage(
-            {
-                type: "svg-gallery-playback",
-                action: isPreviewPlaying
-                    ? "play"
-                    : "pause"
-            },
-            window.location.origin
-        );
-    
+
+        if (isUmbrella) {
+            const rainDrops =
+                umbrellaSvg.querySelectorAll(
+                    ".rain-drop"
+                );
+
+            rainDrops.forEach(
+                function (drop) {
+                    if (isPreviewPlaying) {
+                        // 정지 후 재생 시 처음부터 시작
+                        if (playbackElapsed < 100) {
+                            drop.getAnimations().forEach(
+                                function (animation) {
+                                    animation.currentTime = 0;
+                                }
+                            );
+                        }
+
+                        drop.style.animationPlayState =
+                            "running";
+                    } else {
+                        drop.style.animationPlayState =
+                            "paused";
+                    }
+                }
+            );
+        } else {
+            frame.contentWindow.postMessage(
+                {
+                    type: "svg-gallery-playback",
+                    action: isPreviewPlaying
+                        ? "play"
+                        : "pause"
+                },
+                window.location.origin
+            );
+        }
+
         updatePlaybackButton();
     }
 

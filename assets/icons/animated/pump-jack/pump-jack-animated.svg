@@ -375,6 +375,63 @@ function loadShadowModule() {
         pitman = path;
     }
 
+    
+    function initializeExportShadowSync() {
+        if (
+            !svg.hasAttribute(
+                "data-svg-gallery-export"
+            )
+        ) {
+            return;
+        }
+
+        const movingIds = [
+            "crank-assembly",
+            "walking-beam-group",
+            "pitman-arm",
+            "polished-rod-cable"
+        ];
+
+        const movingPairs = movingIds
+            .map((id) => ({
+                source: document.getElementById(id),
+                shadow: svg.querySelector(
+                    `[data-svg-gallery-shadow] ` +
+                    `[data-shadow-source-id="${id}"]`
+                )
+            }))
+            .filter(
+                ({ source, shadow }) =>
+                    source && shadow
+            );
+
+        syncShadowAnimation = function () {
+            for (const { source, shadow } of movingPairs) {
+                const attribute =
+                    source.localName === "g"
+                        ? "transform"
+                        : "d";
+
+                const value =
+                    source.getAttribute(attribute);
+
+                if (value === null) {
+                    shadow.removeAttribute(attribute);
+                } else if (
+                    shadow.getAttribute(attribute) !== value
+                ) {
+                    shadow.setAttribute(
+                        attribute,
+                        value
+                    );
+                }
+            }
+        };
+    }
+
+    initializeExportShadowSync();
+
+
     function solveBeam(crankPin) {
         const dx = crankPin.x - beamPivot.x;
         const dy = crankPin.y - beamPivot.y;
@@ -567,7 +624,8 @@ function loadShadowModule() {
         let elapsedBeforePause = 0;
         let animationFrame = null;
         let previewVisible = true;
-        let playbackRequested = false;
+        let playbackRequested =
+            svg.hasAttribute("data-svg-gallery-export");
     
         function animate(timestamp) {
             if (document.hidden || !previewVisible) {
@@ -690,6 +748,7 @@ function loadShadowModule() {
             }
         );
     
+        
         document.addEventListener(
             "visibilitychange",
             function () {
@@ -701,7 +760,17 @@ function loadShadowModule() {
             }
         );
 
+        // 다운로드된 독립 SVG만 자동 재생
+        if (
+            svg.hasAttribute(
+                "data-svg-gallery-export"
+            )
+        ) {
+            resumeAnimation();
+        }
+
     })();
+
         ]]>
     </script>
 </svg>
