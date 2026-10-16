@@ -359,29 +359,19 @@ function createPreviewMedia(
 
     container.className = className;
 
-    if (
-        item.previewType === "svg" &&
-        item.previewPath
-    ) {
+    // 목록은 정적 썸네일을 우선 사용한다.
+    const thumbnailPath =
+        item.thumbnailPath ||
+        (
+            item.previewType === "svg"
+                ? item.previewPath
+                : null
+        );
+
+    if (thumbnailPath) {
         const image = document.createElement("img");
 
-        image.src = item.previewPath;
-        image.alt = "";
-        image.loading = "lazy";
-
-        container.append(image);
-
-        return container;
-    }
-
-    if (
-        item.previewType === "html" &&
-        item.previewPath &&
-        item.thumbnailPath
-    ) {
-        const image = document.createElement("img");
-
-        image.src = item.thumbnailPath;
+        image.src = thumbnailPath;
         image.alt = "";
         image.loading = "lazy";
 
