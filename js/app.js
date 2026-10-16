@@ -1047,6 +1047,7 @@ function createGallery(definition) {
         }
     }    
     
+    
     function createSvgDownloadContent(
         sourceText
     ) {
@@ -1084,7 +1085,9 @@ function createGallery(definition) {
             );
 
         const parserError =
-            svgDocument.querySelector("parsererror");
+            svgDocument.querySelector(
+                "parsererror"
+            );
 
         if (parserError) {
             throw new Error(
@@ -1113,8 +1116,10 @@ function createGallery(definition) {
         const isPumpJack =
             selectedItem?.id === "pump-jack";
 
-        // 펌프잭 다운로드 파일은 갤러리 밖에서
-        // 독립적으로 애니메이션을 실행한다.
+        const isLantern =
+            selectedItem?.id === "lantern";
+
+        // 펌프잭 독립 애니메이션 설정 유지
         if (isPumpJack) {
             svgElement.setAttribute(
                 "data-svg-gallery-export",
@@ -1126,21 +1131,33 @@ function createGallery(definition) {
             shadowEnabled?.checked === true &&
             (
                 selectedItem?.previewType === "svg" ||
-                isPumpJack
+                isPumpJack ||
+                isLantern
             );
 
         if (shouldExportShadow) {
             let previewSvg = null;
 
-            if (isPumpJack) {
+            if (isPumpJack || isLantern) {
                 const frame =
                     previewPlaceholder.querySelector(
                         "iframe"
                     );
 
-                previewSvg =
-                    frame?.contentDocument
-                        ?.documentElement || null;
+                const frameDocument =
+                    frame?.contentDocument;
+
+                if (isPumpJack) {
+                    previewSvg =
+                        frameDocument?.documentElement ||
+                        null;
+                } else {
+                    // 랜턴은 HTML 내부의 SVG를 사용
+                    previewSvg =
+                        frameDocument?.querySelector(
+                            "svg.lantern"
+                        ) || null;
+                }
             } else {
                 previewSvg =
                     previewPlaceholder.querySelector(
@@ -1173,6 +1190,7 @@ function createGallery(definition) {
                 );
             }
 
+            // 미리보기 그림자 요소 복사
             const exportedDefs =
                 svgDocument.importNode(
                     shadowDefs,
@@ -1202,6 +1220,7 @@ function createGallery(definition) {
                             )
                     );
 
+            // 원본 그래픽보다 그림자를 뒤에 배치
             svgElement.insertBefore(
                 exportedDefs,
                 firstGraphic || null
@@ -1212,9 +1231,11 @@ function createGallery(definition) {
                 firstGraphic || null
             );
 
-            // 그림자 여백을 포함한 viewBox
+            // 확장된 viewBox 반영
             const expandedViewBox =
-                previewSvg.getAttribute("viewBox");
+                previewSvg.getAttribute(
+                    "viewBox"
+                );
 
             if (expandedViewBox) {
                 svgElement.setAttribute(
@@ -1223,8 +1244,7 @@ function createGallery(definition) {
                 );
             }
 
-            // 다운로드 시점의 그림자 도형이
-            // 원본과 연결되어 있는지 검증
+            // 펌프잭 그림자 동기화 요소 검증 유지
             if (isPumpJack) {
                 const movingIds = [
                     "crank-assembly",
@@ -1255,6 +1275,7 @@ function createGallery(definition) {
             svgDocument
         );
     }
+
 
     function createHtmlDownloadContent(
         sourceText
