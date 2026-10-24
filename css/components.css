@@ -1183,8 +1183,22 @@ body:has(.environmental-context-dialog[open]) {
     box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
 }
 
+
+/* 그림자 설정 팝오버 숨김 */
+
 .detail-shadow-popover[hidden] {
     display: none;
+}
+
+/* 열린 패널을 다른 미리보기 버튼보다 위에 표시 */
+
+.detail-color-editor:has(
+    .detail-color-popover:not([hidden])
+),
+.detail-shadow-editor:has(
+    .detail-shadow-popover:not([hidden])
+) {
+    z-index: 30;
 }
 
 .detail-shadow-popover .shadow-controls {
