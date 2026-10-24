@@ -1479,6 +1479,9 @@ function createGallery(definition) {
             return;
         }
 
+        // 그림자 패널이 열려 있다면 닫기
+        closeShadowPanel();
+
         colorPopover.hidden = false;
 
         colorButton.setAttribute(
@@ -2959,6 +2962,11 @@ function createGallery(definition) {
             function () {
                 const shouldOpen =
                     shadowPanel.hidden;
+
+                // 그림자 패널을 열 때 색상 패널 닫기
+                if (shouldOpen) {
+                    closeColorPopover();
+                }
 
                 shadowPanel.hidden =
                     !shouldOpen;
