@@ -2,6 +2,108 @@ import { illustrations } from "./data/illustrations.js";
 import { icons } from "./data/icons.js";
 import { updateShadow, removeShadow } from "./shadow.js";
 
+// SVG_GALLERY_DOWNLOAD_STATS_INTEGRATION
+// 통계 API가 실패하더라도 SVG 다운로드 기능은 그대로 유지합니다.
+const DOWNLOAD_STATS_ENDPOINT =
+    "https://svg-gallery-api.eunjongdang.workers.dev/api/downloads";
+
+let downloadCounts = null;
+const downloadCountSubscribers = new Set();
+
+function notifyDownloadCountSubscribers() {
+    downloadCountSubscribers.forEach(function (subscriber) {
+        subscriber();
+    });
+}
+
+function getDownloadCount(artworkId) {
+    if (
+        !downloadCounts ||
+        !Object.prototype.hasOwnProperty.call(downloadCounts, artworkId)
+    ) {
+        return null;
+    }
+
+    const value = downloadCounts[artworkId];
+    return Number.isSafeInteger(value) && value >= 0
+        ? value
+        : null;
+}
+
+async function loadDownloadCounts() {
+    try {
+        const response = await fetch(DOWNLOAD_STATS_ENDPOINT, {
+            method: "GET",
+            mode: "cors",
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Download statistics HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!data || typeof data.counts !== "object" || data.counts === null || Array.isArray(data.counts)) {
+            throw new Error("Invalid download statistics response");
+        }
+
+        // Replace only with validated data; preserve a newer POST result if GET
+        // and POST finish out of order.
+        const merged = { ...data.counts };
+        if (downloadCounts) {
+            for (const [id, value] of Object.entries(downloadCounts)) {
+                if (Number.isSafeInteger(value) && value >= 0) {
+                    merged[id] = Math.max(merged[id] ?? 0, value);
+                }
+            }
+        }
+        downloadCounts = merged;
+        notifyDownloadCountSubscribers();
+    } catch (error) {
+        console.warn("다운로드 통계를 불러오지 못했습니다.", error);
+        // 초기 로딩 실패는 화면에 집계 불가로 표시합니다.
+        downloadCounts ??= {};
+        notifyDownloadCountSubscribers();
+    }
+}
+
+async function recordSvgDownload(artworkId) {
+    try {
+        const response = await fetch(
+            `${DOWNLOAD_STATS_ENDPOINT}/${encodeURIComponent(artworkId)}`,
+            { method: "POST", mode: "cors", cache: "no-store" }
+        );
+
+        // 60초당 세 번의 제한은 집계에만 적용됩니다.
+        // 네 번째 다운로드를 막거나 오류를 사용자에게 보여주지 않습니다.
+        if (response.status === 429) {
+            return;
+        }
+        if (!response.ok) {
+            throw new Error(`Download statistics HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (
+            data?.artwork_id !== artworkId ||
+            !Number.isSafeInteger(data.download_count) ||
+            data.download_count < 0
+        ) {
+            throw new Error("Invalid download count response");
+        }
+
+        if (!downloadCounts) {
+            downloadCounts = {};
+        }
+        const previous = getDownloadCount(artworkId);
+        downloadCounts[artworkId] = Math.max(previous ?? 0, data.download_count);
+        notifyDownloadCountSubscribers();
+    } catch (error) {
+        console.warn("다운로드 통계를 기록하지 못했습니다.", error);
+    }
+}
+// END SVG_GALLERY_DOWNLOAD_STATS_INTEGRATION
+
 const SLIDE_DURATION = 500;
 const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 
@@ -526,6 +628,38 @@ function createGallery(definition) {
         "[data-download-empty]"
     );
 
+    // 작품 상세 화면의 다운로드 패널에 횟수를 표시합니다.
+    const downloadCountDisplay = document.createElement("p");
+    downloadCountDisplay.className = "download-count";
+    downloadCountDisplay.hidden = true;
+    downloadCountDisplay.setAttribute("aria-live", "polite");
+
+    const downloadLinks = svgDownload?.closest(".download-links");
+    if (downloadLinks) {
+        downloadLinks.insertAdjacentElement("afterend", downloadCountDisplay);
+    }
+
+    function updateDownloadCountDisplay(item) {
+        if (!downloadLinks) {
+            return;
+        }
+        if (!item || !item.svgPath) {
+            downloadCountDisplay.hidden = true;
+            return;
+        }
+
+        downloadCountDisplay.hidden = false;
+        const count = getDownloadCount(item.id);
+        downloadCountDisplay.textContent = count === null
+            ? "다운로드 수: 집계 정보 없음"
+            : `다운로드 수: ${count.toLocaleString("ko-KR")}회`;
+    }
+
+    downloadCountSubscribers.add(function () {
+        updateDownloadCountDisplay(selectedItem);
+    });
+
+
     const colorEditor = root.querySelector(
         "[data-detail-color-editor]"
     );
@@ -1045,6 +1179,8 @@ function createGallery(definition) {
                 item.htmlPath
             );
         }
+
+        updateDownloadCountDisplay(item);
     }    
     
     
@@ -1341,6 +1477,7 @@ function createGallery(definition) {
         }
 
         isDownloading = true;
+        const downloadedArtworkId = selectedItem.id;
 
         try {
             const response = await fetch(
@@ -1371,6 +1508,8 @@ function createGallery(definition) {
                     )
                 );
 
+                // Blob 생성과 다운로드 시작 요청이 성공한 경우에만 집계를 요청합니다.
+                void recordSvgDownload(downloadedArtworkId);
                 return;
             }
 
@@ -1441,6 +1580,11 @@ function createGallery(definition) {
             !hasStaticShadow &&
             !isPumpJackExport
         ) {
+            if (fileType === "svg") {
+                // 이 경로는 브라우저의 기본 파일 다운로드를 사용합니다.
+                // 완료 여부는 브라우저에서 노출하지 않으므로 클릭 시도를 집계합니다.
+                void recordSvgDownload(selectedItem.id);
+            }
             return;
         }
 
@@ -3341,6 +3485,9 @@ const galleries =
     galleryDefinitions
         .map(createGallery)
         .filter(Boolean);
+
+// 갤러리 초기 표시를 막지 않고 기존 집계 정보를 비동기로 읽습니다.
+void loadDownloadCounts();
 
 function getPreviewLocationState() {
         const searchParams =
