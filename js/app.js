@@ -628,37 +628,44 @@ function createGallery(definition) {
         "[data-download-empty]"
     );
 
-    // 작품 상세 화면의 다운로드 패널에 횟수를 표시합니다.
-    const downloadCountDisplay = document.createElement("p");
-    downloadCountDisplay.className = "download-count";
-    downloadCountDisplay.hidden = true;
-    downloadCountDisplay.setAttribute("aria-live", "polite");
+    // 작품 상세 화면의 다운로드 제목 옆에 횟수를 표시합니다.
+    const downloadCountDisplay = root.querySelector(
+        "[data-download-count]"
+    );
 
-    const downloadLinks = svgDownload?.closest(".download-links");
-    if (downloadLinks) {
-        downloadLinks.insertAdjacentElement("afterend", downloadCountDisplay);
-    }
+    const downloadCountValue = root.querySelector(
+        "[data-download-count-value]"
+    );
 
     function updateDownloadCountDisplay(item) {
-        if (!downloadLinks) {
+        if (!downloadCountDisplay || !downloadCountValue) {
             return;
         }
+
         if (!item || !item.svgPath) {
             downloadCountDisplay.hidden = true;
             return;
         }
 
-        downloadCountDisplay.hidden = false;
         const count = getDownloadCount(item.id);
-        downloadCountDisplay.textContent = count === null
-            ? "다운로드 수: 집계 정보 없음"
-            : `다운로드 수: ${count.toLocaleString("ko-KR")}회`;
+
+        downloadCountValue.textContent = count === null
+            ? "—"
+            : count.toLocaleString("ko-KR");
+
+        downloadCountValue.setAttribute(
+            "aria-label",
+            count === null
+                ? "다운로드 집계 정보 없음"
+                : `다운로드 수: ${count.toLocaleString("ko-KR")}회`
+        );
+
+        downloadCountDisplay.hidden = false;
     }
 
     downloadCountSubscribers.add(function () {
         updateDownloadCountDisplay(selectedItem);
     });
-
 
     const colorEditor = root.querySelector(
         "[data-detail-color-editor]"
